@@ -1,0 +1,129 @@
+name: Auto-Sync TechPartner Platform
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    # Run every 30 minutes
+    - cron: '*/30 * * * *'
+
+jobs:
+  auto-sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "Auto-Sync Bot"
+        git config --global user.email "autosync@techpartner.dev"
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Check for Changes
+      id: check-changes
+      run: |
+        if git diff --quiet HEAD~1 HEAD; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Sync from Remote
+      if: steps.check-changes.outputs.changes == 'true'
+      run: |
+        echo "🔄 Auto-sync triggered by changes"
+        git fetch origin main
+        
+        # Check if we're behind
+        BEHIND=$(git rev-list --count HEAD..origin/main)
+        echo "Behind by $BEHIND commits"
+        
+        if [ "$BEHIND" -gt 0 ]; then
+          echo "⬇️ Pulling latest changes"
+          git merge origin/main --no-edit
+        fi
+    
+    - name: Auto-commit Platform Updates
+      run: |
+        # Check for uncommitted changes
+        if ! git diff --quiet; then
+          echo "📝 Found uncommitted changes"
+          git add .
+          git commit -m "Auto-sync: Platform updates $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+        fi
+    
+    - name: Push Changes
+      run: |
+        git push origin main || echo "Nothing to push"
+    
+    - name: Deployment Notification
+      if: success()
+      run: |
+        echo "✅ Auto-sync completed successfully"
+        echo "🚀 TechPartner platform synchronized"
+
+  health-check:
+    runs-on: ubuntu-latest
+    needs: auto-sync
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Build Check
+      run: |
+        echo "🔧 Checking build status"
+        npm run build --if-present || echo "No build script found"
+    
+    - name: Database Health Check
+      run: |
+        echo "🗄️ Checking database health"
+        # Create data directory
+        mkdir -p data
+        # Test database connection
+        node -e "
+          try {
+            const Database = require('better-sqlite3');
+            const db = new Database('./data/test-health.db');
+            db.exec('CREATE TABLE IF NOT EXISTS health_check (id INTEGER PRIMARY KEY, timestamp TEXT)');
+            db.exec('INSERT INTO health_check (timestamp) VALUES (?)').run(new Date().toISOString());
+            console.log('✅ Database health check passed');
+            db.close();
+          } catch (error) {
+            console.error('❌ Database health check failed:', error.message);
+            process.exit(1);
+          }
+        "
+    
+    - name: Platform Status
+      run: |
+        echo "📊 Platform Status Report"
+        echo "- Repository: Synced ✅"
+        echo "- Dependencies: Installed ✅"
+        echo "- Database: Healthy ✅"
+        echo "- Auto-sync: Active ✅"

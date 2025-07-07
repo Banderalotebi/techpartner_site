@@ -1,0 +1,2341 @@
+/* Frame 35 */
+
+position: absolute;
+width: 1440px;
+height: 3739px;
+left: 1687px;
+top: 0px;
+
+
+
+/* Frame 3 */
+
+position: absolute;
+width: 1440px;
+height: 3739px;
+left: 0px;
+top: 0px;
+
+
+
+/* logo and identity */
+
+position: absolute;
+width: 1440px;
+height: 3739px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+
+
+/* Rectangle 24 */
+
+position: absolute;
+width: 1440px;
+height: 423px;
+left: 0px;
+top: 0px;
+
+background: #F3F2F0;
+
+
+/* tech partner logo black 3 */
+
+position: absolute;
+width: 253px;
+height: 36.78px;
+left: 28px;
+top: 35px;
+
+background: url(tech partner logo black.png);
+
+
+/* Your work */
+
+position: absolute;
+width: 98px;
+height: 66px;
+left: 340px;
+top: 29px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 66px;
+/* identical to box height, or 330% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Your clients */
+
+position: absolute;
+width: 115px;
+height: 66px;
+left: 489px;
+top: 29px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 66px;
+/* identical to box height, or 330% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Home / categories */
+
+position: absolute;
+width: 169px;
+height: 66px;
+left: 83px;
+top: 95px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* community */
+
+position: absolute;
+width: 116px;
+height: 66px;
+left: 645px;
+top: 29px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 66px;
+/* identical to box height, or 330% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Help center */
+
+position: absolute;
+width: 116px;
+height: 66px;
+left: 1033px;
+top: 29px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 66px;
+/* identical to box height, or 330% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Arrow 5 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 0px;
+left: 452px;
+top: 55px;
+
+border: 2px solid #313030;
+transform: rotate(90deg);
+
+
+/* Arrow 6 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 0px;
+left: 772px;
+top: 55px;
+
+border: 2px solid #313030;
+transform: rotate(90deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 85.83%;
+right: 12.72%;
+top: 1.28%;
+bottom: 98.13%;
+
+background: #4B4B4B;
+
+
+/* Vector */
+
+position: absolute;
+left: 81.6%;
+right: 16.6%;
+top: 1.36%;
+bottom: 98.15%;
+
+background: #4B4B4B;
+
+
+/* Ellipse 14 */
+
+position: absolute;
+width: 33px;
+height: 33px;
+left: 1295px;
+top: 43px;
+
+background: url(New-file.png);
+
+
+/* What do you need designed? */
+
+position: absolute;
+width: 413px;
+height: 66px;
+left: 252px;
+top: 188px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 28px;
+line-height: 66px;
+/* identical to box height, or 236% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 16 */
+
+position: absolute;
+width: 82px;
+height: 62px;
+left: 27px;
+top: 312px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 17 */
+
+position: absolute;
+width: 163px;
+height: 62px;
+left: 119px;
+top: 312px;
+
+background: #01A1C1;
+border-radius: 6px;
+
+
+/* Logo & Identity */
+
+position: absolute;
+width: 137px;
+height: 66px;
+left: 133px;
+top: 310px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #FFFFFF;
+
+
+
+/* Rectangle 18 */
+
+position: absolute;
+width: 156px;
+height: 62px;
+left: 292px;
+top: 312px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 19 */
+
+position: absolute;
+width: 222px;
+height: 62px;
+left: 458px;
+top: 312px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 20 */
+
+position: absolute;
+width: 231px;
+height: 62px;
+left: 690px;
+top: 312px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 21 */
+
+position: absolute;
+width: 158px;
+height: 62px;
+left: 931px;
+top: 312px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 22 */
+
+position: absolute;
+width: 157px;
+height: 62px;
+left: 1099px;
+top: 310px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Rectangle 23 */
+
+position: absolute;
+width: 161px;
+height: 62px;
+left: 1266px;
+top: 310px;
+
+background: #D9D9D9;
+border-radius: 6px;
+
+
+/* Vector */
+
+position: absolute;
+left: 3.96%;
+right: 94.7%;
+top: 8.99%;
+bottom: 90.5%;
+
+background: #000000;
+
+
+/* Web & app design */
+
+position: absolute;
+width: 149px;
+height: 66px;
+left: 296px;
+top: 310px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Business & Advertising */
+
+position: absolute;
+width: 206px;
+height: 66px;
+left: 466px;
+top: 310px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Clothing & Merchandise */
+
+position: absolute;
+width: 219px;
+height: 66px;
+left: 697px;
+top: 312px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Art & Illustration */
+
+position: absolute;
+width: 146px;
+height: 66px;
+left: 937px;
+top: 312px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Packing & Label */
+
+position: absolute;
+width: 144px;
+height: 60px;
+left: 1106px;
+top: 312px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 66px;
+/* or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Book & Magazine */
+
+position: absolute;
+width: 156px;
+height: 66px;
+left: 1269px;
+top: 310px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 66px;
+/* identical to box height, or 367% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Line 7 */
+
+position: absolute;
+width: 1200px;
+height: 0px;
+left: 147px;
+top: 933px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 10 */
+
+position: absolute;
+width: 1200px;
+height: 0px;
+left: 147px;
+top: 1339px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 12 */
+
+position: absolute;
+width: 1200px;
+height: 0px;
+left: 105px;
+top: 2236px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 13 */
+
+position: absolute;
+width: 1200px;
+height: 0px;
+left: 105px;
+top: 2505px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 8 */
+
+position: absolute;
+width: 836px;
+height: 0px;
+left: 727px;
+top: 503px;
+
+border: 1px solid #B6B5B3;
+transform: rotate(90deg);
+
+
+/* Line 9 */
+
+position: absolute;
+width: 426px;
+height: 0px;
+left: 1073px;
+top: 507px;
+
+border: 1px solid #B6B5B3;
+transform: rotate(-90deg);
+
+
+/* Logo & brand identity pack */
+
+position: absolute;
+width: 353px;
+height: 66px;
+left: 237px;
+top: 545px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo & brand guide */
+
+position: absolute;
+width: 258px;
+height: 66px;
+left: 237px;
+top: 989px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo & website */
+
+position: absolute;
+width: 198px;
+height: 66px;
+left: 274px;
+top: 1431px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo & social media pack */
+
+position: absolute;
+width: 337px;
+height: 66px;
+left: 205px;
+top: 1844px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Brand guide */
+
+position: absolute;
+width: 161px;
+height: 66px;
+left: 214px;
+top: 2253px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Stationery */
+
+position: absolute;
+width: 135px;
+height: 66px;
+left: 565px;
+top: 2253px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Full-Service Brand Pack */
+
+position: absolute;
+width: 310px;
+height: 66px;
+left: 855px;
+top: 2253px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo & business card */
+
+position: absolute;
+width: 280px;
+height: 66px;
+left: 862px;
+top: 989px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo design */
+
+position: absolute;
+width: 159px;
+height: 66px;
+left: 757px;
+top: 589px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Business card */
+
+position: absolute;
+width: 183px;
+height: 66px;
+left: 1101px;
+top: 589px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* from 3000 SAR */
+
+position: absolute;
+width: 115px;
+height: 66px;
+left: 216px;
+top: 582px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 2400 */
+
+position: absolute;
+width: 81px;
+height: 66px;
+left: 232px;
+top: 1027px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 6000 SAR */
+
+position: absolute;
+width: 120px;
+height: 66px;
+left: 274px;
+top: 1473px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 2600 SAR */
+
+position: absolute;
+width: 115px;
+height: 66px;
+left: 205px;
+top: 1886px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 1600 SAR */
+
+position: absolute;
+width: 115px;
+height: 66px;
+left: 214px;
+top: 2286px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 1000 SAR */
+
+position: absolute;
+width: 110px;
+height: 66px;
+left: 569px;
+top: 2284px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 20,000 SAR */
+
+position: absolute;
+width: 127px;
+height: 66px;
+left: 855px;
+top: 2284px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 2500 */
+
+position: absolute;
+width: 81px;
+height: 66px;
+left: 858px;
+top: 1033px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 2000 SAR */
+
+position: absolute;
+width: 115px;
+height: 66px;
+left: 757px;
+top: 627px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* from 1200 */
+
+position: absolute;
+width: 76px;
+height: 66px;
+left: 1101px;
+top: 633px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Get a logo plus digital and print essentials to jump-start your brand. */
+
+position: absolute;
+width: 504px;
+height: 60px;
+left: 210px;
+top: 638px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Extend your logo design into a complete brand with matching fonts, colors, and style. */
+
+position: absolute;
+width: 561px;
+height: 60px;
+left: 156px;
+top: 1095px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Get a logo and business card design that seamlessly complement each other */
+
+position: absolute;
+width: 482px;
+height: 90px;
+left: 775px;
+top: 1095px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Logo Business card Letterhead & Envelope Facebook cover */
+
+position: absolute;
+width: 229px;
+height: 180px;
+left: 158px;
+top: 704px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 45px;
+/* or 250% */
+
+color: #000000;
+
+
+
+/* Crafting an unforgettable logo tailored to your brand. */
+
+position: absolute;
+width: 243px;
+height: 60px;
+left: 757px;
+top: 691px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 30px;
+/* or 188% */
+
+color: #000000;
+
+
+
+/* A unique card designed to build connections */
+
+position: absolute;
+width: 215px;
+height: 60px;
+left: 1101px;
+top: 691px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 30px;
+/* or 188% */
+
+color: #000000;
+
+
+
+/* Logo Brand guide document */
+
+position: absolute;
+width: 236px;
+height: 60px;
+left: 158px;
+top: 1197px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Logo Facebook cover Twitter header YouTube background */
+
+position: absolute;
+width: 221px;
+height: 120px;
+left: 177px;
+top: 2034px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Logo Business card */
+
+position: absolute;
+width: 152px;
+height: 60px;
+left: 760px;
+top: 1197px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Receive a custom logo and Salla website perfectly aligned with your brand. */
+
+position: absolute;
+width: 453px;
+height: 60px;
+left: 113px;
+top: 1549px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Create a logo and social media cover images to make a lasting online impression. */
+
+position: absolute;
+width: 497px;
+height: 90px;
+left: 113px;
+top: 1957px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Unlock a comprehensive guide detailing your brand's fonts, colors, and style. */
+
+position: absolute;
+width: 257px;
+height: 120px;
+left: 119px;
+top: 2350px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Personalized letterhead and envelopes that convey your brand's message. */
+
+position: absolute;
+width: 258px;
+height: 120px;
+left: 442px;
+top: 2350px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Craft a strategically guided brand identity with your personal Creative Director from Tech Partner Studio. */
+
+position: absolute;
+width: 554px;
+height: 90px;
+left: 781px;
+top: 2350px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Logo Fully functioning, custom-designed Squarespace website Content uploaded for you */
+
+position: absolute;
+width: 544px;
+height: 90px;
+left: 99px;
+top: 1644px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Line 11 */
+
+position: absolute;
+width: 526px;
+height: 0px;
+left: 119px;
+top: 1793px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 14 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 398px;
+top: 2237px;
+
+border: 1px solid #B6B5B3;
+transform: rotate(90deg);
+
+
+/* Line 15 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 727px;
+top: 2237px;
+
+border: 1px solid #B6B5B3;
+transform: rotate(90deg);
+
+
+/* Rectangle 25 */
+
+position: absolute;
+width: 952px;
+height: 293px;
+left: 251px;
+top: 2518px;
+
+background: #F3F2F0;
+border-radius: 5px;
+
+
+/* image 2 */
+
+position: absolute;
+width: 145px;
+height: 283px;
+left: 1008px;
+top: 2519px;
+
+background: url(image.png);
+
+
+/* Discover your perfect brand solution today. */
+
+position: absolute;
+width: 566px;
+height: 66px;
+left: 286px;
+top: 2552px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 66px;
+/* identical to box height, or 254% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Answer a few simple questions about your business, and we'll suggest the perfect design solution for you. */
+
+position: absolute;
+width: 556px;
+height: 90px;
+left: 293px;
+top: 2622px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 30px;
+/* or 167% */
+
+color: #313030;
+
+
+
+/* Rectangle 26 */
+
+position: absolute;
+width: 321px;
+height: 55px;
+left: 334px;
+top: 2716px;
+
+background: #313030;
+border-radius: 50px;
+
+
+/* Take our branding quiz now! */
+
+position: absolute;
+width: 286px;
+height: 30px;
+left: 352px;
+top: 2730px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 30px;
+/* identical to box height, or 150% */
+
+color: #FFFFFF;
+
+
+
+/* Still haven't found what you're looking for? Search and discover! */
+
+position: absolute;
+width: 642px;
+height: 30px;
+left: 383px;
+top: 2848px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 30px;
+/* identical to box height, or 150% */
+
+color: #FE5F50;
+
+
+
+/* Arrow 7 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 20px;
+height: 0px;
+left: 1069.89px;
+top: 2852px;
+
+border: 2px solid #FE5F50;
+transform: rotate(-89.38deg);
+
+
+/* Rectangle 15 */
+
+position: absolute;
+width: 1440px;
+height: 833px;
+left: 0px;
+top: 2907px;
+
+background: #F3F2F0;
+
+
+/* tech partner logo black 2 */
+
+position: absolute;
+width: 262px;
+height: 38px;
+left: 66px;
+top: 3649px;
+
+background: url(tech partner logo black.png);
+
+
+/* Line 3 */
+
+position: absolute;
+width: 1322px;
+height: 0px;
+left: 66px;
+top: 3027px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 4 */
+
+position: absolute;
+width: 1322px;
+height: 0px;
+left: 66px;
+top: 3604px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 5 */
+
+position: absolute;
+width: 63px;
+height: 0px;
+left: 342px;
+top: 3645px;
+
+border: 1px solid #BEBCBB;
+transform: rotate(90deg);
+
+
+/* Line 6 */
+
+position: absolute;
+width: 63px;
+height: 0px;
+left: 584px;
+top: 3645px;
+
+border: 1px solid #BEBCBB;
+transform: rotate(90deg);
+
+
+/* Vector */
+
+position: absolute;
+left: 83.12%;
+right: 15.97%;
+top: 97.59%;
+bottom: 1.77%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: 85.69%;
+right: 12.57%;
+top: 97.65%;
+bottom: 1.82%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: 88.61%;
+right: 9.79%;
+top: 97.65%;
+bottom: 1.77%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: 91.88%;
+right: 6.74%;
+top: 97.7%;
+bottom: 1.77%;
+
+background: #000000;
+
+
+/* Company */
+
+position: absolute;
+width: 91px;
+height: 44px;
+left: 117px;
+top: 3107px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 44px;
+/* identical to box height, or 244% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Get a design */
+
+position: absolute;
+width: 115px;
+height: 44px;
+left: 751px;
+top: 3107px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 44px;
+/* identical to box height, or 244% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Design services */
+
+position: absolute;
+width: 142px;
+height: 44px;
+left: 414px;
+top: 3107px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 44px;
+/* identical to box height, or 244% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Resources */
+
+position: absolute;
+width: 94px;
+height: 44px;
+left: 1084px;
+top: 3107px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 44px;
+/* identical to box height, or 244% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* About */
+
+position: absolute;
+width: 51px;
+height: 44px;
+left: 117px;
+top: 3170px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Logo design */
+
+position: absolute;
+width: 103px;
+height: 44px;
+left: 763px;
+top: 3170px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Design contests */
+
+position: absolute;
+width: 136px;
+height: 44px;
+left: 440px;
+top: 3170px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Become a designer */
+
+position: absolute;
+width: 166px;
+height: 44px;
+left: 1086px;
+top: 3170px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Contact */
+
+position: absolute;
+width: 70px;
+height: 44px;
+left: 117px;
+top: 3214px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Business card */
+
+position: absolute;
+width: 118px;
+height: 44px;
+left: 763px;
+top: 3214px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* 1-to-1 Projects */
+
+position: absolute;
+width: 119px;
+height: 44px;
+left: 440px;
+top: 3214px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Blog */
+
+position: absolute;
+width: 37px;
+height: 44px;
+left: 1086px;
+top: 3214px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Careers */
+
+position: absolute;
+width: 68px;
+height: 44px;
+left: 117px;
+top: 3258px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Web page design */
+
+position: absolute;
+width: 151px;
+height: 44px;
+left: 763px;
+top: 3258px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Find a designer */
+
+position: absolute;
+width: 131px;
+height: 44px;
+left: 440px;
+top: 3258px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Design without borders */
+
+position: absolute;
+width: 197px;
+height: 44px;
+left: 1086px;
+top: 3258px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Team */
+
+position: absolute;
+width: 49px;
+height: 44px;
+left: 117px;
+top: 3302px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Brand guide */
+
+position: absolute;
+width: 104px;
+height: 44px;
+left: 763px;
+top: 3302px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Discover inspiration */
+
+position: absolute;
+width: 167px;
+height: 44px;
+left: 440px;
+top: 3302px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* 99awards */
+
+position: absolute;
+width: 86px;
+height: 44px;
+left: 1086px;
+top: 3302px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Press releases */
+
+position: absolute;
+width: 121px;
+height: 44px;
+left: 117px;
+top: 3346px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Packaging design */
+
+position: absolute;
+width: 152px;
+height: 44px;
+left: 763px;
+top: 3346px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Pricings */
+
+position: absolute;
+width: 67px;
+height: 44px;
+left: 440px;
+top: 3346px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Logo ideas */
+
+position: absolute;
+width: 92px;
+height: 44px;
+left: 1086px;
+top: 3346px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* In the media */
+
+position: absolute;
+width: 107px;
+height: 44px;
+left: 117px;
+top: 3390px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* T-shirt design */
+
+position: absolute;
+width: 118px;
+height: 44px;
+left: 763px;
+top: 3390px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Agencies */
+
+position: absolute;
+width: 79px;
+height: 44px;
+left: 440px;
+top: 3390px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Affiliates */
+
+position: absolute;
+width: 73px;
+height: 44px;
+left: 1086px;
+top: 3390px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Testimonials */
+
+position: absolute;
+width: 107px;
+height: 44px;
+left: 117px;
+top: 3434px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Book cover design */
+
+position: absolute;
+width: 156px;
+height: 44px;
+left: 763px;
+top: 3434px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Tech Partner Studio */
+
+position: absolute;
+width: 166px;
+height: 44px;
+left: 440px;
+top: 3434px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Designer resources */
+
+position: absolute;
+width: 164px;
+height: 44px;
+left: 1086px;
+top: 3434px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Browse all categories */
+
+position: absolute;
+width: 181px;
+height: 44px;
+left: 763px;
+top: 3478px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Tech Partner Select */
+
+position: absolute;
+width: 168px;
+height: 44px;
+left: 440px;
+top: 3478px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Terms and Conditions */
+
+position: absolute;
+width: 187px;
+height: 44px;
+left: 369px;
+top: 3654px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Privacy */
+
+position: absolute;
+width: 62px;
+height: 44px;
+left: 607px;
+top: 3654px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* All Rights Reserved © 2024 Tech Partner Est */
+
+position: absolute;
+width: 363px;
+height: 32px;
+left: 515px;
+top: 3707px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* or 259% */
+
+color: #313030;
+
+
+
+/* Help */
+
+position: absolute;
+width: 38px;
+height: 44px;
+left: 1086px;
+top: 3478px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* identical to box height, or 259% */
+
+color: #313030;
+
+
+
+/* Jetbrains Toolbox */
+
+position: absolute;
+width: 96px;
+height: 96px;
+left: 120px;
+top: 519px;
+
+background: url(.png);
+
+
+/* Autodesk Autocad */
+
+position: absolute;
+width: 71px;
+height: 71px;
+left: 808px;
+top: 516px;
+
+background: url(.png);
+
+
+/* New Contact */
+
+position: absolute;
+width: 74px;
+height: 74px;
+left: 1162px;
+top: 503px;
+
+background: url(.png);
+
+
+/* GIPHY */
+
+position: absolute;
+width: 77px;
+height: 77px;
+left: 155px;
+top: 976px;
+
+background: url(.png);
+
+
+/* Buy With Card */
+
+position: absolute;
+width: 96px;
+height: 96px;
+left: 760px;
+top: 968px;
+
+background: url(.png);
+
+
+/* Google News */
+
+position: absolute;
+width: 83px;
+height: 77px;
+left: 175px;
+top: 1443px;
+
+background: url(.png);
+
+
+/* Old VMware Logo */
+
+position: absolute;
+width: 96px;
+height: 96px;
+left: 96px;
+top: 1839px;
+
+background: url(.png);
+
+
+/* User Manual */
+
+position: absolute;
+width: 78px;
+height: 78px;
+left: 108px;
+top: 2256px;
+
+background: url(.png);
+
+
+/* Note */
+
+position: absolute;
+width: 77px;
+height: 77px;
+left: 465px;
+top: 2260px;
+
+background: url(.png);
+
+
+/* Luggage Trolley */
+
+position: absolute;
+width: 86px;
+height: 86px;
+left: 749px;
+top: 2248px;
+
+background: url(.png);

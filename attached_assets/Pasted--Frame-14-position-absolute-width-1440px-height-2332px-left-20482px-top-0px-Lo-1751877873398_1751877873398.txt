@@ -1,0 +1,454 @@
+/* Frame 14 */
+
+position: absolute;
+width: 1440px;
+height: 2332px;
+left: 20482px;
+top: 0px;
+
+
+
+/* Logo & brand identity pack detail/visual brief/colors */
+
+position: absolute;
+width: 1440px;
+height: 2332px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+
+
+/* tech partner logo black 3 */
+
+position: absolute;
+width: 253px;
+height: 36.78px;
+left: 21px;
+top: 24px;
+
+background: url(tech partner logo black.png);
+
+
+/* +44 20 3319 6464 */
+
+position: absolute;
+width: 141px;
+height: 66px;
+left: 1200px;
+top: 20px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Log in */
+
+position: absolute;
+width: 47px;
+height: 66px;
+left: 1357px;
+top: 20px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Rectangle 88 */
+
+position: absolute;
+width: 1440px;
+height: 1799px;
+left: 0px;
+top: 333px;
+
+background: #F8F8F8;
+
+
+/* Rectangle 110 */
+
+position: absolute;
+width: 1440px;
+height: 134px;
+left: 0px;
+top: 2198px;
+
+background: #FFFFFF;
+box-shadow: -34px -5px 20px rgba(0, 0, 0, 0.28);
+
+
+/* Based on the designs you picked, here are the styles you'd like the designers to explore. Don't worry, you can change the styles after you start receiving designs. */
+
+position: absolute;
+width: 638px;
+height: 66px;
+left: 119px;
+top: 195px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 33px;
+/* or 206% */
+
+color: #313030;
+
+
+
+/* Rectangle 119 */
+
+position: absolute;
+width: 269px;
+height: 69px;
+left: 1100px;
+top: 2230px;
+
+background: #313030;
+border-radius: 50px;
+
+
+/* Continue */
+
+position: absolute;
+width: 148px;
+height: 33px;
+left: 1161px;
+top: 2248px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 33px;
+/* identical to box height, or 103% */
+
+color: #FFFFFF;
+
+
+
+/* 100% money-back guarantee */
+
+position: absolute;
+width: 313px;
+height: 33px;
+left: 92px;
+top: 2234px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 21px;
+line-height: 33px;
+/* identical to box height, or 157% */
+
+color: #000000;
+
+
+
+/* A design you love or your money back */
+
+position: absolute;
+width: 302px;
+height: 33px;
+left: 96px;
+top: 2268px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 33px;
+/* identical to box height, or 206% */
+
+color: #000000;
+
+
+
+/* Rectangle 120 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 22px;
+top: 432px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 124 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 22px;
+top: 958px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 128 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 22px;
+top: 1484px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 121 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 380px;
+top: 432px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 125 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 380px;
+top: 958px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 129 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 380px;
+top: 1484px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 122 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 737px;
+top: 432px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 126 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 737px;
+top: 958px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 130 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 737px;
+top: 1484px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 123 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 1095px;
+top: 432px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Rectangle 127 */
+
+position: absolute;
+width: 324px;
+height: 337px;
+left: 1095px;
+top: 958px;
+
+background: url(image.png);
+border-radius: 10px;
+
+
+/* Colors to explore */
+
+position: absolute;
+width: 474px;
+height: 66px;
+left: 111px;
+top: 117px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 56px;
+line-height: 66px;
+/* identical to box height, or 118% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Ellipse 36 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 71px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 37 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 323px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 55 */
+
+position: absolute;
+width: 20px;
+height: 20px;
+left: 569px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 38 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 825px;
+top: 322px;
+
+background: #B6B6B6;
+
+
+/* Ellipse 39 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 1089px;
+top: 322px;
+
+background: #B6B6B6;
+
+
+/* Ellipse 40 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 1351px;
+top: 322px;
+
+background: #B6B6B6;
+
+
+/* Line 45 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 99px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 46 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 346px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 49 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 592px;
+top: 333px;
+
+border: 3px solid #B6B6B6;
+
+
+/* Line 47 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 853px;
+top: 333px;
+
+border: 3px solid #B6B6B6;
+
+
+/* Line 48 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 1120px;
+top: 333px;
+
+border: 3px solid #B6B6B6;

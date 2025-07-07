@@ -1,0 +1,122 @@
+Perfect — you’re looking to create a multi-step project intake form (wizard style), where the client answers grouped questions at each step. This is very useful for qualifying leads, scoping projects, and matching clients to the right package.
+
+⸻
+
+🧩 Web Development Project Intake – Multi-Step Questions
+
+Here’s a structured breakdown of each step with grouped questions:
+
+⸻
+
+🟦 Step 1: Project Info
+
+Goal: Collect basic client and project identification.
+
+Field	Input Type
+Company / Brand Name	Text
+Contact Person	Text
+Email	Email
+Phone Number (optional)	Phone/Text
+Preferred Language (AR/EN)	Select
+Project Type	Select (Website / Web App / E-commerce / Landing Page)
+Do you already have a domain?	Yes/No + Text field
+
+
+⸻
+
+🟩 Step 2: Project Idea
+
+Goal: Understand the purpose and goals.
+
+Field	Input Type
+What is the main goal of this project?	Long Text
+Who is your target audience?	Long Text
+Do you have examples or inspiration sites?	URL(s)
+Do you want a redesign or build from scratch?	Radio (Redesign / New)
+What would success look like?	Long Text
+
+
+⸻
+
+🟧 Step 3: Project Stack
+
+Goal: Get technical context or preferences.
+
+Field	Input Type
+Do you have a preferred tech stack?	Checkbox or Text
+Do you need a backend?	Yes/No
+Do you need a content management system?	Yes/No + CMS choice
+Do you need authentication/login?	Yes/No
+Any integrations (e.g. payments, APIs)?	Long Text
+
+
+⸻
+
+🟥 Step 4: Project Features & Requirements
+
+Goal: Understand functionality.
+
+Field	Input Type
+How many pages do you estimate?	Number/Text
+Will there be forms or contact submissions?	Yes/No
+Do you need admin or dashboard features?	Yes/No
+Do you need multi-language support?	Yes/No
+Any specific accessibility requirements?	Text
+
+
+⸻
+
+🟨 Step 5: Guidelines & Assets
+
+Goal: Design and brand preferences.
+
+Field	Input Type
+Do you have brand guidelines or assets?	File upload
+Preferred design style (modern, clean, etc)	Text/Select
+Color preferences	Color or Text
+Logo and images ready?	Yes/No
+
+
+⸻
+
+🟫 Step 6: User Flows & Pages
+
+Goal: Collect flow diagrams or structure ideas.
+
+Field	Input Type
+Do you have a sitemap or flowchart?	File Upload / Text
+Describe typical user flow	Long Text
+Do you want help with wireframes?	Yes/No
+Do you want animation or transition effects?	Yes/No + Details
+
+
+⸻
+
+🟪 Step 7: Budget & Timeline
+
+Goal: Match to a package and timeline.
+
+Field	Input Type
+Budget Range	Select (25k / 35k / 45k SAR+)
+Preferred Launch Date	Date Picker
+Is this urgent?	Yes/No
+Maintenance after launch?	Yes/No
+
+
+⸻
+
+✅ Final Step: Review & Submit
+	•	Show a summary of answers
+	•	Confirm and Submit
+	•	Optional: Upload NDA, request proposal
+
+⸻
+
+🛠 Ready to Build?
+
+Would you like me to now:
+	•	Build this as a React multi-step form with TailwindCSS?
+	•	Generate it as a Figma wireframe?
+	•	Or export it as a fillable PDF or Notion form?
+
+Let me know your preferred format.

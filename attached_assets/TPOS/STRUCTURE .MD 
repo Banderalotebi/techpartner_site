@@ -1,0 +1,27 @@
+TPOS/
+├── prisma/
+│   └── schema.prisma
+├── src/
+│   ├── controllers/
+│   │   ├── auth.controller.ts
+│   │   ├── order.controller.ts
+│   │   ├── service.controller.ts
+│   │   └── user.controller.ts
+│   ├── routes/
+│   │   ├── auth.routes.ts
+│   │   ├── order.routes.ts
+│   │   ├── service.routes.ts
+│   │   └── user.routes.ts
+│   ├── services/
+│   │   ├── auth.service.ts
+│   │   ├── order.service.ts
+│   │   ├── service.service.ts
+│   │   └── user.service.ts
+│   ├── middlewares/
+│   │   └── auth.middleware.ts
+│   ├── index.ts
+│   └── utils/
+│       └── logger.ts
+├── .env
+├── package.json
+└── tsconfig.json

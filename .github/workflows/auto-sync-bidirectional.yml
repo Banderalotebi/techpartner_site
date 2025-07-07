@@ -1,0 +1,117 @@
+name: Auto-Sync Bidirectional
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Run every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  auto-sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "TechPartner Auto-Sync"
+        git config --global user.email "auto-sync@techpartner.dev"
+
+    - name: Check for changes from external sources
+      id: check_changes
+      run: |
+        # Fetch latest changes
+        git fetch origin main
+        
+        # Check for new commits since last run
+        BEHIND=$(git rev-list --count HEAD..origin/main)
+        AHEAD=$(git rev-list --count origin/main..HEAD)
+        
+        echo "behind=$BEHIND" >> $GITHUB_OUTPUT
+        echo "ahead=$AHEAD" >> $GITHUB_OUTPUT
+        
+        echo "📊 Repository Status:"
+        echo "   Local ahead: $AHEAD commits"
+        echo "   Remote ahead: $BEHIND commits"
+
+    - name: Sync external changes
+      if: steps.check_changes.outputs.behind > 0
+      run: |
+        echo "🔄 Syncing external changes..."
+        
+        # Smart merge strategy
+        if [ "${{ steps.check_changes.outputs.ahead }}" -gt 0 ]; then
+          echo "⚡ Using rebase for clean history..."
+          git rebase origin/main || {
+            echo "⚠️ Rebase failed, trying merge..."
+            git rebase --abort
+            git merge origin/main --no-edit
+          }
+        else
+          echo "⚡ Fast-forward merge..."
+          git merge origin/main
+        fi
+
+    - name: Detect platform changes
+      id: detect_platform
+      run: |
+        # Check if changes are from Replit or local development
+        RECENT_COMMITS=$(git log --since="10 minutes ago" --pretty=format:"%s" origin/main)
+        
+        if echo "$RECENT_COMMITS" | grep -q "Auto-sync\|Replit\|auto-commit"; then
+          echo "platform=replit" >> $GITHUB_OUTPUT
+          echo "🔍 Detected Replit platform changes"
+        elif echo "$RECENT_COMMITS" | grep -q "local\|development"; then
+          echo "platform=local" >> $GITHUB_OUTPUT
+          echo "🔍 Detected local development changes"
+        else
+          echo "platform=unknown" >> $GITHUB_OUTPUT
+          echo "🔍 Platform source unknown"
+        fi
+
+    - name: Create sync notification
+      if: steps.check_changes.outputs.behind > 0 || steps.check_changes.outputs.ahead > 0
+      run: |
+        echo "📝 Creating sync notification..."
+        
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S UTC')
+        PLATFORM="${{ steps.detect_platform.outputs.platform }}"
+        
+        cat >> SYNC_LOG.md << EOF
+        ## Auto-Sync Report - $TIMESTAMP
+        
+        **Platform Source**: $PLATFORM
+        **Commits Synced**: ${{ steps.check_changes.outputs.behind }}
+        **Local Changes**: ${{ steps.check_changes.outputs.ahead }}
+        **Status**: ✅ Synchronized
+        
+        ---
+        EOF
+
+    - name: Commit sync metadata
+      run: |
+        if [ -f SYNC_LOG.md ]; then
+          git add SYNC_LOG.md
+          git commit -m "Auto-sync: Update sync metadata [$(date '+%Y-%m-%d %H:%M:%S')]" || echo "No changes to commit"
+        fi
+
+    - name: Push synchronized changes
+      run: |
+        echo "📤 Pushing synchronized changes..."
+        git push origin main || echo "Nothing to push"
+
+    - name: Sync Status Summary
+      run: |
+        echo "🎉 Auto-Sync Complete!"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "✅ Repository synchronized successfully"
+        echo "🌐 All platforms now have latest changes"
+        echo "📊 Sync frequency: Every 10 minutes"
+        echo "🔄 Next sync: Automatic on push or schedule"

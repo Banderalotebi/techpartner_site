@@ -1,0 +1,204 @@
+/* starts with logo */
+
+position: absolute;
+width: 1042px;
+height: 768px;
+left: 199px;
+top: 1762px;
+
+
+
+/* Everything begins with a logo. */
+
+position: absolute;
+width: 601px;
+height: 30px;
+left: 414px;
+top: 1762px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 30px;
+/* identical to box height, or 75% */
+
+color: #313030;
+
+
+
+/* Whether you're starting fresh or refining your brand, our solutions are tailored to suit your business and elevate your branding */
+
+position: absolute;
+width: 795px;
+height: 122px;
+left: 322px;
+top: 1806px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 44px;
+/* or 244% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Try Our AI Logo Maker */
+
+position: absolute;
+width: 283px;
+height: 44px;
+left: 284px;
+top: 2245px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 44px;
+/* identical to box height, or 169% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Start a logo contest. */
+
+position: absolute;
+width: 263px;
+height: 44px;
+left: 866px;
+top: 2245px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 26px;
+line-height: 44px;
+/* identical to box height, or 169% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Easily craft your unique logo in just minutes with our intuitive, AI-powered tool. It's effortless and provides the ideal starting point or inspiration for our expert designers to elevate your branding journey to new heights. */
+
+position: absolute;
+width: 476px;
+height: 190px;
+left: 199px;
+top: 2289px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 38px;
+/* or 211% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Elevate your branding journey with a wide array of custom logo options from our talented community of freelancers. Experience next-level creative direction, unmatched expertise, and personalized solutions tailored to your unique business needs. */
+
+position: absolute;
+width: 476px;
+height: 190px;
+left: 765px;
+top: 2289px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 38px;
+/* or 211% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Create a logo, it's free */
+
+position: absolute;
+width: 218px;
+height: 38px;
+left: 309px;
+top: 2492px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 38px;
+/* identical to box height, or 190% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logos from SAR1500 */
+
+position: absolute;
+width: 187px;
+height: 38px;
+left: 905px;
+top: 2492px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 38px;
+/* identical to box height, or 190% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Arrow 2 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 24px;
+height: 0px;
+left: 543px;
+top: 2512px;
+
+border: 2px solid #000000;
+
+
+/* Arrow 3 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 29px;
+height: 0px;
+left: 1107px;
+top: 2512px;
+
+border: 2px solid #000000;
+
+
+/* image 13 */
+
+position: absolute;
+width: 409px;
+height: 273px;
+left: 245px;
+top: 1941px;
+
+background: url(image.png);

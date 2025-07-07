@@ -1,0 +1,1539 @@
+/* Frame 16 */
+
+position: absolute;
+width: 1440px;
+height: 4088px;
+left: 23996px;
+top: 0px;
+
+
+
+/* Logo & brand identity pack detail/visual brief/detail */
+
+position: absolute;
+width: 1440px;
+height: 4088px;
+left: 0px;
+top: 0px;
+
+background: #FFFFFF;
+
+
+/* tech partner logo black 3 */
+
+position: absolute;
+width: 253px;
+height: 36.78px;
+left: 21px;
+top: 24px;
+
+background: url(tech partner logo black.png);
+
+
+/* +44 20 3319 6464 */
+
+position: absolute;
+width: 141px;
+height: 66px;
+left: 1200px;
+top: 20px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Log in */
+
+position: absolute;
+width: 47px;
+height: 66px;
+left: 1357px;
+top: 20px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 66px;
+/* identical to box height, or 412% */
+text-align: center;
+
+color: #313030;
+
+
+
+/* Rectangle 88 */
+
+position: absolute;
+width: 1440px;
+height: 3524px;
+left: 0px;
+top: 332px;
+
+background: #F8F8F8;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+
+/* Rectangle 110 */
+
+position: absolute;
+width: 1440px;
+height: 134px;
+left: 0px;
+top: 3954px;
+
+background: #FFFFFF;
+box-shadow: -34px -5px 20px rgba(0, 0, 0, 0.28);
+
+
+/* All logo & brand identity pack packages come with a 100% money-back guarantee and full copyright ownership of the final design. */
+
+position: absolute;
+width: 665px;
+height: 62px;
+left: 119px;
+top: 195px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 31px;
+/* or 194% */
+
+color: #313030;
+
+
+
+/* Rectangle 119 */
+
+position: absolute;
+width: 269px;
+height: 69px;
+left: 1100px;
+top: 3986px;
+
+background: #313030;
+border-radius: 50px;
+
+
+/* Rectangle 151 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 199px;
+height: 69px;
+left: 874px;
+top: 3986px;
+
+border: 1px solid #000000;
+border-radius: 50px;
+
+
+/* Continue */
+
+position: absolute;
+width: 148px;
+height: 33px;
+left: 1161px;
+top: 4004px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 32px;
+line-height: 33px;
+/* identical to box height, or 103% */
+
+color: #FFFFFF;
+
+
+
+/* 100% money-back guarantee */
+
+position: absolute;
+width: 313px;
+height: 33px;
+left: 92px;
+top: 3990px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 21px;
+line-height: 33px;
+/* identical to box height, or 157% */
+
+color: #000000;
+
+
+
+/* A design you love or your money back */
+
+position: absolute;
+width: 302px;
+height: 33px;
+left: 96px;
+top: 4024px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 33px;
+/* identical to box height, or 206% */
+
+color: #000000;
+
+
+
+/* Which design package do you want? */
+
+position: absolute;
+width: 1043px;
+height: 66px;
+left: 102px;
+top: 117px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 56px;
+line-height: 66px;
+/* identical to box height, or 118% */
+text-align: center;
+
+color: #000000;
+
+
+
+/* Ellipse 36 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 71px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 37 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 323px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 55 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 569px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 38 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 825px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 39 */
+
+position: absolute;
+width: 20px;
+height: 20px;
+left: 1089px;
+top: 322px;
+
+background: #313030;
+
+
+/* Ellipse 40 */
+
+position: absolute;
+width: 18px;
+height: 18px;
+left: 1351px;
+top: 322px;
+
+background: #B6B6B6;
+
+
+/* Line 45 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 99px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 46 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 346px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 51 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 592px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 47 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 853px;
+top: 333px;
+
+border: 3px solid #313030;
+
+
+/* Line 48 */
+
+position: absolute;
+width: 220px;
+height: 0px;
+left: 1120px;
+top: 333px;
+
+border: 3px solid #B6B6B6;
+
+
+/* Rectangle 137 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 370px;
+height: 375px;
+left: 38px;
+top: 457px;
+
+background: #FFFFFF;
+border: 15px solid #A5823D;
+
+
+/* Rectangle 138 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 308px;
+height: 328px;
+left: 431px;
+top: 484px;
+
+background: #FFFFFF;
+border: 15px solid #DAD9D7;
+
+
+/* Rectangle 139 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 308px;
+height: 328px;
+left: 762px;
+top: 481px;
+
+background: #FFFFFF;
+border: 15px solid #A5823D;
+
+
+/* Rectangle 140 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 308px;
+height: 328px;
+left: 1093px;
+top: 481px;
+
+background: #FFFFFF;
+border: 15px solid #757470;
+
+
+/* Rectangle 141 */
+
+position: absolute;
+width: 368px;
+height: 519px;
+left: 39px;
+top: 832px;
+
+background: #FBFBFB;
+box-shadow: 3px 6px 17px rgba(0, 0, 0, 0.25);
+
+
+/* Logo & business card  Letterhead & envelope  Facebook cover */
+
+position: absolute;
+width: 338px;
+height: 141px;
+left: 52px;
+top: 896px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 26px;
+line-height: 47px;
+/* or 181% */
+
+color: #757470;
+
+
+
+/* Logo & business card  Letterhead & envelope  Facebook cover */
+
+position: absolute;
+width: 286px;
+height: 141px;
+left: 425px;
+top: 858px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 47px;
+/* or 214% */
+
+color: #757470;
+
+
+
+/* Logo & business card  Letterhead & envelope  Facebook cover */
+
+position: absolute;
+width: 286px;
+height: 141px;
+left: 772px;
+top: 858px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 47px;
+/* or 214% */
+
+color: #757470;
+
+
+
+/* Logo & business card  Letterhead & envelope  Facebook cover */
+
+position: absolute;
+width: 286px;
+height: 141px;
+left: 1105px;
+top: 858px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 47px;
+/* or 214% */
+
+color: #757470;
+
+
+
+/* Line 52 */
+
+position: absolute;
+width: 331px;
+height: 0px;
+left: 72px;
+top: 1092px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 54 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 443px;
+top: 1010px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 60 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 443px;
+top: 1180px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 62 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 801px;
+top: 1180px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 64 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1180px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 61 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 443px;
+top: 1265px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 63 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 801px;
+top: 1265px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 65 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1265px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 66 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1340px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 67 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1416px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 56 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 782px;
+top: 1010px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 58 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1010px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 53 */
+
+position: absolute;
+width: 331px;
+height: 0px;
+left: 72px;
+top: 1180px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 55 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 443px;
+top: 1098px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 57 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 782px;
+top: 1098px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 59 */
+
+position: absolute;
+width: 268px;
+height: 0px;
+left: 1123px;
+top: 1098px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Expect ~30 designs */
+
+position: absolute;
+width: 243px;
+height: 33px;
+left: 85px;
+top: 1116px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 26px;
+line-height: 33px;
+/* identical to box height, or 127% */
+
+color: #757470;
+
+
+
+/* Expect ~40 designs */
+
+position: absolute;
+width: 206px;
+height: 33px;
+left: 450px;
+top: 1037px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Expect ~50 designs */
+
+position: absolute;
+width: 206px;
+height: 33px;
+left: 808px;
+top: 1037px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Expect ~50 designs */
+
+position: absolute;
+width: 206px;
+height: 33px;
+left: 1130px;
+top: 1037px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Money back guarantee */
+
+position: absolute;
+width: 254px;
+height: 33px;
+left: 450px;
+top: 1116px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Money back guarantee */
+
+position: absolute;
+width: 254px;
+height: 33px;
+left: 808px;
+top: 1116px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Money back guarantee */
+
+position: absolute;
+width: 254px;
+height: 33px;
+left: 1130px;
+top: 1116px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Larger designer prize */
+
+position: absolute;
+width: 228px;
+height: 33px;
+left: 450px;
+top: 1207px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Larger designer prize */
+
+position: absolute;
+width: 228px;
+height: 33px;
+left: 808px;
+top: 1207px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Larger designer prize */
+
+position: absolute;
+width: 228px;
+height: 33px;
+left: 1130px;
+top: 1207px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Mid and Top Level designers only */
+
+position: absolute;
+width: 201px;
+height: 66px;
+left: 808px;
+top: 1290px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* or 150% */
+
+color: #757470;
+
+
+
+/* Top Level designers only */
+
+position: absolute;
+width: 264px;
+height: 33px;
+left: 1130px;
+top: 1290px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Prioritized support */
+
+position: absolute;
+width: 195px;
+height: 33px;
+left: 1130px;
+top: 1367px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Dedicated manager */
+
+position: absolute;
+width: 223px;
+height: 33px;
+left: 1130px;
+top: 1431px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 22px;
+line-height: 33px;
+/* identical to box height, or 150% */
+
+color: #757470;
+
+
+
+/* Creative design on a budget */
+
+position: absolute;
+width: 299px;
+height: 33px;
+left: 74px;
+top: 555px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 21px;
+line-height: 33px;
+/* identical to box height, or 157% */
+
+color: #757470;
+
+
+
+/* Greater variety */
+
+position: absolute;
+width: 156px;
+height: 33px;
+left: 461px;
+top: 560px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 21px;
+line-height: 33px;
+/* identical to box height, or 157% */
+
+color: #757470;
+
+
+
+/* Work only with Mid and Top Level designers */
+
+position: absolute;
+width: 245px;
+height: 66px;
+left: 797px;
+top: 560px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 21px;
+line-height: 33px;
+/* or 157% */
+
+color: #757470;
+
+
+
+/* Work only with Top Level designers */
+
+position: absolute;
+width: 256px;
+height: 66px;
+left: 1120px;
+top: 560px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 21px;
+line-height: 33px;
+/* or 157% */
+
+color: #757470;
+
+
+
+/* Money back guarantee */
+
+position: absolute;
+width: 300px;
+height: 33px;
+left: 85px;
+top: 1201px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 26px;
+line-height: 33px;
+/* identical to box height, or 127% */
+
+color: #757470;
+
+
+
+/* Write a descriptive contest title to attract more designers. */
+
+position: absolute;
+width: 311px;
+height: 66px;
+left: 125px;
+top: 1812px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 20px;
+line-height: 33px;
+/* or 165% */
+
+color: #757470;
+
+
+
+/* Boost the number of designs you receive in your contest. */
+
+position: absolute;
+width: 332px;
+height: 66px;
+left: 125px;
+top: 2108px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 20px;
+line-height: 33px;
+/* or 165% */
+
+color: #757470;
+
+
+
+/* Customize your contest to suit your need */
+
+position: absolute;
+width: 405px;
+height: 33px;
+left: 75px;
+top: 2336px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 20px;
+line-height: 33px;
+/* identical to box height, or 165% */
+
+color: #757470;
+
+
+
+/* Check out top performing titles */
+
+position: absolute;
+width: 308px;
+height: 33px;
+left: 492px;
+top: 1856px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 300;
+font-size: 20px;
+line-height: 33px;
+/* identical to box height, or 165% */
+
+color: #2A2925;
+
+
+
+/* Rectangle 142 */
+
+position: absolute;
+width: 264px;
+height: 74px;
+left: 106px;
+top: 1265px;
+
+background: #A3813D;
+border-radius: 56px;
+
+
+/* Rectangle 143 */
+
+position: absolute;
+width: 232px;
+height: 65px;
+left: 437px;
+top: 1285px;
+
+background: #DAD9D7;
+border-radius: 56px;
+
+
+/* Rectangle 144 */
+
+position: absolute;
+width: 228px;
+height: 64px;
+left: 808px;
+top: 1384px;
+
+background: #A5823D;
+border-radius: 56px;
+
+
+/* Rectangle 145 */
+
+position: absolute;
+width: 228px;
+height: 64px;
+left: 1128px;
+top: 1489px;
+
+background: #757470;
+border-radius: 56px;
+
+
+/* Bronze */
+
+position: absolute;
+width: 102px;
+height: 33px;
+left: 187px;
+top: 1285px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 33px;
+/* identical to box height, or 110% */
+
+color: #FFFFFF;
+
+
+
+/* Bronze */
+
+position: absolute;
+width: 136px;
+height: 33px;
+left: 71px;
+top: 499px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #A5823D;
+
+
+
+/* Silver */
+
+position: absolute;
+width: 109px;
+height: 33px;
+left: 461px;
+top: 516px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #DAD9D7;
+
+
+
+/* Gold */
+
+position: absolute;
+width: 95px;
+height: 33px;
+left: 797px;
+top: 516px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #A5823D;
+
+
+
+/* Platinum */
+
+position: absolute;
+width: 181px;
+height: 33px;
+left: 1120px;
+top: 516px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #757470;
+
+
+
+/* £489 */
+
+position: absolute;
+width: 103px;
+height: 33px;
+left: 224px;
+top: 727px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #A3813D;
+
+
+
+/* £739 */
+
+position: absolute;
+width: 98px;
+height: 33px;
+left: 600px;
+top: 727px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #DAD9D7;
+
+
+
+/* £739 */
+
+position: absolute;
+width: 98px;
+height: 33px;
+left: 936px;
+top: 727px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #A5823D;
+
+
+
+/* £739 */
+
+position: absolute;
+width: 98px;
+height: 33px;
+left: 1259px;
+top: 727px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 33px;
+/* identical to box height, or 82% */
+
+color: #757470;
+
+
+
+/* Silver */
+
+position: absolute;
+width: 82px;
+height: 33px;
+left: 512px;
+top: 1300px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 33px;
+/* identical to box height, or 110% */
+
+color: #FFFFFF;
+
+
+
+/* Gold */
+
+position: absolute;
+width: 71px;
+height: 33px;
+left: 886px;
+top: 1400px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 33px;
+/* identical to box height, or 110% */
+
+color: #FFFFFF;
+
+
+
+/* Platinum */
+
+position: absolute;
+width: 136px;
+height: 33px;
+left: 1174px;
+top: 1504px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 33px;
+/* identical to box height, or 110% */
+
+color: #F7F7F7;
+
+
+
+/* Rectangle 146 */
+
+position: absolute;
+width: 899px;
+height: 76px;
+left: 492px;
+top: 1769px;
+
+background: #FFFFFF;
+border: 1px solid #818181;
+border-radius: 8px;
+
+
+/* Line 68 */
+
+position: absolute;
+width: 1334px;
+height: 0px;
+left: 57px;
+top: 2006px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 70 */
+
+position: absolute;
+width: 1334px;
+height: 0px;
+left: 57px;
+top: 2255px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 69 */
+
+position: absolute;
+width: 174px;
+height: 0px;
+left: 546px;
+top: 2143px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Rectangle 147 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 845px;
+height: 453px;
+left: 546px;
+top: 2325px;
+
+background: #FFFFFF;
+border: 1px solid #454545;
+border-radius: 8px;
+
+
+/* Rectangle 149 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 845px;
+height: 364px;
+left: 546px;
+top: 2989px;
+
+background: #FFFFFF;
+border: 1px solid #01A1C1;
+border-radius: 8px;
+
+
+/* Rectangle 150 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 845px;
+height: 386px;
+left: 546px;
+top: 3381px;
+
+background: #FFFFFF;
+border: 1px solid #01A1C1;
+border-radius: 8px;
+
+
+/* Rectangle 148 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 845px;
+height: 155px;
+left: 546px;
+top: 2806px;
+
+background: #FFFFFF;
+border: 1px solid #454545;
+border-radius: 8px;
+
+
+/* Line 71 */
+
+position: absolute;
+width: 722px;
+height: 0px;
+left: 610px;
+top: 3515px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 72 */
+
+position: absolute;
+width: 722px;
+height: 0px;
+left: 610px;
+top: 3571px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 73 */
+
+position: absolute;
+width: 722px;
+height: 0px;
+left: 610px;
+top: 3627px;
+
+border: 1px solid #B6B5B3;
+
+
+/* Line 74 */
+
+position: absolute;
+width: 722px;
+height: 0px;
+left: 610px;
+top: 3683px;
+
+border: 1px solid #B6B5B3;
+
+
+/* All Rights Reserved © 2024 Tech Partner Est */
+
+position: absolute;
+width: 363px;
+height: 32px;
+left: 460px;
+top: 4038px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 44px;
+/* or 259% */
+
+color: #313030;
+
