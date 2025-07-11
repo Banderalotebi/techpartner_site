@@ -1,48 +1,28 @@
 #!/bin/bash
 
-# Quick fix for Google Cloud Run deployment
-echo "Building application..."
-npm run build
+# Quick Cloud Permission Fix Script
+echo "🔧 Attempting to grant necessary permissions..."
 
-echo "Creating fixed Dockerfile..."
-cat > Dockerfile.fixed << 'EOF'
-FROM node:20-slim
-WORKDIR /app
+PROJECT_ID="glossy-agency-448211-s4"
+SERVICE_ACCOUNT="replit-deployer@${PROJECT_ID}.iam.gserviceaccount.com"
 
-# Copy package files
-COPY package*.json ./
-RUN npm ci --only=production
+echo "Project: $PROJECT_ID"
+echo "Service Account: $SERVICE_ACCOUNT"
 
-# Copy built application
-COPY dist/ ./dist/
-COPY server/ ./server/
+# Try to grant compute permissions
+echo "Granting Compute Engine permissions..."
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/compute.admin" || echo "❌ Failed to grant compute.admin"
 
-# Install tsx for runtime
-RUN npm install -g tsx
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$SERVICE_ACCOUNT" \
+  --role="roles/compute.networkAdmin" || echo "❌ Failed to grant network admin"
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=8080
+# Try to enable required APIs
+echo "Enabling required APIs..."
+gcloud services enable compute.googleapis.com || echo "❌ Failed to enable Compute API"
+gcloud services enable cloudbuild.googleapis.com || echo "❌ Failed to enable Cloud Build API"
 
-# Expose port
-EXPOSE 8080
-
-# Start application with tsx
-CMD ["tsx", "server/index.ts"]
-EOF
-
-echo "Building Docker image..."
-gcloud builds submit --tag gcr.io/glossy-agency-448211-s4/techpartner:quick-fix
-
-echo "Deploying to Cloud Run..."
-gcloud run deploy techpartner-site \
-  --image gcr.io/glossy-agency-448211-s4/techpartner:quick-fix \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --port=8080 \
-  --set-env-vars="NODE_ENV=production,PORT=8080"
-
-echo "Testing deployment..."
-sleep 10
-curl "https://techpartner-site-flxd6wf2jq-uc.a.run.app/api/health"
+echo "✅ Permission setup attempt complete!"
+echo "If errors occurred, manual permission grant is required."

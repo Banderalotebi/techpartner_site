@@ -1,36 +1,44 @@
-# 🔧 Google Cloud Deployment Fix Strategy
+# 🛠 Google Cloud VM Deployment - Permission Fix
 
-## Issue Summary
-The deployed Cloud Run service shows a white page because API endpoints return HTML instead of JSON.
+## Current Blocker
+The service account `replit-deployer@glossy-agency-448211-s4.iam.gserviceaccount.com` lacks VM creation permissions.
 
-## Root Cause
-The production static file serving uses a catch-all route `app.use("*", ...)` that intercepts API requests.
+## Required Action (5 minutes)
 
-## Applied Fix
-Created `server/static-handler.ts` with corrected routing that excludes API routes from static file serving.
+### Step 1: Go to Google Cloud Console
+Visit: https://console.cloud.google.com/iam-admin/iam?project=glossy-agency-448211-s4
 
-## Current Deployment Status
-- **Build in Progress**: Cloud Build is creating new image with fix
-- **Expected Resolution**: 3-5 minutes for new deployment
-- **Alternative**: Environment variable update attempted
+### Step 2: Find Service Account
+Look for: `replit-deployer@glossy-agency-448211-s4.iam.gserviceaccount.com`
 
-## Test Commands
-```bash
-# Test API endpoint (should return JSON)
-curl "https://techpartner-site-flxd6wf2jq-uc.a.run.app/api/health"
+### Step 3: Add These Roles
+Click "Edit" (pencil icon) and add:
+- **Compute Engine Admin** 
+- **Compute Network Admin**
+- **Service Account User**
 
-# Should return: {"status":"healthy","timestamp":"...","service":"TechPartner Platform"}
-```
+### Step 4: Enable APIs
+Visit: https://console.cloud.google.com/apis/library?project=glossy-agency-448211-s4
 
-## Expected Outcome
-Once the fix is deployed:
-- API endpoints will return proper JSON responses
-- React app will load correctly
-- Landing page will display properly
-- All features will function as expected
+Enable:
+- Compute Engine API
+- Cloud Resource Manager API
 
-## Manual Verification Steps
-1. Visit https://techpartner-site-flxd6wf2jq-uc.a.run.app/
-2. Should see TechPartner landing page with hero section
-3. API health check should return JSON response
-4. All navigation and features should work
+## After Permission Grant
+
+Once you grant these permissions, tell me and I will:
+
+1. **Create VM** - `e2-medium` instance with Ubuntu 20.04
+2. **Setup Environment** - Node.js 20, PM2, Nginx
+3. **Deploy Platform** - Your complete TechPartner application
+4. **Configure SSL** - Free Let's Encrypt certificate
+5. **Provide URL** - Live public IP address
+
+## VM Specifications
+- **Type**: e2-medium (2 vCPU, 4GB RAM)
+- **OS**: Ubuntu 20.04 LTS
+- **Storage**: 30GB SSD
+- **Region**: us-central1-a
+- **Network**: HTTP/HTTPS ports open
+
+Your platform will be fully deployed and live within 10 minutes of granting permissions!
