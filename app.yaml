@@ -3,8 +3,8 @@ runtime: nodejs20
 # Environment variables (replace with your actual values)
 env_variables:
   NODE_ENV: production
-  DATABASE_URL: "postgresql://username:password@host:port/database"
-  SESSION_SECRET: "your-secure-session-secret-minimum-32-characters-long"
+  DATABASE_URL: "postgresql://techpartner_user:TechPartner2025!@db.techpartner.cloud:5432/techpartner_db"
+  SESSION_SECRET: "TechPartnerSecureSessionKey2025MinimumLength32Characters"
   PORT: 8080
 
 # Automatic scaling configuration
