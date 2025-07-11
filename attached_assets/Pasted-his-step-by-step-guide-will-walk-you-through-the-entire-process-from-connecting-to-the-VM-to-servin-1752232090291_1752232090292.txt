@@ -1,0 +1,110 @@
+his step-by-step guide will walk you through the entire process, from connecting to the VM to serving your site publicly.
+
+Prerequisites:
+
+You have a Google Cloud Platform (GCP) project.
+You have created a Compute Engine VM instance (a Debian-based one like Debian or Ubuntu is recommended for this guide).
+You have the gcloud CLI installed and configured on your local machine.
+Step 1: Connect to Your VM via SSH
+First, you need to securely connect to your virtual machine's terminal. The easiest way is using the gcloud CLI.
+
+Open your local terminal.
+
+Run the following command, replacing the placeholders with your VM's details:
+
+bash
+gcloud compute ssh [YOUR_VM_NAME] --zone=[YOUR_VM_ZONE] --project=[YOUR_PROJECT_ID]
+[YOUR_VM_NAME]: The name you gave your VM instance.
+[YOUR_VM_ZONE]: The zone your VM is in (e.g., us-central1-a).
+[YOUR_PROJECT_ID]: Your GCP project ID.
+You are now connected to your VM's command line. All subsequent commands should be run there.
+
+Step 2: Install Required Software on the VM
+Your VM needs a few things to build and serve a web application: git to get your code, Node.js and npm to build your React app, and Nginx to serve it.
+
+Update Package Lists:
+
+bash
+sudo apt update
+Install Git:
+
+bash
+sudo apt install git -y
+Install Nginx (Web Server):
+
+bash
+sudo apt install nginx -y
+Install Node.js and npm: The recommended way is to use nvm (Node Version Manager), which allows you to easily manage Node.js versions.
+
+bash
+# Download and run the nvm installation script
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Load nvm into your current shell session
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Install the latest Long-Term Support (LTS) version of Node.js
+nvm install --lts
+Note: You may need to close and reopen your SSH session for the nvm command to be fully available.
+
+Step 3: Clone and Build Your React Project
+Now, get your application code onto the VM and build it for production.
+
+Clone your repository: Replace the URL with your own repository's URL.
+
+bash
+git clone https://github.com/your-username/techpartner_site.git
+Navigate into the project directory:
+
+bash
+cd techpartner_site
+Install project dependencies:
+
+bash
+npm install
+Create the production build: This command bundles your app into static files in a build directory.
+
+bash
+npm run build
+Step 4: Configure Nginx to Serve Your App
+Nginx will act as the web server, taking incoming requests and serving the static files from your build folder.
+
+Create a new Nginx configuration file for your site:
+
+bash
+sudo nano /etc/nginx/sites-available/techpartner_site
+Paste the following configuration into the file. This tells Nginx where to find your files and how to handle routing for a single-page application.
+
+Important: You must replace /home/your_user/techpartner_site with the actual absolute path to your project directory on the VM. You can find this by running pwd from within your project folder.
+nginx
+server {
+    listen 80;
+    server_name [YOUR_VM_EXTERNAL_IP]; # Or your domain name later
+
+    # Path to your React app's build directory
+    root /home/your_user/techpartner_site/build;
+    index index.html index.htm;
+
+    location / {
+        # This is the key for single-page applications
+        try_files $uri /index.html;
+    }
+}
+Save the file and exit the editor (in nano, press Ctrl+X, then Y, then Enter).
+
+Enable the site by creating a symbolic link from sites-available to sites-enabled:
+
+bash
+sudo ln -s /etc/nginx/sites-available/techpartner_site /etc/nginx/sites-enabled/
+Test the Nginx configuration to make sure there are no syntax errors:
+
+bash
+sudo nginx -t
+If it shows syntax is ok and test is successful, you're good to go.
+
+Restart Nginx to apply the new configuration:
+
+bash
+sudo systemctl restart nginx
