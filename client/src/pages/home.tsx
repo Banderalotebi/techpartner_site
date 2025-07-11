@@ -225,6 +225,75 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Custom Web Development Featured Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-purple-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-white space-y-6">
+              <div className="inline-block bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+                FEATURED SERVICE
+              </div>
+              
+              <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
+                Custom Web Development
+              </h2>
+              
+              <p className="text-xl text-purple-100 leading-relaxed">
+                Professional full-stack development solutions using modern technologies. From simple websites to complex web applications with complete technical requirements gathering.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span className="text-purple-100">Custom UI/UX Design</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span className="text-purple-100">Full-Stack Development</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span className="text-purple-100">CMS Integration & Backend</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span className="text-purple-100">8-Step Technical Assessment</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/categories/web-development">
+                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                    Start Development Project
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <div className="flex items-center space-x-2">
+                  <span className="text-white text-lg font-medium">Starting from</span>
+                  <span className="text-2xl font-bold text-white">25,000 SAR</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Image */}
+            <div className="relative">
+              <div className="relative z-10">
+                <img 
+                  src={fullStackDevImage} 
+                  alt="Custom Web Development" 
+                  className="w-full h-auto rounded-2xl shadow-2xl"
+                />
+              </div>
+              
+              {/* Decorative Elements */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-300/30 rounded-full blur-xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Your Business Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
