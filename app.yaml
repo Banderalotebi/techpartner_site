@@ -1,0 +1,48 @@
+runtime: nodejs20
+
+# Environment variables (replace with your actual values)
+env_variables:
+  NODE_ENV: production
+  DATABASE_URL: "postgresql://username:password@host:port/database"
+  SESSION_SECRET: "your-secure-session-secret-minimum-32-characters-long"
+  PORT: 8080
+
+# Automatic scaling configuration
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+  target_cpu_utilization: 0.6
+  target_throughput_utilization: 0.6
+
+# Resource allocation
+resources:
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10
+
+# Network settings
+network:
+  session_affinity: false
+
+# Health checks
+liveness_check:
+  path: "/api/health"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+
+readiness_check:
+  path: "/api/health"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300
+
+# Security headers
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+  redirect_http_response_code: 301

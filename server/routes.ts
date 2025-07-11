@@ -11,6 +11,15 @@ import {
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for Google Cloud App Engine
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'healthy', 
+      timestamp: new Date().toISOString(),
+      service: 'TechPartner Platform'
+    });
+  });
+
   // Authentication routes
   app.post('/api/auth/register', async (req, res) => {
     try {
