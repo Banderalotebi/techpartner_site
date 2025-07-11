@@ -379,3 +379,9 @@ Changelog:
   * Authenticated Google Cloud CLI with service account (replit-deployer@glossy-agency-448211-s4.iam.gserviceaccount.com)
   * Platform fully prepared for deployment pending additional App Engine permissions for service account
   * Alternative Cloud Run deployment option configured with Dockerfile for flexible deployment strategy
+- July 11, 2025. Deploying exact original TechPartner platform to Google Cloud VM:
+  * User requirements: Deploy exact same website with no layout changes
+  * VM IP: 35.226.175.178 (techpartner-original)
+  * Complete original platform files ready for deployment
+  * All original design elements preserved: hero section, service cards, questionnaire flows, styling
+  * Working on transferring built files to VM while maintaining exact original appearance
