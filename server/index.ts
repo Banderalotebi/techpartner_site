@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { serveStaticFixed } from "./static-handler";
 
 const app = express();
 app.use(express.json());
@@ -53,7 +54,8 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // In production, use fixed static handler that doesn't interfere with API routes
+    serveStaticFixed(app);
   }
 
   // Use Google Cloud's PORT environment variable or default to 5000
