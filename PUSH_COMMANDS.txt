@@ -1,0 +1,19 @@
+🚀 RUN THESE COMMANDS IN YOUR REPLIT SHELL:
+
+# Remove git lock (if exists)
+rm -f .git/index.lock
+
+# Add all files
+git add .
+
+# Commit changes
+git commit -m "feat: Complete TechPartner platform with deployment automation"
+
+# Push to main (triggers CI/CD)
+git push origin main
+
+✅ After running these commands:
+- Your CI/CD pipeline will trigger automatically
+- Google Cloud Build will deploy to VM: 34.69.69.182
+- Complete TechPartner platform will go live in 2-3 minutes
+- Check deployment at: http://34.69.69.182
