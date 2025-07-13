@@ -1,48 +1,43 @@
 # Server Update Guide
 
-The error shows the server is looking for missing static files. Here's the fix:
+## Current Issue
+- Project built successfully at `/home/bander/techpartner_site`
+- Server not accessible on domain/IP
+- Need to check which server is running and on which port
 
-## Quick Fix Commands (Run on VM):
-
+## Debugging Steps
 ```bash
-cd /opt/techpartner
+cd /home/bander/techpartner_site
 
-# Stop current servers
-sudo pkill -f node
-sudo pkill -f pm2
+# Check what's currently running
+sudo netstat -tlnp | grep :80
+sudo netstat -tlnp | grep :5000
+ps aux | grep node
 
-# Create simple working server
-cat > server.js << 'EOF'
-import express from 'express';
-const app = express();
-app.use(express.json());
+# Check if server started correctly
+npm start
 
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    platform: 'TechPartner Platform',
-    timestamp: new Date().toISOString()
-  });
-});
+# Check logs
+pm2 logs
 
-app.get('*', (req, res) => {
-  res.send('<h1>TechPartner Studio</h1><p>Platform running successfully on port 80</p><p><a href="/api/health">API Health Check</a></p>');
-});
+# If server needs to run on port 80
+sudo PORT=80 npm start
 
-app.listen(80, '0.0.0.0', () => {
-  console.log('TechPartner Platform running on port 80');
-});
-EOF
-
-# Start server
-sudo node server.js
+# Or use PM2 with port 80
+sudo PORT=80 pm2 start ecosystem.config.js --name techpartner-platform
 ```
 
-## What This Fixes:
-- Removes dependency on missing static files
-- Creates working server on port 80
-- Provides health check endpoint
-- Professional landing page
-- Ready for frontend integration
+## Port Configuration
+The server might be running on a different port. Check which port your domain is configured for and ensure the TechPartner server runs on that port.
 
-Your platform will be accessible at **http://34.69.69.182** immediately.
+## Alternative: Direct Server Start
+```bash
+cd /home/bander/techpartner_site
+
+# Stop all conflicting processes
+sudo pkill -f node
+sudo pkill -f "/opt/techpartner"
+
+# Start on port 80 (standard web port)
+sudo PORT=80 NODE_ENV=production npm start
+```

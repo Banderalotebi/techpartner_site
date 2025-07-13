@@ -425,6 +425,8 @@ Changelog:
   * SOLUTION FOUND: Original project intact at `/home/bander/techpartner_site` with complete file structure
   * All source files exist (client/, server/, shared/, package.json) - only missing built dist/ files
   * Simple npm run build will restore complete working TechPartner platform
+  * User reports server still not accessible on domain - need to check port configuration and ensure TechPartner runs on correct port
+  * Issue likely: server running on wrong port or conflicting with basic server at /opt/techpartner
 - July 11, 2025. Implemented comprehensive CI/CD pipeline for automated deployment:
   * Created professional automated deployment process from Replit to Google Cloud VM
   * Integrated GitHub repository with Google Cloud Build triggers for continuous deployment
