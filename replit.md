@@ -419,6 +419,9 @@ Changelog:
   * User attempted deployment but scripts were not transferred to VM - provided single comprehensive deployment command
   * Created simplified deployment package with complete React frontend, Vite build system, and all TechPartner components
   * Single command deployment ready to transform basic server into complete React application with professional styling
+  * CRITICAL DISCOVERY: User's project path is `/home/bander/techpartner_site/techpartner_site`, not `/opt/techpartner`
+  * Original working TechPartner platform was at correct path and working fine - need to restore/check original project
+  * VM deployment attempts were targeting wrong directory - user's actual project location identified
 - July 11, 2025. Implemented comprehensive CI/CD pipeline for automated deployment:
   * Created professional automated deployment process from Replit to Google Cloud VM
   * Integrated GitHub repository with Google Cloud Build triggers for continuous deployment
