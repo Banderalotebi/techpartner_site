@@ -1,0 +1,78 @@
+Last login: Sun Jul 13 06:14:02 on ttys009
+You have mail.
+(base) bander@Banders-MacBook-Pro-2 ~ % ssh -i ~/.ssh/techpartner-server bander@34.69.69.182
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.8.0-1032-gcp x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Jul 13 04:48:18 UTC 2025
+
+  System load:  0.24               Processes:             110
+  Usage of /:   18.0% of 28.89GB   Users logged in:       0
+  Memory usage: 7%                 IPv4 address for ens4: 10.128.0.9
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+3 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.2 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Sun Jul 13 03:14:08 2025 from 188.55.17.129
+bander@techpartner-exact:~$ # Reset server to exact GitHub state (this will work)
+git fetch origin
+git reset --hard origin/main
+pm2 restart all
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [all](ids: [ 0 ])
+[PM2] [techpartner-site](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ techpartner-site   │ fork     │ 3360 │ online    │ 0%       │ 19.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+bander@techpartner-exact:~$ # Configure git to handle divergent branches
+git config pull.rebase false
+
+# Force pull with merge strategy
+git pull origin main
+
+# If that still fails, reset to match GitHub exactly
+git reset --hard origin/main
+
+# Then restart the application
+pm2 restart all
+fatal: not in a git directory
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [all](ids: [ 0 ])
+[PM2] [techpartner-site](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ techpartner-site   │ fork     │ 3376 │ online    │ 0%       │ 20.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+bander@techpartner-exact:~$ # Check you have the latest commit
+git log --oneline -3
+
+# Test the enhanced API
+curl localhost:3000/api/health
+fatal: not a git repository (or any of the parent directories): .git
+curl: (7) Failed to connect to localhost port 3000 after 0 ms: Connection refused
+bander@techpartner-exact:~$ 
