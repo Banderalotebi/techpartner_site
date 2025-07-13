@@ -1,57 +1,38 @@
 # Direct Deploy Solution
 
-Since there's no git repository on the VM, let's deploy your database integration directly:
+tsx interpreter is missing. Here's how to fix it and deploy your database integration:
 
-## Method 1: Clone Fresh Repository
+## Install tsx and Deploy
 ```bash
-# Navigate to opt directory
-cd /opt
+# Install tsx globally
+sudo npm install -g tsx
 
-# Remove old installation
-sudo rm -rf techpartner
-
-# Clone your updated repository with database integration
-git clone https://github.com/Banderalotebi/techpartner_site.git techpartner-platform
-
-# Navigate to new directory
-cd techpartner-platform
-
-# Install dependencies
-npm install --production
-
-# Stop old PM2 process
-pm2 delete all
-
-# Start new enhanced server
-pm2 start npm --name "techpartner-site" -- start
+# Start your database server
+cd /opt/techpartner
+pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
 
 # Check status
 pm2 status
+pm2 logs
+
+# Test database integration
+curl localhost:5000/api/health
+curl localhost:5000/api/categories
+curl http://34.69.69.182:5000/api/health
 ```
 
-## Method 2: Direct File Transfer
-If git clone doesn't work, transfer files directly:
-
+## Alternative: Use Node with ES Modules
+If tsx still has issues:
 ```bash
-# Create new directory for updated platform
-sudo mkdir -p /opt/techpartner-updated
-
-# Change ownership
-sudo chown -R bander:bander /opt/techpartner-updated
-
-# You'll need to upload the files manually or use wget/curl to download from GitHub
+cd /opt/techpartner
+pm2 start server/index.js --name "techpartner-database" --node-args="--loader tsx/esm"
 ```
 
-## Method 3: Check Current Server Code
-First see what's actually running:
+## Alternative: Build in Production
 ```bash
-# Check PM2 process details
-pm2 show techpartner-site
-
-# Find the actual running directory
-pm2 info techpartner-site | grep cwd
-
-# Navigate to that directory and check contents
+cd /opt/techpartner
+npm run build
+pm2 start dist/index.js --name "techpartner-database"
 ```
 
-The VM seems to be running code but without git tracking. Try Method 1 first to get a fresh deployment with your database integration.
+This will get your PostgreSQL database integration running on the production server.
