@@ -1,0 +1,47 @@
+bander@techpartner-exact:/opt/techpartner$ # 1. Clean and prepare
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo chown bander:bander /opt/techpartner
+cd /opt/techpartner
+
+# 2. Clone fresh code (if you have GitHub repo)
+git clone https://github.com/your-repo-url/techpartner-platform.git .
+# OR copy files manually
+
+# 3. Install and build
+npm install
+npm run build
+
+# 4. Deploy on port 80
+sudo HOST=0.0.0.0 PORT=80 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner"
+
+# 5. Verify
+pm2 status
+curl localhost:80/api/health
+Cloning into '.'...
+Username for 'https://github.com': bander.alotebi@gmail.com
+Password for 'https://bander.alotebi%40gmail.com@github.com': 
+remote: Repository not found.
+fatal: repository 'https://github.com/your-repo-url/techpartner-platform.git/' not found
+npm error code ENOENT
+npm error syscall open
+npm error path /opt/techpartner/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/opt/techpartner/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /home/bander/.npm/_logs/2025-07-13T05_31_04_724Z-debug-0.log
+npm error code ENOENT
+npm error syscall open
+npm error path /opt/techpartner/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/opt/techpartner/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /home/bander/.npm/_logs/2025-07-13T05_31_05_185Z-debug-0.log
+[PM2][ERROR] Script not found: /opt/techpartner/dist/index.js
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+{"status":"healthy","timestamp":"2025-07-13T05:31:05.696Z","platform":"TechPartner Platform - Production","version":"2.0.0"}bander@techpartner-exact:/opt/techpartner$ 
+bander@techpartner-exact:/opt/techpartner$ 
