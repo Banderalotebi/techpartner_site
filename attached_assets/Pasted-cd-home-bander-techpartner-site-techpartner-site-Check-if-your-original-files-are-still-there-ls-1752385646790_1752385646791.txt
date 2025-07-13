@@ -1,0 +1,146 @@
+cd /home/bander/techpartner_site/techpartner_site
+
+# Check if your original files are still there
+ls -la
+
+# Check what processes are running
+ps aux | grep node
+
+# Check if PM2 is managing your processes
+pm2 list
+
+# Stop any conflicting processes at /opt/techpartner
+sudo pkill -f "/opt/techpartner"
+
+# Restart your original project
+pm2 restart techpartner-database
+# OR
+npm start
+-bash: cd: /home/bander/techpartner_site/techpartner_site: No such file or directory
+total 868
+drwxrwxr-x  14 bander bander  12288 Jul 13 05:03  .
+drwxr-x---  11 bander bander   4096 Jul 13 05:15  ..
+-rw-rw-r--   1 bander bander    408 Jul 13 04:54  .gcloudignore
+drwxrwxr-x   8 bander bander   4096 Jul 13 04:54  .git
+-rw-rw-r--   1 bander bander     66 Jul 11 11:00  .gitattributes
+drwxrwxr-x   3 bander bander   4096 Jul 11 11:00  .github
+-rw-rw-r--   1 bander bander     67 Jul 11 11:00  .gitignore
+-rw-rw-r--   1 bander bander    717 Jul 13 04:54  .replit
+-rwxrwxr-x   1 bander bander   1296 Jul 13 04:54  ADD_TO_MAIN.sh
+-rw-rw-r--   1 bander bander   5382 Jul 11 11:00  AUTO-SYNC-README.md
+-rw-rw-r--   1 bander bander   5065 Jul 11 11:00  AUTO_SYNC_README.md
+-rw-rw-r--   1 bander bander   1623 Jul 13 04:54  CI_CD_DEPLOYMENT_COMMANDS.md
+-rw-rw-r--   1 bander bander   9189 Jul 13 04:54  COMPLETE_PLATFORM_CODE.html
+-rw-rw-r--   1 bander bander   2400 Jul 13 04:54  COMPLETE_PLATFORM_STATUS.md
+-rw-rw-r--   1 bander bander   2558 Jul 13 04:54  DEPLOYMENT_CHECKLIST.md
+-rw-rw-r--   1 bander bander   3051 Jul 13 04:54  DEPLOYMENT_OPTIONS.md
+-rw-rw-r--   1 bander bander   1676 Jul 13 04:54  DEPLOYMENT_PACKAGE.md
+-rw-rw-r--   1 bander bander   1329 Jul 13 04:54  DEPLOYMENT_STATUS.md
+-rw-rw-r--   1 bander bander   1402 Jul 13 04:54  DEPLOYMENT_STATUS_FINAL.md
+-rw-rw-r--   1 bander bander   1400 Jul 13 04:54  DEPLOYMENT_SUCCESS_VERIFICATION.md
+-rwxrwxr-x   1 bander bander   2122 Jul 13 04:54  DEPLOY_DATABASE_INTEGRATION.sh
+-rw-rw-r--   1 bander bander   2220 Jul 13 04:54  DEPLOY_INSTRUCTIONS.md
+-rw-rw-r--   1 bander bander    405 Jul 13 04:54  Dockerfile
+-rw-rw-r--   1 bander bander    594 Jul 13 04:54  Dockerfile.production
+-rwxrwxr-x   1 bander bander   1029 Jul 13 04:54  FETCH_REPO_UPDATES.sh
+-rw-rw-r--   1 bander bander   1621 Jul 13 04:54  FINAL_DEPLOYMENT_SOLUTION.md
+-rwxrwxr-x   1 bander bander   1259 Jul 13 04:54  FORCE_DEPLOY.sh
+-rw-rw-r--   1 bander bander   2853 Jul 13 04:54  GOOGLE_CLOUD_DEPLOYMENT.md
+-rw-rw-r--   1 bander bander   1392 Jul 13 04:54  GOOGLE_CLOUD_FIX.md
+-rw-rw-r--   1 bander bander   3081 Jul 13 04:54  GOOGLE_CLOUD_QUICKSTART.md
+-rw-rw-r--   1 bander bander   1616 Jul 13 04:54  MANUAL_PUSH_INSTRUCTIONS.md
+-rw-rw-r--   1 bander bander   2032 Jul 13 04:54  NEW_DEPLOYMENT_STATUS.md
+-rw-rw-r--   1 bander bander   1719 Jul 13 04:54  PERMISSION_SETUP_GUIDE.md
+-rw-rw-r--   1 bander bander   6881 Jul 11 11:00  PULL_REQUEST.md
+-rwxrwxr-x   1 bander bander    688 Jul 13 04:54  PUSH_ALL_CHANGES.sh
+-rw-rw-r--   1 bander bander    516 Jul 13 04:54  PUSH_COMMANDS.txt
+-rwxrwxr-x   1 bander bander   1619 Jul 13 04:54  PUSH_TO_MAIN.sh
+-rw-rw-r--   1 bander bander   2165 Jul 13 04:54  QUICK-START-SYNC.md
+-rw-rw-r--   1 bander bander   1089 Jul 13 04:54  QUICK_DEPLOY_SOLUTION.md
+-rw-rw-r--   1 bander bander   3632 Jul 11 11:00  README-SYNC.md
+-rw-rw-r--   1 bander bander   7313 Jul 13 04:54  REPLIT-LOCAL-SYNC-GUIDE.md
+-rw-rw-r--   1 bander bander   1287 Jul 13 04:54  REPO_SYNC_COMMANDS.md
+-rw-rw-r--   1 bander bander   1031 Jul 13 04:54  SIMPLE_DEPLOYMENT_STEPS.md
+-rwxrwxr-x   1 bander bander   1412 Jul 13 04:54  SYNC_AND_PUSH.sh
+-rw-rw-r--   1 bander bander   2857 Jul 11 11:00  SYNC_INSTRUCTIONS.md
+-rw-rw-r--   1 bander bander   1288 Jul 13 04:54  SYSTEM_STATUS.md
+-rw-rw-r--   1 bander bander   1827 Jul 13 04:54  VM_DEPLOYMENT_GUIDE.md
+-rw-rw-r--   1 bander bander   1009 Jul 13 04:54  app.yaml
+-rw-rw-r--   1 bander bander    445 Jul 13 04:54  app.yaml.fixed
+drwxrwxr-x   4 bander bander  20480 Jul 13 04:54  attached_assets
+-rw-rw-r--   1 bander bander   6773 Jul 11 11:00  auto-sync-daemon.js
+-rwxrwxr-x   1 bander bander   5822 Jul 11 11:00  auto-sync-watch.sh
+drwxrwxr-x   3 bander bander   4096 Jul 13 04:54  client
+-rw-rw-r--   1 bander bander    593 Jul 13 04:54  cloudbuild-simple.yaml
+-rw-rw-r--   1 bander bander    483 Jul 13 04:54  cloudbuild.yaml
+-rwxrwxr-x   1 bander bander   4391 Jul 13 04:54  complete-platform-deploy.sh
+-rw-rw-r--   1 bander bander   9291 Jul 13 04:54  complete-startup-script.sh
+-rw-rw-r--   1 bander bander    459 Jul 11 11:00  components.json
+-rwxrwxr-x   1 bander bander   3839 Jul 11 11:00  conflict-check.sh
+drwxrwxr-x   2 bander bander   4096 Jul 13 04:54  data
+-rwxrwxr-x   1 bander bander   5148 Jul 13 04:54  deploy-complete-platform.sh
+-rw-rw-r--   1 bander bander   4894 Jul 13 04:54  deploy-exact-original.sh
+-rwxrwxr-x   1 bander bander   2178 Jul 13 04:54  deploy-full-platform.sh
+-rwxrwxr-x   1 bander bander   1059 Jul 13 04:54  deploy-to-vm.sh
+-rwxrwxr-x   1 bander bander   1042 Jul 13 04:54  deploy.sh
+-rw-rw-r--   1 bander bander    325 Jul 11 11:00  drizzle.config.ts
+-rwxrwxr-x   1 bander bander   4576 Jul 13 04:54  final-deployment.sh
+-rw-rw-r--   1 bander bander   6472 Jul 13 04:54  final-startup-script.sh
+drwxrwxr-x   3 bander bander   4096 Jul 13 04:54  manual-build
+drwxrwxr-x 376 bander bander  16384 Jul 13 05:03  node_modules
+-rw-rw-r--   1 bander bander 344413 Jul 13 05:03  package-lock.json
+-rw-rw-r--   1 bander bander   3660 Jul 13 04:54  package.json
+-rw-rw-r--   1 bander bander     80 Jul 11 11:00  postcss.config.js
+-rwxrwxr-x   1 bander bander   1085 Jul 13 04:54  quick-cloud-fix.sh
+-rwxrwxr-x   1 bander bander    816 Jul 13 04:54  quick-deploy.sh
+-rwxrwxr-x   1 bander bander   1869 Jul 11 11:00  quick-push.sh
+-rwxrwxr-x   1 bander bander   1859 Jul 11 11:00  replit-sync.sh
+-rw-rw-r--   1 bander bander  35430 Jul 13 04:54  replit.md
+drwxrwxr-x   2 bander bander   4096 Jul 13 04:54  scripts
+drwxrwxr-x   2 bander bander   4096 Jul 13 04:54  server
+drwxrwxr-x   2 bander bander   4096 Jul 13 04:54  shared
+-rwxrwxr-x   1 bander bander   4813 Jul 11 11:00  smart-sync.sh
+-rwxrwxr-x   1 bander bander   3101 Jul 11 11:00  start-auto-sync.sh
+-rw-rw-r--   1 bander bander   1887 Jul 13 04:54  startup-script.sh
+-rwxrwxr-x   1 bander bander   2176 Jul 11 11:00  sync-from-remote.sh
+-rw-rw-r--   1 bander bander   2627 Jul 11 11:00  tailwind.config.ts
+-rw-rw-r--   1 bander bander    657 Jul 11 11:00  tsconfig.json
+-rwxrwxr-x   1 bander bander   2585 Jul 13 04:54  upload-original-files.sh
+-rw-rw-r--   1 bander bander    971 Jul 13 04:54  vite.config.ts
+-rw-rw-r--   1 bander bander   9720 Jul 13 04:54  vm-deploy-script.sh
+-rwxrwxr-x   1 bander bander  12017 Jul 13 04:54  vm-deployment.sh
+-rw-rw-r--   1 bander bander    444 Jul 13 04:54  vm-setup.sh
+drwxrwxr-x   5 bander bander   4096 Jul 13 04:54  vm-transfer
+-rw-rw-r--   1 bander bander   7022 Jul 13 04:54  working-startup-script.sh
+drwxrwxr-x   3 bander bander   4096 Jul 13 04:54 '~'
+bander     86326  0.0  0.0   7008  2304 pts/0    S+   05:47   0:00 grep --color=auto node
+[PM2] Spawning PM2 daemon with pm2_home=/home/bander/.pm2
+[PM2] PM2 Successfully daemonized
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+Use --update-env to update environment variables
+[PM2][ERROR] Process or Namespace techpartner-database not found
+
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+
+node:internal/modules/cjs/loader:1404
+  throw err;
+  ^
+
+Error: Cannot find module '/home/bander/techpartner_site/dist/index.js'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1401:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+    at Function._load (node:internal/modules/cjs/loader:1211:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v22.17.0
+bander@techpartner-exact:~/techpartner_site$ 
