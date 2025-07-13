@@ -1,124 +1,47 @@
-# Google Cloud App Engine Deployment Guide
+# Google Cloud Database Integration
 
-## Prerequisites
+Setting up Google Cloud SQL PostgreSQL for TechPartner platform:
 
-1. **Google Cloud CLI installed**: Download from [cloud.google.com/sdk](https://cloud.google.com/sdk)
-2. **Google Cloud Project**: Create a project in Google Cloud Console
-3. **App Engine enabled**: Enable App Engine in your project
-4. **Database**: Set up a Cloud SQL PostgreSQL instance or use external database
-
-## Environment Setup
-
-### 1. Set your environment variables in `app.yaml`:
-
-```yaml
-env_variables:
-  NODE_ENV: production
-  DATABASE_URL: "postgresql://username:password@host:port/database"
-  SESSION_SECRET: "your-secure-session-secret-here"
-```
-
-### 2. Database Options:
-
-**Option A: Google Cloud SQL (Recommended)**
+## Step 1: Create Cloud SQL Instance
 ```bash
-# Create Cloud SQL instance
+# Create PostgreSQL instance
 gcloud sql instances create techpartner-db \
-    --database-version=POSTGRES_14 \
+    --database-version=POSTGRES_15 \
     --tier=db-f1-micro \
-    --region=us-central1
+    --region=us-central1 \
+    --storage-type=SSD \
+    --storage-size=10GB \
+    --authorized-networks=0.0.0.0/0
 
 # Create database
 gcloud sql databases create techpartner --instance=techpartner-db
 
-# Get connection string
+# Create user
+gcloud sql users create techpartner-user \
+    --instance=techpartner-db \
+    --password=your-secure-password
+```
+
+## Step 2: Get Connection String
+```bash
+# Get connection info
 gcloud sql instances describe techpartner-db
+
+# Connection string format:
+# postgresql://techpartner-user:your-secure-password@INSTANCE_IP:5432/techpartner
 ```
 
-**Option B: External Database (Neon, Supabase, etc.)**
-- Use your existing DATABASE_URL
-- Ensure the database is accessible from Google Cloud
-
-## Deployment Steps
-
-### 1. Authenticate with Google Cloud
+## Step 3: Update Server Configuration
 ```bash
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
+cd /opt/techpartner
+
+# Start with Google Cloud SQL
+NODE_ENV=development DATABASE_URL="postgresql://techpartner-user:your-secure-password@GOOGLE_SQL_IP:5432/techpartner" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
 ```
 
-### 2. Build the application
-```bash
-npm run build
-```
-
-### 3. Deploy to App Engine
-```bash
-gcloud app deploy app.yaml --quiet
-```
-
-### 4. View your deployed app
-```bash
-gcloud app browse
-```
-
-## Production Configuration
-
-### Security Considerations:
-- Use Google Secret Manager for sensitive data
-- Enable HTTPS (automatically handled by App Engine)
-- Configure proper CORS settings
-- Set up monitoring and logging
-
-### Performance Optimizations:
-- Enable automatic scaling
-- Configure CPU and memory limits
-- Use CDN for static assets
-- Enable compression
-
-## Troubleshooting
-
-### Common Issues:
-
-1. **Build Failures**
-   - Check Node.js version compatibility
-   - Verify all dependencies are production-ready
-   - Review build logs for errors
-
-2. **Database Connection Issues**
-   - Verify DATABASE_URL format
-   - Check network connectivity
-   - Ensure database credentials are correct
-
-3. **Memory/CPU Limits**
-   - Adjust instance class in app.yaml
-   - Monitor performance metrics
-   - Optimize application code
-
-### Debug Commands:
-```bash
-# View logs
-gcloud app logs tail -s default
-
-# Check app status
-gcloud app instances list
-
-# View app versions
-gcloud app versions list
-```
-
-## Cost Optimization
-
-- Use automatic scaling with appropriate min/max instances
-- Set up billing alerts
-- Monitor usage with Cloud Monitoring
-- Consider regional deployment for better performance
-
-## Maintenance
-
-### Regular Tasks:
-- Monitor application logs
-- Update dependencies
-- Backup database regularly
-- Review security settings
-- Monitor performance metrics
+## Benefits of Google Cloud SQL:
+- Better integration with your VM
+- Automatic backups
+- High availability
+- Better performance in same region
+- Integrated with Google Cloud console

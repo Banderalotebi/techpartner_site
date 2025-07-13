@@ -1,120 +1,44 @@
-# 🚀 Quick Google Cloud Deployment Guide
+# Google Cloud Database Quickstart
 
-## Step-by-Step Deployment
-
-### 1. **Prepare Your Environment**
+## Option 1: Quick Setup with Existing VM
 ```bash
-# Install Google Cloud CLI (if not already installed)
-# Visit: https://cloud.google.com/sdk/docs/install
+# On your VM, install Cloud SQL Proxy
+cd /opt/techpartner
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+chmod +x cloud_sql_proxy
 
-# Login and set project
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-gcloud app create --region=us-central
+# Create Cloud SQL instance (run from local machine with gcloud)
+gcloud sql instances create techpartner-db \
+    --database-version=POSTGRES_15 \
+    --tier=db-f1-micro \
+    --region=us-central1
+
+# Get instance connection name
+gcloud sql instances describe techpartner-db --format="value(connectionName)"
 ```
 
-### 2. **Configure Database**
-Edit `app.yaml` and replace these values:
-```yaml
-env_variables:
-  DATABASE_URL: "postgresql://user:password@host:port/database"
-  SESSION_SECRET: "your-secure-32-character-session-secret"
-```
-
-**Database Options:**
-- **Google Cloud SQL**: `gcloud sql instances create techpartner-db`
-- **External Database**: Use your existing Neon/Supabase URL
-
-### 3. **Deploy in 3 Commands**
+## Option 2: Use Cloud SQL with Connection String
 ```bash
-# Build the application
-npm run build
+# Create instance with public IP
+gcloud sql instances create techpartner-db \
+    --database-version=POSTGRES_15 \
+    --tier=db-f1-micro \
+    --region=us-central1 \
+    --authorized-networks=34.69.69.182
 
-# Deploy to Google Cloud
-gcloud app deploy app.yaml --quiet
+# Create database and user
+gcloud sql databases create techpartner --instance=techpartner-db
+gcloud sql users create techpartner --instance=techpartner-db --password=TechPartner2025!
 
-# Open your live app
-gcloud app browse
+# Get public IP
+gcloud sql instances describe techpartner-db --format="value(ipAddresses[0].ipAddress)"
 ```
 
-## 🎯 What You Get
-
-Your deployed TechPartner platform includes:
-
-✅ **Complete Admin Dashboard**
-- Revenue analytics and order management
-- Bulk actions and export functionality
-- Real-time system health monitoring
-- Customer and payment tracking
-
-✅ **Service Portfolio**
-- 8 specialized service categories
-- Multi-step questionnaire flows
-- Professional pricing in SAR
-- Portfolio showcase with case studies
-
-✅ **Business Features**
-- Authentication system
-- Order processing workflow
-- Payment tracking
-- Project brief management
-- Blog platform with industry insights
-
-✅ **Google Cloud Optimizations**
-- Automatic scaling (1-10 instances)
-- Health checks at `/api/health`
-- Production-ready configuration
-- SSL/HTTPS automatically enabled
-
-## 🔧 Configuration Files Created
-
-- `app.yaml` - App Engine configuration
-- `.gcloudignore` - Deployment exclusions
-- `deploy.sh` - Automated deployment script
-- `cloudbuild.yaml` - CI/CD configuration
-- Health check endpoint added
-
-## 📊 Monitoring Your App
-
+## Option 3: Keep Current Neon Database
+Your Neon database is working fine. We can continue with it if you prefer:
 ```bash
-# View live logs
-gcloud app logs tail -s default
-
-# Check app status
-gcloud app instances list
-
-# Monitor performance
-# Visit Google Cloud Console > App Engine
+cd /opt/techpartner
+NODE_ENV=development DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
 ```
 
-## 💡 Pro Tips
-
-1. **Environment Variables**: Update `app.yaml` with your actual database credentials
-2. **Scaling**: Adjust `min_instances` and `max_instances` based on your traffic
-3. **Costs**: Set up billing alerts to monitor usage
-4. **Backups**: Enable automated database backups
-5. **Custom Domain**: Configure your own domain in App Engine settings
-
-## 🆘 Troubleshooting
-
-**Build Errors?**
-- Check Node.js version compatibility
-- Verify all dependencies are installed
-
-**Database Connection Issues?**
-- Verify DATABASE_URL format
-- Check database accessibility from Google Cloud
-
-**Performance Issues?**
-- Increase memory/CPU in `app.yaml`
-- Review scaling settings
-
-## 🎉 Success!
-
-Once deployed, your TechPartner platform will be live with:
-- Professional Saudi Arabian business platform
-- Enterprise-grade admin dashboard
-- Complete service marketplace
-- Real-time analytics and reporting
-
-**Your app will be available at:** `https://YOUR_PROJECT_ID.appspot.com`
+Which option would you prefer?
