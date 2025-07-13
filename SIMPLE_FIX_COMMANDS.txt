@@ -1,13 +1,22 @@
-cd /home/bander/techpartner_site/techpartner_site
-npm run build
+TechPartner Clean Deployment Commands
+
+# 1. Clean VM (run on VM)
 sudo rm -rf /opt/techpartner
 sudo mkdir -p /opt/techpartner
-sudo cp -r dist/* /opt/techpartner/
-sudo cp -r node_modules /opt/techpartner/
-sudo cp package*.json /opt/techpartner/
-sudo chown -R bander:bander /opt/techpartner
-cd /opt/techpartner
-pm2 delete all
-NODE_ENV=production pm2 start index.js --name "techpartner-database"
-pm2 status
-curl localhost:5000/api/health
+sudo chown bander:bander /opt/techpartner
+
+# 2. Upload clean package (from Replit, copy clean-techpartner-deploy.tar.gz to VM)
+scp clean-techpartner-deploy.tar.gz bander@34.69.69.182:~/
+
+# 3. Upload startup script (from Replit, copy complete-startup-script.sh to VM)
+scp complete-startup-script.sh bander@34.69.69.182:~/
+
+# 4. Run deployment (on VM)
+cd ~
+chmod +x complete-startup-script.sh
+./complete-startup-script.sh
+
+# 5. Access platform
+http://34.69.69.182
+
+This creates a completely clean deployment with proper project structure.

@@ -1,50 +1,27 @@
 # Clean Deployment Fix
 
-The git reset worked but caused directory corruption. Here's how to fix it:
+Starting fresh with proper project structure and deployment.
 
-## Step 1: Navigate to Parent Directory
+## Step 1: Clean VM and Prepare Fresh Upload
+
 ```bash
-cd /home/bander/techpartner_site
-pwd
-ls -la
+# On VM - Clean existing deployment
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo chown bander:bander /opt/techpartner
 ```
 
-## Step 2: Clean Deploy Your Database Integration
-```bash
-# Remove corrupted directory
-rm -rf techpartner_site
+## Step 2: Create Complete Deployment Package
 
-# Clone fresh with your database integration
-git clone https://github.com/Banderalotebi/techpartner_site.git techpartner_site
+We'll create a clean deployment package with:
+- Complete source code with correct paths
+- Production-ready build configuration
+- Proper Google Cloud port setup (80/8080)
+- Database integration with Neon PostgreSQL
+- All original TechPartner design elements
 
-# Navigate to new clean directory
-cd techpartner_site
-```
+## Step 3: Upload and Deploy
 
-## Step 3: Install and Deploy
-```bash
-# Install dependencies
-npm install --production
+Fresh upload with correct project structure and immediate deployment on standard web ports.
 
-# Stop old PM2 processes
-pm2 delete all
-
-# Start your database-powered server
-pm2 start server/index.js --name "techpartner-site"
-
-# Check status
-pm2 status
-pm2 logs
-```
-
-## Step 4: Verify Database Integration
-```bash
-# Test enhanced API
-curl localhost:3000/api/health
-curl localhost:5000/api/health
-
-# Verify you have latest database code
-git log --oneline -3
-```
-
-The reset command successfully pulled your database integration, but corrupted the working directory. This clean deployment will give you a fresh start with all your PostgreSQL features.
+This ensures clean deployment without any path conflicts or residual configuration issues.
