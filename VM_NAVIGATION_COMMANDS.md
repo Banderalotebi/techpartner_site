@@ -1,55 +1,35 @@
-# VM Navigation and Update Commands
+# VM Navigation Commands
 
-Based on the search results, try these locations in order:
+Create ecosystem file and start server with these commands:
 
-## Option 1: Check /opt/techpartner
 ```bash
 cd /opt/techpartner
-pwd
-ls -la
-git status
+
+# Create ecosystem file directly
+echo 'module.exports = {
+  apps: [{
+    name: "techpartner-database",
+    script: "server/index.ts",
+    interpreter: "tsx",
+    env: {
+      NODE_ENV: "development",
+      DATABASE_URL: "postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
+      PORT: 5000
+    },
+    instances: 1,
+    exec_mode: "fork",
+    autorestart: true
+  }]
+}' > ecosystem.config.js
+
+# Start server
+pm2 start ecosystem.config.js
+pm2 logs techpartner-database --lines 5
+curl localhost:5000/api/health
 ```
 
-## Option 2: Check /home/bander/techpartner_site  
+Alternative direct start:
 ```bash
-cd /home/bander/techpartner_site
-pwd
-ls -la
-git status
+cd /opt/techpartner
+NODE_ENV=development DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
 ```
-
-## Option 3: Check nested directory
-```bash
-cd /home/bander/techpartner_site/techpartner_site
-pwd
-ls -la
-git status
-```
-
-## Once you find the git repository, run:
-```bash
-# Verify you're in the right place
-git status
-git remote -v
-
-# Update with your database integration
-git config pull.rebase false
-git reset --hard origin/main
-
-# Install dependencies and restart
-npm install --production
-pm2 restart all
-
-# Verify the update
-git log --oneline -3
-pm2 status
-curl localhost:3000/api/health
-```
-
-## Find which port the server is running on:
-```bash
-pm2 status
-netstat -tlnp | grep node
-```
-
-Run these commands on your VM to locate the correct repository and update it with your database integration.
