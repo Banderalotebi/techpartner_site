@@ -1,51 +1,38 @@
 # Server Update Guide
 
-Your GitHub push was successful, but the server needs to pull the new changes. Here are the methods to update the production server:
+The PM2 process is running but not accessible. Here's how to debug and fix:
 
-## Option 1: Automatic Script
-
-Run this to trigger server update:
+## Check Server Logs and Port
 ```bash
-./TRIGGER_SERVER_UPDATE.sh
+cd /opt/techpartner
+pm2 logs techpartner-database --lines 20
+pm2 describe techpartner-database
+netstat -tlnp | grep :5000
 ```
 
-## Option 2: Manual VM Update
-
-Connect to your VM and update manually:
+## Check Server Configuration
 ```bash
-# SSH to the VM
-gcloud compute ssh techpartner-exact --zone=us-central1-a
-
-# On the VM, run:
-cd /opt/techpartner-platform
-git pull origin main
-npm install
-npm run build
-pm2 restart all
+# View the server startup
+cat server/index.ts | head -20
+env | grep PORT
 ```
 
-## Option 3: Trigger Cloud Build
-
-Force a new deployment:
+## Restart with Explicit Port
 ```bash
-gcloud builds submit --config=cloudbuild-with-secrets.yaml .
+pm2 delete techpartner-database
+PORT=5000 pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+pm2 logs techpartner-database
+curl localhost:5000/api/health
 ```
 
-## Current Status
+## Check External Access
+```bash
+# Test internal first
+curl localhost:5000/api/health
+curl 127.0.0.1:5000/api/health
 
-- ✅ GitHub: Updated with database integration (commit: cc0ac8d)
-- ❓ Server: Needs to pull latest changes from GitHub
-- 🎯 Goal: Deploy PostgreSQL database integration to production
+# Then external
+curl http://34.69.69.182:5000/api/health
+```
 
-## What Should Happen
-
-After update:
-1. Server pulls your database integration code
-2. PostgreSQL database goes live
-3. JWT authentication activates
-4. Enhanced API server starts
-5. Production platform with persistent storage
-
-The server currently shows version 2.0.0 but may not have the latest database features until it pulls from GitHub.
-
-Run the update script to sync your production server with the latest GitHub changes.
+This will identify why the server isn't responding and get your database integration accessible.
