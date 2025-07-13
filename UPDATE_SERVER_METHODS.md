@@ -1,56 +1,36 @@
-# Server Update Methods
+# Update Server Methods
 
-Your GitHub push was successful, but the production server needs to pull the changes. Since gcloud authentication is not available, here are alternative methods:
+The server is running but environment variables need proper configuration. Here's how to fix it:
 
-## Current Status
-- ✅ GitHub: Updated with database integration (commit: cc0ac8d)
-- ❓ Production Server: Running v2.0.0, needs latest changes
-- 🎯 Goal: Deploy PostgreSQL database integration
-
-## Method 1: VM Console Access (Recommended)
-
-1. Go to Google Cloud Console
-2. Navigate to Compute Engine > VM instances
-3. Click "SSH" next to `techpartner-exact`
-4. Run these commands in the VM terminal:
-
+## Method 1: Use PM2 Ecosystem File
 ```bash
-cd /opt/techpartner-platform
-git pull origin main
-npm install --production
-pm2 restart all
-pm2 status
+cd /opt/techpartner
+pm2 delete techpartner-database
+pm2 start ecosystem.config.js
+pm2 logs techpartner-database
+curl localhost:5000/api/health
+curl http://34.69.69.182:5000
 ```
 
-## Method 2: GitHub Actions/Webhooks
+## Method 2: Direct Environment Variable
+```bash
+cd /opt/techpartner
+pm2 delete techpartner-database
 
-If you have a GitHub webhook configured, you can:
-1. Go to your GitHub repository
-2. Go to Settings > Webhooks
-3. Find the deployment webhook
-4. Click "Redeliver" to trigger deployment
+# Create environment file
+echo 'NODE_ENV=development
+DATABASE_URL=postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+PORT=5000' > .env
 
-## Method 3: Manual File Upload
+pm2 start server/index.ts --name "techpartner-database" --interpreter tsx --env .env
+```
 
-1. Download your latest code from GitHub
-2. Use Google Cloud Console to upload files to the VM
-3. Replace the files in `/opt/techpartner-platform`
-4. Restart the application
+## Method 3: Check Current Status
+```bash
+cd /opt/techpartner
+pm2 describe techpartner-database
+curl localhost:5000
+curl localhost:5000/api/categories
+```
 
-## Method 4: Redeploy VM
-
-If other methods fail:
-1. Create a new VM with the latest code
-2. Update DNS to point to the new VM
-3. This ensures clean deployment
-
-## What Should Happen After Update
-
-Once the server pulls your changes:
-- PostgreSQL database replaces in-memory storage
-- JWT authentication system activates
-- Enhanced security middleware starts
-- Database-powered API operations begin
-- All user data becomes persistent
-
-The easiest method is accessing the VM through Google Cloud Console and running the git pull commands directly.
+This will ensure proper environment variable handling and resolve the database connection issue.

@@ -1,0 +1,39 @@
+bander@techpartner-exact:/opt/techpartner$ cd /opt/techpartner
+pm2 delete techpartner-database
+
+# Start in development mode with proper frontend serving
+NODE_ENV=development DATABASE_URL='postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require' pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+
+pm2 logs techpartner-database --lines 10
+curl localhost:5000/api/health
+[PM2] Applying action deleteProcessId on app [techpartner-database](ids: [ 0 ])
+[PM2] [techpartner-database](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /opt/techpartner/server/index.ts in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ techpartner-datab… │ fork     │ 0    │ online    │ 0%       │ 13.5mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [techpartner-database] process (change the value with --lines option)
+/home/bander/.pm2/logs/techpartner-database-error.log last 10 lines:
+0|techpart |         ^
+0|techpart | 
+0|techpart | 
+0|techpart | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpart |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpart |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpart |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpart |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpart | 
+0|techpart | Node.js v22.17.0
+
+/home/bander/.pm2/logs/techpartner-database-out.log last 10 lines:
+0|techpart | 5:08:42 AM [express] TechPartner Platform serving on port 5000
+0|techpart | 5:11:29 AM [express] GET /api/health 200 in 4ms :: {"status":"healthy","timestamp":"2025-07-13T05:11…
+
+0|techpartner-database  | 5:11:40 AM [express] TechPartner Platform serving on port 5000
+
