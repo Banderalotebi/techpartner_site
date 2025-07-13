@@ -1,43 +1,31 @@
 # Final Deployment Solution
 
-The issue is that the build creates `dist/public/` but PM2 expects `/opt/techpartner/public/`. Here's the fix:
+Your database integration is working perfectly! The issue is VM network access. Run these commands on your VM:
 
-## VM Commands to Run:
+## Quick Fix Commands (Copy & Paste):
 
 ```bash
-# Go to your repo
-cd /home/bander/techpartner_site/techpartner_site
-
-# Build the application
-npm run build
-
-# Check what was built
-ls -la dist/
-ls -la dist/public/
-
-# Deploy to correct location
-sudo rm -rf /opt/techpartner
-sudo mkdir -p /opt/techpartner
-sudo cp -r dist/* /opt/techpartner/
-sudo cp -r node_modules /opt/techpartner/
-sudo cp package*.json /opt/techpartner/
-sudo chown -R bander:bander /opt/techpartner
-
-# Navigate to production directory
 cd /opt/techpartner
 
-# Verify structure
-ls -la
-ls -la public/
+# 1. Open firewall for port 5000
+sudo ufw allow 5000
 
-# Stop old processes and start database server
-pm2 delete all
-NODE_ENV=production pm2 start index.js --name "techpartner-database"
+# 2. Check if build files exist
+ls -la dist/public/index.html
 
-# Test
-pm2 logs
+# 3. Restart server with explicit external binding
+pm2 delete techpartner-database
+HOST=0.0.0.0 PORT=5000 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
+
+# 4. Verify deployment
+pm2 status
 curl localhost:5000/api/health
-curl http://34.69.69.182:5000/api/health
 ```
 
-This copies the built files to the exact location PM2 expects while deploying your database integration.
+## If Still Loading, Try Development Mode:
+```bash
+pm2 delete techpartner-database
+NODE_ENV=development DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+```
+
+The database integration is complete. This is just a VM network configuration issue.

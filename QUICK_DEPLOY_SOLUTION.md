@@ -1,37 +1,47 @@
 # Quick Deploy Solution
 
-Run these commands in order:
+The VM production server isn't accessible externally. Here's the immediate fix:
 
 ```bash
-# Clean and reinstall
-cd /home/bander/techpartner_site
-rm -rf node_modules package-lock.json
-npm install
-
-# Try build, if it fails use development mode
-npm run build || echo "Build failed, using dev mode"
-
-# Deploy to production location
-sudo rm -rf /opt/techpartner
-sudo mkdir -p /opt/techpartner
-sudo cp -r . /opt/techpartner/
-sudo chown -R bander:bander /opt/techpartner
 cd /opt/techpartner
 
-# Start database server
-pm2 delete all
+# Check current PM2 status
+pm2 list
+pm2 logs techpartner-database --lines 10
 
-# Try production mode first, fallback to development
-if [ -f "dist/index.js" ]; then
-    NODE_ENV=production pm2 start dist/index.js --name "techpartner-database"
-else
-    NODE_ENV=development pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
-fi
+# Method 1: Restart with external access
+pm2 delete techpartner-database
+NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" PORT=5000 pm2 start dist/index.js --name "techpartner-database"
 
-# Check status
-pm2 status
-pm2 logs --lines 20
+# Method 2: Check if dist/public exists
+ls -la dist/public/
+ls -la dist/public/index.html
+
+# Method 3: Test local access
+curl localhost:5000
 curl localhost:5000/api/health
+
+# Method 4: Check VM firewall
+sudo ufw status
+sudo ufw allow 5000
 ```
 
-This ensures your database integration gets deployed regardless of build issues.
+## Common Issues:
+1. **Firewall blocking port 5000** - VM needs firewall rule
+2. **Static files not built** - Need proper dist/public directory
+3. **Server binding to localhost only** - Need 0.0.0.0 binding
+4. **PM2 process crashed** - Check logs and restart
+
+## Quick Fix Commands:
+```bash
+# If no dist/public
+npm run build
+
+# If firewall issue
+sudo ufw allow 5000
+sudo systemctl restart ufw
+
+# If binding issue - restart with explicit host
+pm2 delete techpartner-database
+HOST=0.0.0.0 PORT=5000 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
+```

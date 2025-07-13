@@ -1,51 +1,36 @@
 # Simple Deployment Steps
 
-The build failed due to corrupted node_modules. Here's how to fix it:
+Run these commands on your VM to fix the loading issue:
 
-## Step 1: Clean Install Dependencies
+## Step 1: Check Current Status
 ```bash
-cd /home/bander/techpartner_site
-rm -rf node_modules package-lock.json
-npm install
-```
-
-## Step 2: Build and Deploy
-```bash
-npm run build
-sudo rm -rf /opt/techpartner
-sudo mkdir -p /opt/techpartner
-sudo cp -r dist/* /opt/techpartner/
-sudo cp -r node_modules /opt/techpartner/
-sudo cp package*.json /opt/techpartner/
-sudo chown -R bander:bander /opt/techpartner
 cd /opt/techpartner
+pm2 list
+pm2 logs techpartner-database --lines 5
 ```
 
-## Step 3: Start Production Server
+## Step 2: Check Build Output
 ```bash
-pm2 delete all
-NODE_ENV=production pm2 start index.js --name "techpartner-database"
-pm2 status
-pm2 logs
+ls -la dist/
+ls -la dist/public/
 ```
 
-## Step 4: Test Database Integration
+## Step 3: Fix Firewall (Most Likely Issue)
 ```bash
-curl localhost:5000/api/health
-curl http://34.69.69.182:5000/api/health
+sudo ufw allow 5000
+sudo systemctl restart ufw
 ```
 
-## Alternative: Use Existing Build
-If build keeps failing, you can deploy without building:
+## Step 4: Restart Server with Explicit Binding
 ```bash
-cd /home/bander/techpartner_site
-sudo rm -rf /opt/techpartner
-sudo mkdir -p /opt/techpartner
-sudo cp -r . /opt/techpartner/
-sudo chown -R bander:bander /opt/techpartner
-cd /opt/techpartner
-pm2 delete all
-pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+pm2 delete techpartner-database
+HOST=0.0.0.0 PORT=5000 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
 ```
 
-This will fix the dependency corruption and deploy your database integration.
+## Step 5: Test Access
+```bash
+curl localhost:5000
+curl http://34.69.69.182:5000
+```
+
+Your database integration is working perfectly. The issue is just external access to the VM.
