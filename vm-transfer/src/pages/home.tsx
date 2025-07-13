@@ -108,6 +108,11 @@ export default function Home() {
                     View Portfolio
                   </Button>
                 </Link>
+                <Link to="/blog">
+                  <Button variant="outline" size="sm" className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg border-[#01A1C1] text-[#01A1C1] hover:bg-[#01A1C1] hover:text-white w-full sm:w-auto">
+                    Read Blog
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -774,6 +779,154 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Blog Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Latest from Our <span className="text-[#01A1C1]">Blog</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stay updated with the latest insights, tutorials, and industry trends from our expert team
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {/* Featured Blog Post 1 */}
+            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-8 text-center relative">
+                <div className="text-4xl mb-4 text-white">🎨</div>
+                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                  <span className="text-xs font-medium text-white">Brand Identity</span>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
+                  <span>Dec 15, 2024</span>
+                  <span>8 min read</span>
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
+                  The Future of Logo Design in Saudi Arabia's Digital Transformation
+                </h3>
+                
+                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                  Explore how Saudi Vision 2030 is reshaping brand identity requirements and what modern businesses need to know about effective logo design.
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      AA
+                    </div>
+                    <span>Ahmed Al-Rashid</span>
+                  </div>
+                  
+                  <Link to="/blog">
+                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
+                      Read More
+                      <ArrowRight className="ml-1" size={14} />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </article>
+
+            {/* Featured Blog Post 2 */}
+            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
+              <div className="bg-gradient-to-br from-green-500 to-teal-600 p-8 text-center relative">
+                <div className="text-4xl mb-4 text-white">💻</div>
+                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                  <span className="text-xs font-medium text-white">Web Development</span>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
+                  <span>Dec 10, 2024</span>
+                  <span>6 min read</span>
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
+                  E-commerce Web Development Trends for MENA Businesses
+                </h3>
+                
+                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                  Discover the latest web development technologies and user experience patterns that drive successful e-commerce platforms in the Middle East.
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      FA
+                    </div>
+                    <span>Fatima Al-Zahra</span>
+                  </div>
+                  
+                  <Link to="/blog">
+                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
+                      Read More
+                      <ArrowRight className="ml-1" size={14} />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </article>
+
+            {/* Featured Blog Post 3 */}
+            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
+              <div className="bg-gradient-to-br from-orange-500 to-red-600 p-8 text-center relative">
+                <div className="text-4xl mb-4 text-white">📱</div>
+                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                  <span className="text-xs font-medium text-white">Mobile Design</span>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
+                  <span>Nov 15, 2024</span>
+                  <span>9 min read</span>
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
+                  Mobile-First Design Strategies for Saudi Market
+                </h3>
+                
+                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                  With over 95% mobile penetration in Saudi Arabia, learn how to design mobile-first experiences that resonate with local users.
+                </p>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      KS
+                    </div>
+                    <span>Khalid Al-Sudairi</span>
+                  </div>
+                  
+                  <Link to="/blog">
+                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
+                      Read More
+                      <ArrowRight className="ml-1" size={14} />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div className="text-center">
+            <Link to="/blog">
+              <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0189A8] text-white px-8 py-4 text-lg">
+                View All Blog Posts
+                <ArrowRight className="ml-2" size={20} />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

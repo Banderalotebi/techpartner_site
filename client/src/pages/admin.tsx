@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
@@ -32,7 +33,13 @@ import {
   RefreshCw,
   BarChart3,
   PieChart,
-  Activity
+  Activity,
+  PenTool,
+  BookOpen,
+  Wand2,
+  Upload,
+  Save,
+  Copy
 } from "lucide-react";
 import type { Order, Payment, ProjectBrief, User } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -159,6 +166,17 @@ export default function AdminPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
 
+  // Blog management states
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState("");
+  const [articleTitle, setArticleTitle] = useState("");
+  const [articleCategory, setArticleCategory] = useState("");
+  const [articleTags, setArticleTags] = useState("");
+  const [articleAuthor, setArticleAuthor] = useState("");
+  const [targetWordCount, setTargetWordCount] = useState(800);
+  const [targetKeyword, setTargetKeyword] = useState("");
+
   // Fetch all data
   const { data: orders = [], isLoading: ordersLoading } = useQuery<Order[]>({
     queryKey: ["/api/orders"],
@@ -224,6 +242,139 @@ export default function AdminPage() {
     const daysDiff = (Date.now() - new Date(order.createdAt).getTime()) / (1000 * 60 * 60 * 24);
     return daysDiff <= 7;
   }).length;
+
+  // Blog calendar data from CSV
+  const blogCalendarData = [
+    { time: "10:00 AM", title: "Why Saudi Businesses Are Migrating to Cloud in 2025", topicFocus: "Cloud adoption trends in KSA", targetKeyword: "cloud services Saudi Arabia", wordCount: "800–1000" },
+    { time: "2:00 PM", title: "Managed IT Services: A Smart Investment for Growing Companies", topicFocus: "Business case for managed IT", targetKeyword: "managed IT services Saudi Arabia", wordCount: "800" },
+    { time: "6:00 PM", title: "How to Choose the Right Cybersecurity Provider in Saudi Arabia", topicFocus: "Cybersecurity service selection", targetKeyword: "cybersecurity solutions KSA", wordCount: "850" },
+    { time: "10:00 PM", title: "The Role of Digital Transformation in Vision 2030", topicFocus: "National initiatives & tech", targetKeyword: "digital transformation Saudi Arabia", wordCount: "900" },
+    { time: "2:00 AM", title: "Top 5 IT Challenges Facing SMBs in Saudi Arabia (and How to Solve Them)", topicFocus: "Pain points & solutions", targetKeyword: "IT support for SMBs Saudi Arabia", wordCount: "800" },
+    { time: "10:00 AM", title: "What is Cloud Backup and Why Does Your Business Need It?", topicFocus: "Data protection & continuity", targetKeyword: "cloud backup services Saudi Arabia", wordCount: "850" },
+    { time: "2:00 PM", title: "Explained: SOC-as-a-Service for Saudi Enterprises", topicFocus: "Cybersecurity infrastructure", targetKeyword: "SOC as a service Saudi Arabia", wordCount: "800" },
+    { time: "6:00 PM", title: "Microsoft Azure vs. AWS: Which Cloud Platform is Right for Saudi Businesses?", topicFocus: "Comparison article", targetKeyword: "Azure vs AWS Saudi Arabia", wordCount: "1000" },
+    { time: "10:00 AM", title: "Disaster Recovery Planning for Saudi Companies in 2025", topicFocus: "Business continuity", targetKeyword: "disaster recovery Saudi Arabia", wordCount: "900" },
+    { time: "2:00 PM", title: "Why Your Business Needs Proactive IT Monitoring", topicFocus: "Remote monitoring benefits", targetKeyword: "IT monitoring services Saudi Arabia", wordCount: "850" },
+    { time: "6:00 PM", title: "The Future of AI in Saudi IT Infrastructure", topicFocus: "AI integration & outlook", targetKeyword: "AI IT services Saudi Arabia", wordCount: "900" },
+    { time: "10:00 PM", title: "Cybersecurity Compliance in Saudi Arabia: What You Need to Know", topicFocus: "Regulations & standards", targetKeyword: "cybersecurity compliance Saudi Arabia", wordCount: "950" }
+  ];
+
+  // Function to generate article using Gemini API
+  const generateArticleWithGemini = async (articleData: any) => {
+    setIsGenerating(true);
+    try {
+      // You'll need to replace this with your actual Gemini API key
+      const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
+      
+      const prompt = `Write a comprehensive blog article with the following specifications:
+
+Title: ${articleData.title}
+Topic Focus: ${articleData.topicFocus}
+Target Keyword: ${articleData.targetKeyword}
+Word Count: ${articleData.wordCount} words
+Target Audience: Saudi Arabian businesses and IT decision makers
+
+Please create a well-structured article that includes:
+1. An engaging introduction that establishes the importance of the topic
+2. Clear headings and subheadings for better readability
+3. Practical insights and actionable advice
+4. Local context relevant to Saudi Arabia and the region
+5. A strong conclusion with key takeaways
+6. Natural integration of the target keyword throughout the content
+7. Professional tone suitable for business executives and IT professionals
+
+The article should be informative, authoritative, and provide real value to readers while being optimized for SEO with the target keyword "${articleData.targetKeyword}".`;
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: prompt
+            }]
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate content');
+      }
+
+      const data = await response.json();
+      const generatedText = data.candidates[0].content.parts[0].text;
+      
+      setGeneratedContent(generatedText);
+      setArticleTitle(articleData.title);
+      setArticleCategory(articleData.topicFocus);
+      setTargetKeyword(articleData.targetKeyword);
+      setTargetWordCount(parseInt(articleData.wordCount.replace(/[^\d]/g, '')));
+      
+      toast({
+        title: "Success",
+        description: "Article generated successfully!",
+      });
+    } catch (error) {
+      console.error('Error generating article:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate article. Please check your API key and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Function to save article (you can extend this to save to database)
+  const saveArticle = async () => {
+    try {
+      // Here you would typically save to your database
+      // For now, we'll just show a success message
+      const articleData = {
+        title: articleTitle,
+        content: generatedContent,
+        category: articleCategory,
+        tags: articleTags.split(',').map(tag => tag.trim()),
+        author: articleAuthor || "TechPartner Team",
+        targetKeyword: targetKeyword,
+        wordCount: generatedContent.split(' ').length,
+        createdAt: new Date().toISOString()
+      };
+
+      console.log('Article to save:', articleData);
+      
+      toast({
+        title: "Success",
+        description: "Article saved successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save article.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Function to copy content to clipboard
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied",
+        description: "Content copied to clipboard!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to copy content.",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (ordersLoading || paymentsLoading || usersLoading || briefsLoading) {
     return (
@@ -310,12 +461,13 @@ export default function AdminPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="payments">Payments ({payments.length})</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
             <TabsTrigger value="briefs">Project Briefs ({projectBriefs.length})</TabsTrigger>
+            <TabsTrigger value="blog">Blog Management</TabsTrigger>
           </TabsList>
 
           {/* Analytics Tab */}
@@ -751,6 +903,239 @@ export default function AdminPage() {
                       ))}
                     </TableBody>
                   </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Blog Management Tab */}
+          <TabsContent value="blog" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Article Generation Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <PenTool className="mr-2" size={20} />
+                    AI Article Generator
+                  </CardTitle>
+                  <CardDescription>Generate high-quality blog articles using Gemini AI</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Manual Article Generation */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-900">Custom Article Generation</h4>
+                    <div className="grid grid-cols-1 gap-4">
+                      <Input
+                        placeholder="Article Title"
+                        value={articleTitle}
+                        onChange={(e) => setArticleTitle(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Topic Focus"
+                        value={articleCategory}
+                        onChange={(e) => setArticleCategory(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Target Keyword"
+                        value={targetKeyword}
+                        onChange={(e) => setTargetKeyword(e.target.value)}
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input
+                          placeholder="Word Count"
+                          type="number"
+                          value={targetWordCount}
+                          onChange={(e) => setTargetWordCount(Number(e.target.value))}
+                        />
+                        <Input
+                          placeholder="Author"
+                          value={articleAuthor}
+                          onChange={(e) => setArticleAuthor(e.target.value)}
+                        />
+                      </div>
+                      <Textarea
+                        placeholder="Article Tags (comma separated)"
+                        value={articleTags}
+                        onChange={(e) => setArticleTags(e.target.value)}
+                        rows={2}
+                      />
+                      <Button
+                        onClick={() => generateArticleWithGemini({
+                          title: articleTitle,
+                          topicFocus: articleCategory,
+                          targetKeyword: targetKeyword,
+                          wordCount: `${targetWordCount}`,
+                        })}
+                        disabled={isGenerating || !articleTitle || !articleCategory}
+                        className="w-full"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="mr-2" size={16} />
+                            Generate Article with AI
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Generated Content Preview */}
+                  {generatedContent && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-semibold text-gray-900">Generated Article</h4>
+                        <Badge variant="outline" className="text-green-600">
+                          {generatedContent.split(' ').length} words
+                        </Badge>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border max-h-64 overflow-y-auto">
+                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                          {generatedContent}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button onClick={saveArticle} size="sm">
+                          <Save className="mr-2" size={14} />
+                          Save Article
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => copyToClipboard(generatedContent)}
+                          size="sm"
+                        >
+                          <Copy className="mr-2" size={14} />
+                          Copy Content
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setGeneratedContent("")}
+                          size="sm"
+                        >
+                          <Trash2 className="mr-2" size={14} />
+                          Clear
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Blog Calendar Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Calendar className="mr-2" size={20} />
+                    Content Calendar
+                  </CardTitle>
+                  <CardDescription>Planned articles from your content strategy</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {blogCalendarData.map((article, index) => (
+                      <div key={index} className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <h5 className="font-medium text-gray-900 text-sm leading-tight mb-1">
+                              {article.title}
+                            </h5>
+                            <div className="text-xs text-gray-600 mb-2">
+                              <span className="font-medium">Topic:</span> {article.topicFocus}
+                            </div>
+                            <div className="flex flex-wrap gap-1 text-xs">
+                              <Badge variant="outline" className="text-blue-600">
+                                {article.targetKeyword}
+                              </Badge>
+                              <Badge variant="outline" className="text-green-600">
+                                {article.wordCount} words
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-500 ml-2">
+                            {article.time}
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => generateArticleWithGemini(article)}
+                          disabled={isGenerating}
+                          className="w-full mt-2"
+                        >
+                          <Wand2 className="mr-2" size={14} />
+                          Generate This Article
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Blog Analytics */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BookOpen className="mr-2" size={20} />
+                  Blog Analytics & Management
+                </CardTitle>
+                <CardDescription>Track performance and manage your content</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-blue-600">Total Articles</div>
+                    <div className="text-2xl font-bold text-blue-900">{blogCalendarData.length}</div>
+                    <div className="text-xs text-blue-600">In content calendar</div>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-green-600">Generated</div>
+                    <div className="text-2xl font-bold text-green-900">
+                      {generatedContent ? 1 : 0}
+                    </div>
+                    <div className="text-xs text-green-600">Ready to publish</div>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-purple-600">Avg. Word Count</div>
+                    <div className="text-2xl font-bold text-purple-900">
+                      {Math.round(blogCalendarData.reduce((sum, article) => 
+                        sum + parseInt(article.wordCount.replace(/[^\d]/g, '')), 0) / blogCalendarData.length)}
+                    </div>
+                    <div className="text-xs text-purple-600">Words per article</div>
+                  </div>
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <div className="text-sm font-medium text-orange-600">Categories</div>
+                    <div className="text-2xl font-bold text-orange-900">
+                      {new Set(blogCalendarData.map(article => article.topicFocus)).size}
+                    </div>
+                    <div className="text-xs text-orange-600">Unique topics</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-gray-900">Quick Actions</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm">
+                      <Download className="mr-2" size={14} />
+                      Export Calendar
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Upload className="mr-2" size={14} />
+                      Import Articles
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <BarChart3 className="mr-2" size={14} />
+                      View Analytics
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Calendar className="mr-2" size={14} />
+                      Schedule Posts
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

@@ -159,6 +159,121 @@ export default function AdminPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
 
+  // Blog Management State
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState("");
+  const [blogFilter, setBlogFilter] = useState("all");
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+
+  // Blog Calendar Data (from CSV)
+  const blogCalendarData = [
+    { id: 1, title: "Digital Transformation in Saudi Arabia", category: "Technology", scheduledDate: "2024-01-15", status: "scheduled", keywords: ["digital transformation", "saudi arabia", "technology", "innovation"], difficulty: "intermediate", estimatedReadTime: "8-10 minutes" },
+    { id: 2, title: "Cloud Computing Benefits for Saudi Businesses", category: "Cloud", scheduledDate: "2024-01-22", status: "draft", keywords: ["cloud computing", "business benefits", "saudi arabia", "efficiency"], difficulty: "beginner", estimatedReadTime: "6-8 minutes" },
+    { id: 3, title: "Cybersecurity Best Practices in the Middle East", category: "Security", scheduledDate: "2024-02-05", status: "scheduled", keywords: ["cybersecurity", "middle east", "best practices", "protection"], difficulty: "advanced", estimatedReadTime: "10-12 minutes" },
+    { id: 4, title: "AI and Machine Learning Applications in Saudi Vision 2030", category: "AI", scheduledDate: "2024-02-12", status: "draft", keywords: ["artificial intelligence", "machine learning", "saudi vision 2030", "applications"], difficulty: "intermediate", estimatedReadTime: "9-11 minutes" },
+    { id: 5, title: "Web Development Trends for Saudi Market", category: "Development", scheduledDate: "2024-02-19", status: "scheduled", keywords: ["web development", "trends", "saudi market", "responsive design"], difficulty: "intermediate", estimatedReadTime: "7-9 minutes" },
+    { id: 6, title: "E-commerce Solutions for Small Saudi Businesses", category: "E-commerce", scheduledDate: "2024-02-26", status: "draft", keywords: ["e-commerce", "small business", "saudi arabia", "online solutions"], difficulty: "beginner", estimatedReadTime: "8-10 minutes" },
+    { id: 7, title: "Mobile App Development in the Saudi Tech Scene", category: "Mobile", scheduledDate: "2024-03-05", status: "scheduled", keywords: ["mobile app development", "saudi tech", "app store", "innovation"], difficulty: "intermediate", estimatedReadTime: "9-11 minutes" },
+    { id: 8, title: "Data Analytics for Saudi Businesses", category: "Analytics", scheduledDate: "2024-03-12", status: "draft", keywords: ["data analytics", "business intelligence", "saudi businesses", "insights"], difficulty: "intermediate", estimatedReadTime: "8-10 minutes" },
+    { id: 9, title: "DevOps Implementation in Saudi IT Companies", category: "DevOps", scheduledDate: "2024-03-19", status: "scheduled", keywords: ["devops", "implementation", "saudi it companies", "automation"], difficulty: "advanced", estimatedReadTime: "10-12 minutes" },
+    { id: 10, title: "Blockchain Technology Adoption in Saudi Arabia", category: "Blockchain", scheduledDate: "2024-03-26", status: "draft", keywords: ["blockchain", "technology adoption", "saudi arabia", "innovation"], difficulty: "advanced", estimatedReadTime: "11-13 minutes" },
+    { id: 11, title: "IoT Solutions for Smart Cities in Saudi Arabia", category: "IoT", scheduledDate: "2024-04-02", status: "scheduled", keywords: ["internet of things", "smart cities", "saudi arabia", "connectivity"], difficulty: "intermediate", estimatedReadTime: "9-11 minutes" },
+    { id: 12, title: "Software Quality Assurance in Saudi Tech Industry", category: "QA", scheduledDate: "2024-04-09", status: "draft", keywords: ["quality assurance", "software testing", "saudi tech industry", "best practices"], difficulty: "intermediate", estimatedReadTime: "7-9 minutes" }
+  ];
+
+  // Generate article with Gemini AI
+  const generateArticleWithGemini = async (articleData: any) => {
+    setIsGenerating(true);
+    try {
+      // Replace with your actual Gemini API key
+      const API_KEY = "YOUR_GEMINI_API_KEY";
+      
+      if (API_KEY === "YOUR_GEMINI_API_KEY") {
+        // Fallback content when API key is not configured
+        setGeneratedContent(`# ${articleData.title}
+
+## Introduction
+Welcome to our comprehensive guide on ${articleData.title.toLowerCase()}. This article explores the latest trends and best practices relevant to the Saudi Arabian market.
+
+## Key Points
+${articleData.keywords.map((keyword: string) => `- ${keyword.charAt(0).toUpperCase() + keyword.slice(1)}`).join('\n')}
+
+## Market Overview
+The Saudi Arabian technology landscape is rapidly evolving, with significant investments in digital transformation and innovation initiatives aligned with Vision 2030.
+
+## Best Practices
+1. **Strategic Planning**: Develop a comprehensive strategy aligned with local market needs
+2. **Technology Adoption**: Leverage cutting-edge solutions while considering cultural and regulatory requirements
+3. **Local Partnerships**: Collaborate with local technology providers and consultants
+4. **Continuous Learning**: Stay updated with the latest industry trends and regulations
+
+## Implementation Guide
+This section would contain detailed steps for implementing the discussed concepts in a Saudi business context.
+
+## Conclusion
+${articleData.title} represents a significant opportunity for businesses in Saudi Arabia to enhance their technological capabilities and competitive advantage.
+
+---
+*Estimated reading time: ${articleData.estimatedReadTime}*
+*Difficulty level: ${articleData.difficulty}*`);
+        
+        toast({
+          title: "Article Generated",
+          description: "Sample content generated. Please configure your Gemini API key for AI-powered content.",
+        });
+      } else {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Write a comprehensive blog article about "${articleData.title}" targeted at the Saudi Arabian market. 
+                
+                Article Details:
+                - Category: ${articleData.category}
+                - Keywords: ${articleData.keywords.join(', ')}
+                - Difficulty: ${articleData.difficulty}
+                - Estimated reading time: ${articleData.estimatedReadTime}
+                - Target audience: Saudi businesses and technology professionals
+                
+                Please write a well-structured article with:
+                1. An engaging introduction
+                2. Main content sections with practical insights
+                3. Saudi market-specific considerations
+                4. Implementation tips for local businesses
+                5. A strong conclusion
+                
+                Use a professional yet accessible tone. Include relevant examples and references to Saudi Vision 2030 where appropriate.`
+              }]
+            }]
+          })
+        });
+
+        const data = await response.json();
+        const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Failed to generate content.";
+        setGeneratedContent(generatedText);
+        
+        toast({
+          title: "Article Generated",
+          description: "AI-powered content has been generated successfully!",
+        });
+      }
+    } catch (error) {
+      console.error('Error generating article:', error);
+      toast({
+        title: "Generation Error",
+        description: "Failed to generate article. Please check your API configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   // Fetch all data
   const { data: orders = [], isLoading: ordersLoading } = useQuery<Order[]>({
     queryKey: ["/api/orders"],
@@ -310,12 +425,13 @@ export default function AdminPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="payments">Payments ({payments.length})</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
             <TabsTrigger value="briefs">Project Briefs ({projectBriefs.length})</TabsTrigger>
+            <TabsTrigger value="blog">Blog Management</TabsTrigger>
           </TabsList>
 
           {/* Analytics Tab */}
@@ -751,6 +867,351 @@ export default function AdminPage() {
                       ))}
                     </TableBody>
                   </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Blog Management Tab */}
+          <TabsContent value="blog" className="space-y-6">
+            {/* Blog Analytics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Articles</CardTitle>
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{blogCalendarData.length}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {blogCalendarData.filter(article => article.status === 'scheduled').length} scheduled
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">This Month</CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {blogCalendarData.filter(article => {
+                      const articleDate = new Date(article.scheduledDate);
+                      return articleDate.getMonth() === currentMonth;
+                    }).length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Articles to publish</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Categories</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {new Set(blogCalendarData.map(article => article.category)).size}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Topic categories</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Blog Management Interface */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Edit className="mr-2" size={20} />
+                  AI Article Generator
+                </CardTitle>
+                <CardDescription>
+                  Generate high-quality blog articles using Gemini AI based on your content calendar
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Content Calendar */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold">Content Calendar</h3>
+                      <Select value={blogFilter} onValueChange={setBlogFilter}>
+                        <SelectTrigger className="w-32">
+                          <SelectValue placeholder="Filter" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Articles</SelectItem>
+                          <SelectItem value="scheduled">Scheduled</SelectItem>
+                          <SelectItem value="draft">Drafts</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="max-h-96 overflow-y-auto space-y-2">
+                      {blogCalendarData
+                        .filter(article => blogFilter === 'all' || article.status === blogFilter)
+                        .map((article) => (
+                          <div 
+                            key={article.id} 
+                            className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                              selectedArticle?.id === article.id 
+                                ? 'border-[#01A1C1] bg-blue-50' 
+                                : 'hover:bg-gray-50'
+                            }`}
+                            onClick={() => setSelectedArticle(article)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <h4 className="font-medium text-sm">{article.title}</h4>
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <Badge variant="outline" className="text-xs">
+                                    {article.category}
+                                  </Badge>
+                                  <span className="text-xs text-gray-500">
+                                    {new Date(article.scheduledDate).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Badge 
+                                  variant={article.status === 'scheduled' ? 'default' : 'secondary'}
+                                  className="text-xs"
+                                >
+                                  {article.status}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+
+                  {/* Article Generator */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Article Generator</h3>
+                    
+                    {selectedArticle ? (
+                      <div className="space-y-4">
+                        <Card>
+                          <CardHeader className="pb-3">
+                            <CardTitle className="text-base">{selectedArticle.title}</CardTitle>
+                            <CardDescription>
+                              {selectedArticle.category} • {selectedArticle.estimatedReadTime} • {selectedArticle.difficulty}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="pt-0">
+                            <div className="space-y-2">
+                              <div>
+                                <span className="text-sm font-medium">Keywords:</span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {selectedArticle.keywords.map((keyword: string, index: number) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {keyword}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                              <div>
+                                <span className="text-sm font-medium">Scheduled Date:</span>
+                                <span className="text-sm text-gray-600 ml-2">
+                                  {new Date(selectedArticle.scheduledDate).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Button 
+                          onClick={() => generateArticleWithGemini(selectedArticle)}
+                          disabled={isGenerating}
+                          className="w-full bg-[#01A1C1] hover:bg-[#0891B2]"
+                        >
+                          {isGenerating ? (
+                            <>
+                              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                              Generating Article...
+                            </>
+                          ) : (
+                            <>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Generate Article with AI
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <FileText className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+                        <p>Select an article from the calendar to generate content</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Generated Content Preview */}
+                {generatedContent && (
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold">Generated Article Preview</h3>
+                      <div className="flex space-x-2">
+                        <Button variant="outline" size="sm">
+                          <Eye className="mr-2 h-4 w-4" />
+                          Preview
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Download className="mr-2 h-4 w-4" />
+                          Export
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="border rounded-lg p-4 bg-white max-h-96 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap text-sm font-mono text-gray-700">
+                        {generatedContent}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Actions */}
+                <div className="mt-6 pt-6 border-t">
+                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button variant="outline" className="flex items-center justify-center">
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Schedule Post
+                    </Button>
+                    <Button variant="outline" className="flex items-center justify-center">
+                      <BarChart3 className="mr-2 h-4 w-4" />
+                      Analytics
+                    </Button>
+                    <Button variant="outline" className="flex items-center justify-center">
+                      <RefreshCw className="mr-2 h-4 w-4" />
+                      Bulk Generate
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Blog Management Tab */}
+          <TabsContent value="blog" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Blog Management</CardTitle>
+                <CardDescription>Schedule and manage blog articles</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Article Generation Section */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-4">Generate New Article</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Article Title"
+                      value={selectedArticle?.title || ""}
+                      onChange={(e) => setSelectedArticle({ ...selectedArticle, title: e.target.value })}
+                      className="col-span-2"
+                    />
+                    <Select
+                      value={selectedArticle?.category || ""}
+                      onValueChange={(value) => setSelectedArticle({ ...selectedArticle, category: value })}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Technology">Technology</SelectItem>
+                        <SelectItem value="Cloud">Cloud</SelectItem>
+                        <SelectItem value="Security">Security</SelectItem>
+                        <SelectItem value="AI">AI</SelectItem>
+                        <SelectItem value="Development">Development</SelectItem>
+                        <SelectItem value="E-commerce">E-commerce</SelectItem>
+                        <SelectItem value="Mobile">Mobile</SelectItem>
+                        <SelectItem value="Analytics">Analytics</SelectItem>
+                        <SelectItem value="DevOps">DevOps</SelectItem>
+                        <SelectItem value="Blockchain">Blockchain</SelectItem>
+                        <SelectItem value="IoT">IoT</SelectItem>
+                        <SelectItem value="QA">QA</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      onClick={() => generateArticleWithGemini(selectedArticle)}
+                      isLoading={isGenerating}
+                      className="whitespace-nowrap"
+                    >
+                      Generate Article
+                    </Button>
+                  </div>
+                  
+                  {/* Generated Content Preview */}
+                  {generatedContent && (
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+                      <h4 className="text-md font-semibold mb-2">Generated Content Preview</h4>
+                      <div className="prose max-w-none">
+                        {generatedContent.split('\n').map((line, index) => (
+                          <p key={index} className="text-sm text-gray-700 whitespace-pre-wrap">{line}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Blog Calendar */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Blog Calendar</h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    {blogCalendarData.filter(article => blogFilter === "all" || article.status === blogFilter).map(article => (
+                      <div key={article.id} className="p-4 bg-white rounded-lg shadow">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h4 className="text-md font-semibold">{article.title}</h4>
+                            <div className="text-sm text-gray-500">
+                              {article.keywords.join(', ')}
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-blue-600">
+                            {article.status.charAt(0).toUpperCase() + article.status.slice(1)}
+                          </Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-sm">
+                          <span className="bg-gray-100 text-gray-800 rounded-full px-3 py-1">
+                            {article.category}
+                          </span>
+                          <span className="bg-gray-100 text-gray-800 rounded-full px-3 py-1">
+                            {article.difficulty}
+                          </span>
+                          <span className="bg-gray-100 text-gray-800 rounded-full px-3 py-1">
+                            {article.estimatedReadTime}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
+                          <div>
+                            <span className="mr-2">Scheduled:</span>
+                            <strong>{new Date(article.scheduledDate).toLocaleDateString()}</strong>
+                          </div>
+                          <div className="flex items-center">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedArticle(article);
+                                setGeneratedContent("");
+                              }}
+                              className="mr-2"
+                            >
+                              Edit
+                            </Button>
+                            <Button variant="destructive" size="sm">
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
