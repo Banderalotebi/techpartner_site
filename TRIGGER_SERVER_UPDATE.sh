@@ -1,41 +1,42 @@
 #!/bin/bash
+# Trigger Server Update Script
 
-echo "🔄 Triggering server update with new GitHub changes..."
+echo "=== Starting TechPartner Database Integration ==="
 
-# Check current server status
-echo "📊 Current server status:"
-curl -s http://34.69.69.182/api/health
+cd /opt/techpartner
 
+# Create ecosystem config directly on VM
+cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'techpartner-database',
+    script: 'server/index.ts',
+    interpreter: 'tsx',
+    env: {
+      NODE_ENV: 'development',
+      DATABASE_URL: 'postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+      PORT: 5000
+    },
+    instances: 1,
+    exec_mode: 'fork',
+    autorestart: true
+  }]
+}
+EOF
+
+# Start server with proper configuration
+pm2 start ecosystem.config.js
+
+echo "Server started, checking status..."
+sleep 3
+pm2 status
+
+echo "Checking logs..."
+pm2 logs techpartner-database --lines 10
+
+echo "Testing endpoints..."
+curl localhost:5000/api/health
 echo ""
-echo "🚀 Triggering CI/CD pipeline deployment..."
+curl http://34.69.69.182:5000/api/health
 
-# Method 1: SSH to VM and pull updates
-echo "📥 Connecting to VM to pull latest changes..."
-gcloud compute ssh techpartner-exact --zone=us-central1-a --command="
-    cd /opt/techpartner-platform
-    git pull origin main
-    npm install
-    npm run build
-    pm2 restart all
-    pm2 status
-" 2>/dev/null
-
-if [ $? -eq 0 ]; then
-    echo "✅ Server updated successfully via SSH"
-else
-    echo "❌ SSH update failed, trying alternative methods..."
-    
-    # Method 2: Trigger Cloud Build manually
-    echo "🔨 Triggering Cloud Build deployment..."
-    gcloud builds submit --config=cloudbuild-with-secrets.yaml . 2>/dev/null
-fi
-
-echo ""
-echo "⏰ Waiting for deployment to complete..."
-sleep 30
-
-echo "🔍 Checking updated server status:"
-curl -s http://34.69.69.182/api/health
-
-echo ""
-echo "🏁 Server update process completed!"
+echo "=== TechPartner Platform Active at http://34.69.69.182:5000 ==="
