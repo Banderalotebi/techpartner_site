@@ -40,7 +40,7 @@ export default function Header() {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                <span>hello@techpartner.studio</span>
+                <span>info@techpartner.sa</span>
               </div>
             </div>
             <div className="flex items-center space-x-4 text-gray-600">

@@ -179,7 +179,7 @@ sudo tee /var/www/html/index.html > /dev/null << 'EOF'
     <footer>
         <div class="container">
             <p>&copy; 2025 TechPartner Studio. Professional digital agency services in Saudi Arabia.</p>
-            <p>Contact: info@techpartner.studio | +966 XX XXX XXXX</p>
+            <p>Contact: info@techpartner.sa | +966 XX XXX XXXX</p>
         </div>
     </footer>
 

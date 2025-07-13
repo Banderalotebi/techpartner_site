@@ -5,7 +5,7 @@ const contactInfo = [
   {
     icon: <Mail className="text-[#01A1C1]" size={24} />,
     title: "Email",
-    details: "hello@techpartner.com",
+    details: "info@techpartner.sa",
     description: "Send us an email anytime!"
   },
   {

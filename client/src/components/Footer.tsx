@@ -35,7 +35,7 @@ export default function Footer() {
               <Mail className="w-5 h-5 text-[#01A1C1]" />
               <div>
                 <div className="text-white font-medium">Email Us</div>
-                <div className="text-gray-400 text-sm">hello@techpartner.studio</div>
+                <div className="text-gray-400 text-sm">info@techpartner.sa</div>
               </div>
             </div>
             <div className="flex items-center space-x-3">

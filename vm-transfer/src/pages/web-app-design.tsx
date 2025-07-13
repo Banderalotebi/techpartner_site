@@ -432,7 +432,7 @@ export default function WebAppDesignPage() {
             Start design quiz
           </button>
           <button 
-            onClick={() => window.location.href = 'mailto:info@techpartner.studio'}
+            onClick={() => window.location.href = 'mailto:info@techpartner.sa'}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
             Email us now
