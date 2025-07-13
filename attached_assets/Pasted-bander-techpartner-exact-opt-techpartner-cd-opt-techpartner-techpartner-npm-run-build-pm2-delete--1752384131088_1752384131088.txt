@@ -1,0 +1,66 @@
+bander@techpartner-exact:/opt/techpartner$ cd /opt/techpartner/techpartner
+npm run build
+pm2 delete techpartner-database
+NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
+pm2 status
+curl http://34.69.69.182:5000
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 1898 modules transformed.
+../dist/public/index.html                                                  0.63 kB │ gzip:   0.38 kB
+../dist/public/assets/image_1751877827547-BgGAcS6o.png                    10.46 kB
+../dist/public/assets/image_1751877844515-Hcrr620H.png                    10.77 kB
+../dist/public/assets/image_1751877789796-DrHkNwdo.png                    11.11 kB
+../dist/public/assets/image_1751877855852-9c-J6sZ9.png                    11.25 kB
+../dist/public/assets/image_1751877805279-s3uJmvOY.png                    11.28 kB
+../dist/public/assets/image_1751877797983-B42W_Odw.png                    11.48 kB
+../dist/public/assets/image_1751877814735-Bt-9Fb0T.png                    11.67 kB
+../dist/public/assets/image_1751877837466-4FKUUouW.png                    11.71 kB
+../dist/public/assets/image_1751877861445-6d5JhG3-.png                    11.79 kB
+../dist/public/assets/tech partner logo_1751927733407-PUD5UwpI.png        43.99 kB
+../dist/public/assets/19362653 _Converted__1751929167532-CHpqfIok.png     73.28 kB
+../dist/public/assets/image_1751877076320-CQQ9D5ga.png                   186.64 kB
+../dist/public/assets/image_1751882996727-uXKcyTn8.png                   222.31 kB
+../dist/public/assets/image_1751883007179-3_0nJrdy.png                   223.23 kB
+../dist/public/assets/Full-Stack-Dev_1751883915476-Ii4FKK3A.jpg          232.51 kB
+../dist/public/assets/image_1751883029057-Dsl-jCL2.png                   235.88 kB
+../dist/public/assets/image_1751883014077-7CTc3DoP.png                   322.29 kB
+../dist/public/assets/image_1751877115110-BbCIet0j.png                   369.31 kB
+../dist/public/assets/image_1751883022348-1P-w-lOj.png                   369.73 kB
+../dist/public/assets/image_1751877014080-E9SCYtNy.png                   394.90 kB
+../dist/public/assets/image_1751895996149-Bt-X-AmU.png                   541.10 kB
+../dist/public/assets/image_1751883149385-DujWxLyX.png                 1,018.56 kB
+../dist/public/assets/image_1751882806746-CGl8nBP3.png                 1,574.06 kB
+../dist/public/assets/index-DOmdoLQ3.css                                  96.90 kB │ gzip:  15.76 kB
+../dist/public/assets/index-CKX63C-9.js                                  820.84 kB │ gzip: 216.71 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 8.46s
+
+  dist/index.js  35.8kb
+
+⚡ Done in 8ms
+[PM2] Applying action deleteProcessId on app [techpartner-database](ids: [ 0 ])
+[PM2] [techpartner-database](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /opt/techpartner/dist/index.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ techpartner-datab… │ fork     │ 0    │ online    │ 0%       │ 20.3mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ techpartner-datab… │ fork     │ 0    │ online    │ 0%       │ 65.7mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
