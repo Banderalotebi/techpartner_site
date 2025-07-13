@@ -1,58 +1,45 @@
-# TechPartner Platform VM Deployment Guide
-## Deploy Without CLI Commands
+# VM Deployment Guide
 
-Your TechPartner platform is ready for deployment to your VM at **34.69.69.182**
+The server requires DATABASE_URL. Here are the options:
 
-## Option 1: Google Cloud Console (Web Interface)
-
-### Download Deployment Files
-1. **Download from Google Cloud Storage**: 
-   - Go to: https://console.cloud.google.com/storage/browser/techpartner-deployment
-   - Download: `vm-ready-platform.tar.gz`
-
-### VM File Transfer (Web Console)
-1. **Open VM in Browser**:
-   - Go to: https://console.cloud.google.com/compute/instances
-   - Find your VM: `techpartner-exact`
-   - Click **SSH** (opens web terminal)
-
-2. **Upload Files**:
-   - In the web SSH terminal, click the **gear icon** → **Upload file**
-   - Upload the `vm-ready-platform.tar.gz` file
-
-### Extract and Deploy
+## Option 1: Set Database URL and Start
 ```bash
-# In the web SSH terminal
-cd ~
-tar -xzf vm-ready-platform.tar.gz
-sudo cp -r dist/public/* /var/www/html/
-sudo systemctl reload nginx
+cd /opt/techpartner
+pm2 delete techpartner-database
+
+# Start with database URL (replace with your actual database)
+DATABASE_URL="postgresql://user:password@localhost:5432/techpartner" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+
+pm2 logs techpartner-database
+curl localhost:5000/api/health
 ```
 
-## Option 2: Direct File Transfer
-
-### Create the Platform Files Manually
-1. **Connect to VM** via web SSH console
-2. **Create the main page**:
+## Option 2: Use Memory Storage (Quick Fix)
 ```bash
-sudo nano /var/www/html/index.html
+cd /opt/techpartner
+
+# Temporarily switch to memory storage
+sed -i 's/import { DatabaseStorage }/\/\/ import { DatabaseStorage }/g' server/storage.ts
+sed -i 's/export const storage = new DatabaseStorage();/export const storage = new MemStorage();/g' server/storage.ts
+
+pm2 delete techpartner-database
+pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+curl localhost:5000/api/health
 ```
 
-3. **Copy the complete TechPartner platform** (I'll provide the exact content)
+## Option 3: Use SQLite Database
+```bash
+cd /opt/techpartner
 
-## Current VM Status
-- **IP**: 34.69.69.182
-- **Status**: Healthy with placeholder page
-- **APIs**: All 8 services responding with SAR pricing
-- **Backend**: Fully operational
-- **Nginx**: Configured and running
+# Install sqlite and use local database
+npm install better-sqlite3
+DATABASE_URL="file:./techpartner.db" pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+```
 
-## Deployment Package Contents
-- Complete TechPartner Studio design
-- All 8 service categories (Logo & Identity to Print Design)
-- SAR pricing system (1,500 - 25,000 SAR)
-- Professional styling with gradients and animations
-- Responsive design for all devices
+## Check External Access
+```bash
+curl http://34.69.69.182:5000/api/health
+curl http://34.69.69.182:5000/api/categories
+```
 
-## Next Steps
-Choose your preferred method above, and I'll guide you through the specific steps to get your original TechPartner platform live on your VM.
+This will get your database integration running on the production server.

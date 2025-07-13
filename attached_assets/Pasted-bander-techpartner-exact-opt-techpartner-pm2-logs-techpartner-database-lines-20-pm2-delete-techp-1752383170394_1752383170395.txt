@@ -1,0 +1,129 @@
+bander@techpartner-exact:/opt/techpartner$ pm2 logs techpartner-database --lines 20
+pm2 delete techpartner-database
+PORT=5000 pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+pm2 logs techpartner-database
+curl localhost:5000/api/health
+[TAILING] Tailing last 20 lines for [techpartner-database] process (change the value with --lines option)
+/home/bander/.pm2/logs/techpartner-database-out.log last 20 lines:
+/home/bander/.pm2/logs/techpartner-database-error.log last 20 lines:
+0|techpart | 
+0|techpart | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpart |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpart |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpart |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpart |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpart | 
+0|techpart | Node.js v22.17.0
+0|techpart | /opt/techpartner/server/db.ts:9
+0|techpart |   throw new Error(
+0|techpart |         ^
+0|techpart | 
+0|techpart | 
+0|techpart | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpart |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpart |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpart |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpart |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpart | 
+0|techpart | Node.js v22.17.0
+
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+0|techpartner-database  | /opt/techpartner/server/db.ts:9
+0|techpartner-database  |   throw new Error(
+0|techpartner-database  |         ^
+0|techpartner-database  | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|techpartner-database  |     at <anonymous> (/opt/techpartner/server/db.ts:9:9)
+0|techpartner-database  |     at ModuleJob.run (node:internal/modules/esm/module_job:329:25)
+0|techpartner-database  |     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+0|techpartner-database  |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+0|techpartner-database  | Node.js v22.17.0
+
