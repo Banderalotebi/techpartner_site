@@ -1,50 +1,31 @@
-# Production Deployment Fix
+# Production Deployment Fix - Google Cloud Standard Ports
 
-The PM2 process is looking for files in the wrong directory. Here's how to fix it:
+Google Cloud VMs use standard web ports. Let's deploy on port 80:
 
-## Step 1: Stop Old Process and Build Application
+## Quick Fix Commands:
+
 ```bash
-cd /home/bander/techpartner_site/techpartner_site
-pm2 delete all
-npm run build
-ls -la dist/
-```
+cd /opt/techpartner
 
-## Step 2: Deploy to Production Location
-```bash
-# Copy built application to production directory
-sudo mkdir -p /opt/techpartner-platform
-sudo cp -r . /opt/techpartner-platform/
-sudo chown -R bander:bander /opt/techpartner-platform
-cd /opt/techpartner-platform
-```
+# Stop current server
+pm2 delete techpartner-database
 
-## Step 3: Start Production Server
-```bash
-# Install production dependencies
-npm install --production
+# Start on port 80 (standard HTTP port)
+sudo HOST=0.0.0.0 PORT=80 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
 
-# Start database server (not static server)
-pm2 start server/index.js --name "techpartner-database" -- --port=3000
-
-# Check status
+# Check deployment
 pm2 status
-pm2 logs
+curl localhost:80/api/health
 ```
 
-## Step 4: Test Database Integration
+## Test Access:
+Your platform will be accessible at:
+- **http://34.69.69.182** (no port needed!)
+
+## Alternative - Standard Web Port 8080:
 ```bash
-curl localhost:3000/api/health
-curl localhost:3000/api/categories
-curl http://34.69.69.182:3000/api/health
+sudo HOST=0.0.0.0 PORT=8080 NODE_ENV=production DATABASE_URL="postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" pm2 start dist/index.js --name "techpartner-database"
 ```
+Access: **http://34.69.69.182:8080**
 
-## Alternative: Update PM2 Config
-If you want to keep current location:
-```bash
-cd /home/bander/techpartner_site/techpartner_site
-npm run build
-pm2 start server/index.js --name "techpartner-database" --cwd /home/bander/techpartner_site/techpartner_site
-```
-
-This will deploy your PostgreSQL database integration to the production location where PM2 expects it.
+Port 80 requires sudo but provides standard web access without port numbers.
