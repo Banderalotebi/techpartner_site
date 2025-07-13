@@ -1,51 +1,57 @@
-# Push All Landing Page Changes to Main Branch
+# Manual Push Instructions
 
-## Quick Push Command
+Since git operations are restricted in Replit, you'll need to manually push your database integration work to the main branch.
 
-Run this single command to push all your TechPartner platform changes:
+## Option 1: Use the Script (Recommended)
 
+Run this script in your terminal:
 ```bash
-./PUSH_TO_MAIN.sh
+./ADD_TO_MAIN.sh
 ```
 
-## Or Push Manually
+## Option 2: Manual Commands
 
-If the script doesn't work, run these commands:
+If the script doesn't work, use these commands:
 
 ```bash
-# Clear any git locks
+# Clear git locks
 rm -f .git/index.lock
 
-# Add all changes
-git add .
+# Check status
+git status
 
-# Commit with descriptive message
-git commit -m "feat: Complete TechPartner platform deployment files"
-
-# Push to main (triggers CI/CD)
+# Push to main
 git push origin main
 ```
 
-## What Gets Pushed
+## What Will Be Deployed
 
-Your changes include:
-- ✅ **COMPLETE_PLATFORM_CODE.html** - Full TechPartner Studio platform
-- ✅ **vm-deploy-script.sh** - Automated deployment script  
-- ✅ **SIMPLE_DEPLOYMENT_STEPS.md** - Deployment documentation
-- ✅ **replit.md** - Updated CI/CD pipeline documentation
-- ✅ All original design elements with SAR pricing system
+Your push will deploy:
+- **Complete PostgreSQL database integration** (1,728 lines of code)
+- **Enhanced CI/CD pipeline** with Google Secret Manager
+- **JWT authentication system** with security middleware
+- **Database-powered API server** replacing in-memory storage
+- **Production-grade deployment automation**
 
 ## After Push
 
-1. **Automatic Deployment**: Your CI/CD pipeline triggers automatically
-2. **Build Process**: Google Cloud Build installs dependencies and builds your app  
-3. **VM Deployment**: Automated deployment to 34.69.69.182
-4. **Verification**: Health check confirms successful deployment
+1. **GitHub receives your commits** with all database work
+2. **CI/CD pipeline triggers** via Google Cloud Build
+3. **Server deploys automatically** to VM 34.69.69.182
+4. **Database goes live** with full PostgreSQL persistence
 
-## Check Deployment Status
+## Monitoring Deployment
 
-- **VM Health**: http://34.69.69.182/api/health
-- **Full Platform**: http://34.69.69.182  
-- **Build Logs**: Google Cloud Console → Cloud Build → History
+- **GitHub Repository**: Check commits appear at github.com/Banderalotebi/techpartner_site
+- **CI/CD Progress**: Monitor Google Cloud Build logs
+- **Live Server**: Test at http://34.69.69.182
+- **API Health**: Check http://34.69.69.182/api/health
 
-Your TechPartner platform will be live with all the landing page updates within 2-3 minutes after pushing.
+## Current Status
+
+- **Local commits**: 5+ database integration commits ready
+- **Repository**: Up to date, ready to push
+- **CI/CD**: Configured and waiting for trigger
+- **Server**: Ready for database deployment
+
+Push now to deploy your enhanced TechPartner platform with full database integration!
