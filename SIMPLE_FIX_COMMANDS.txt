@@ -1,0 +1,13 @@
+cd /home/bander/techpartner_site/techpartner_site
+npm run build
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo cp -r dist/* /opt/techpartner/
+sudo cp -r node_modules /opt/techpartner/
+sudo cp package*.json /opt/techpartner/
+sudo chown -R bander:bander /opt/techpartner
+cd /opt/techpartner
+pm2 delete all
+NODE_ENV=production pm2 start index.js --name "techpartner-database"
+pm2 status
+curl localhost:5000/api/health
