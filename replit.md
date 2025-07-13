@@ -427,6 +427,8 @@ Changelog:
   * Simple npm run build will restore complete working TechPartner platform
   * User reports server still not accessible on domain - need to check port configuration and ensure TechPartner runs on correct port
   * Issue likely: server running on wrong port or conflicting with basic server at /opt/techpartner
+  * BUILD ISSUE IDENTIFIED: dist/ directory missing - npm run build needs to complete successfully before server can start
+  * User needs to run npm run build first to create dist/index.js, then start server on port 80
 - July 11, 2025. Implemented comprehensive CI/CD pipeline for automated deployment:
   * Created professional automated deployment process from Replit to Google Cloud VM
   * Integrated GitHub repository with Google Cloud Build triggers for continuous deployment
