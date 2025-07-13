@@ -1,35 +1,51 @@
-# Delete Initializing Page & Deploy TechPartner Platform
+# Simple Deployment Steps
 
-## Quick SSH Deployment
+The build failed due to corrupted node_modules. Here's how to fix it:
 
-1. **Connect to your VM**:
-   ```bash
-   ssh -i ~/.ssh/techpartner-server bander@34.69.69.182
-   ```
+## Step 1: Clean Install Dependencies
+```bash
+cd /home/bander/techpartner_site
+rm -rf node_modules package-lock.json
+npm install
+```
 
-2. **Run the deployment script**:
-   ```bash
-   curl -s https://raw.githubusercontent.com/your-repo/main/vm-deploy-script.sh | bash
-   ```
+## Step 2: Build and Deploy
+```bash
+npm run build
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo cp -r dist/* /opt/techpartner/
+sudo cp -r node_modules /opt/techpartner/
+sudo cp package*.json /opt/techpartner/
+sudo chown -R bander:bander /opt/techpartner
+cd /opt/techpartner
+```
 
-3. **Or deploy manually**:
-   ```bash
-   # Backup current file
-   sudo cp /var/www/html/index.html /var/www/html/index.html.backup
-   
-   # Replace with TechPartner platform
-   sudo nano /var/www/html/index.html
-   # Delete all content and paste the complete code from COMPLETE_PLATFORM_CODE.html
-   
-   # Reload nginx
-   sudo systemctl reload nginx
-   ```
+## Step 3: Start Production Server
+```bash
+pm2 delete all
+NODE_ENV=production pm2 start index.js --name "techpartner-database"
+pm2 status
+pm2 logs
+```
 
-## Result
-After deployment, http://34.69.69.182 will show:
-- ✅ TechPartner Studio (instead of placeholder)
-- ✅ Professional gradient design
-- ✅ All 8 service categories with SAR pricing
-- ✅ Animated statistics and complete functionality
+## Step 4: Test Database Integration
+```bash
+curl localhost:5000/api/health
+curl http://34.69.69.182:5000/api/health
+```
 
-The initializing page will be completely removed and replaced with your original TechPartner platform.
+## Alternative: Use Existing Build
+If build keeps failing, you can deploy without building:
+```bash
+cd /home/bander/techpartner_site
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo cp -r . /opt/techpartner/
+sudo chown -R bander:bander /opt/techpartner
+cd /opt/techpartner
+pm2 delete all
+pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+```
+
+This will fix the dependency corruption and deploy your database integration.

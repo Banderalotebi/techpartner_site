@@ -1,0 +1,56 @@
+chpartner_site
+npm run build
+sudo rm -rf /opt/techpartner
+sudo mkdir -p /opt/techpartner
+sudo cp -r dist/* /opt/techpartner/
+sudo cp -r node_modules /opt/techpartner/
+sudo cp package*.json /opt/techpartner/
+sudo chown -R bander:bander /opt/techpartner
+cd /opt/techpartner
+pm2 delete all
+NODE_ENV=production pm2 start index.js --name "techpartner-database"
+pm2 status
+curl localhost:5000/api/health
+-bash: cd: /home/bander/techpartner_site/techpartner_site: No such file or directory
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+/home/bander/techpartner_site/node_modules/rollup/dist/native.js:63
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/home/bander/techpartner_site/node_modules/rollup/dist/native.js:63:9)
+    at Object.<anonymous> (/home/bander/techpartner_site/node_modules/rollup/dist/native.js:72:76)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at cjsLoader (node:internal/modules/esm/translators:266:5)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:200:7) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /home/bander/techpartner_site/node_modules/rollup/dist/native.js
+      at Function._resolveFilename (node:internal/modules/cjs/loader:1401:15)
+      at defaultResolveImpl (node:internal/modules/cjs/loader:1057:19)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1062:22)
+      at Function._load (node:internal/modules/cjs/loader:1211:37)
+      at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+      at Module.require (node:internal/modules/cjs/loader:1487:12)
+      at require (node:internal/modules/helpers:135:16)
+      at requireWithFriendlyError (/home/bander/techpartner_site/node_modules/rollup/dist/native.js:45:10)
+      at Object.<anonymous> (/home/bander/techpartner_site/node_modules/rollup/dist/native.js:72:76) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/home/bander/techpartner_site/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v22.17.0
+cp: cannot stat 'dist/*': No such file or directory
+
