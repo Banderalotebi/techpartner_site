@@ -1,0 +1,42 @@
+bander@techpartner-exact:~$ gcloud sql instances create techpartner-db \
+    --database-version=POSTGRES_15 \
+    --tier=db-f1-micro \
+    --region=us-central1 \
+    --authorized-networks=34.69.69.182
+
+gcloud sql databases create techpartner --instance=techpartner-db
+gcloud sql users create techpartner --instance=techpartner-db --password=TechPartner2025!
+ERROR: (gcloud.sql.instances.create) [307686484314-compute@developer.gserviceaccount.com] does not have permission to access projects instance [glossy-agency-448211-s4] (or it may not exist): Request had insufficient authentication scopes. This command is authenticated as 307686484314-compute@developer.gserviceaccount.com which is the active account specified by the [core/account] property.
+- '@type': type.googleapis.com/google.rpc.ErrorInfo
+  domain: googleapis.com
+  metadata:
+    method: google.cloud.sql.v1beta4.SqlInstancesService.Insert
+    service: sqladmin.googleapis.com
+  reason: ACCESS_TOKEN_SCOPE_INSUFFICIENT
+
+If you are in a compute engine VM, it is likely that the specified scopes during VM creation are not enough to run this command.
+See https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam for more information about access scopes.
+See https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes for how to update access scopes of the VM.
+ERROR: (gcloud.sql.databases.create) PERMISSION_DENIED: Request had insufficient authentication scopes. This command is authenticated as 307686484314-compute@developer.gserviceaccount.com which is the active account specified by the [core/account] property.
+- '@type': type.googleapis.com/google.rpc.ErrorInfo
+  domain: googleapis.com
+  metadata:
+    method: google.cloud.sql.v1beta4.SqlDatabasesService.Insert
+    service: sqladmin.googleapis.com
+  reason: ACCESS_TOKEN_SCOPE_INSUFFICIENT
+
+If you are in a compute engine VM, it is likely that the specified scopes during VM creation are not enough to run this command.
+See https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam for more information about access scopes.
+See https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes for how to update access scopes of the VM.
+ERROR: (gcloud.sql.users.create) PERMISSION_DENIED: Request had insufficient authentication scopes. This command is authenticated as 307686484314-compute@developer.gserviceaccount.com which is the active account specified by the [core/account] property.
+- '@type': type.googleapis.com/google.rpc.ErrorInfo
+  domain: googleapis.com
+  metadata:
+    method: google.cloud.sql.v1beta4.SqlUsersService.Insert
+    service: sqladmin.googleapis.com
+  reason: ACCESS_TOKEN_SCOPE_INSUFFICIENT
+
+If you are in a compute engine VM, it is likely that the specified scopes during VM creation are not enough to run this command.
+See https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam for more information about access scopes.
+See https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances#changeserviceaccountandscopes for how to update access scopes of the VM.
+bander@techpartner-exact:~$ 
