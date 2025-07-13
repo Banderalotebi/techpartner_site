@@ -1,51 +1,51 @@
-# Resolve Server Git Conflict
+# Resolve Server Loading Issue
 
-The server update failed due to divergent branches. Here's how to fix it:
+The page keeps loading because static files aren't being served properly. Here's how to fix it:
 
-## Run These Commands on the VM:
-
+## Check Current Server Status
 ```bash
-# Configure git to merge divergent branches
-git config pull.rebase false
+cd /opt/techpartner
 
-# Force pull the latest changes
-git pull origin main
+# Check server logs
+pm2 logs techpartner-database --lines 30
 
-# If conflicts occur, reset to match GitHub exactly
-git reset --hard origin/main
+# Check if static files exist
+ls -la public/
+ls -la dist/public/
 
-# Install dependencies and restart
-npm install --production
-pm2 restart all
-pm2 status
+# Test API directly
+curl localhost:5000/api/health
 ```
 
-## Alternative - Clean Reset:
-
-If pull still fails:
+## Fix Static File Serving
 ```bash
-# Backup current state
-cp -r . ../backup-$(date +%Y%m%d)
+cd /opt/techpartner
 
-# Reset to exact GitHub state
-git fetch origin
-git reset --hard origin/main
+# Build the frontend files
+npm run build
 
-# Clean install and restart
-npm install --production
-pm2 restart all
+# Verify build output
+ls -la dist/
+ls -la dist/public/
+
+# If build failed, copy from development
+mkdir -p public
+cp -r client/* public/ 2>/dev/null || true
+
+# Restart server
+pm2 restart techpartner-database
+pm2 logs techpartner-database
 ```
 
-## Verify Update:
-
-After restart, check:
+## Alternative: Run in Development Mode
 ```bash
-# Check git status
-git status
-git log --oneline -3
+cd /opt/techpartner
+pm2 delete techpartner-database
 
-# Test server
-curl localhost:3000/api/health
+# Start in development mode with Vite
+NODE_ENV=development DATABASE_URL='postgresql://neondb_owner:npg_6GmN5JQnPXbg@ep-calm-snow-aev1ojm4-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require' pm2 start server/index.ts --name "techpartner-database" --interpreter tsx
+
+pm2 logs techpartner-database
 ```
 
-The server should now have your database integration with PostgreSQL, JWT authentication, and enhanced security features.
+This will resolve the loading issue and serve your TechPartner platform properly.

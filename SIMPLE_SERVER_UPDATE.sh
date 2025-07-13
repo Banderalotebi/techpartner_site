@@ -1,32 +1,26 @@
 #!/bin/bash
+# Simple Server Update Script
 
-echo "Updating production server with latest GitHub changes..."
+echo "=== Fixing TechPartner Platform Loading Issue ==="
 
-# Check current server
-echo "Current server status:"
-curl -s http://34.69.69.182/api/health
+cd /opt/techpartner
 
-echo ""
-echo "Connecting to VM to update..."
+echo "Building frontend..."
+npm run build
 
-# SSH to VM and update
-gcloud compute ssh techpartner-exact --zone=us-central1-a --command="
-    echo 'Updating TechPartner platform...'
-    cd /opt/techpartner-platform
-    git pull origin main
-    npm install --production
-    npm run build 2>/dev/null || echo 'Build step skipped'
-    pm2 restart all
-    echo 'Update completed!'
-    pm2 status
-"
+echo "Checking build output..."
+ls -la dist/public/
 
-echo ""
-echo "Waiting for server restart..."
-sleep 20
+echo "Restarting server..."
+pm2 restart techpartner-database
 
-echo "Updated server status:"
-curl -s http://34.69.69.182/api/health
+sleep 3
 
-echo ""
-echo "Server update completed!"
+echo "Checking server status..."
+pm2 logs techpartner-database --lines 10
+
+echo "Testing server..."
+curl -I localhost:5000
+
+echo "=== Server Update Complete ==="
+echo "Visit: http://34.69.69.182:5000"
