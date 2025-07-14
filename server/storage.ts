@@ -7,8 +7,21 @@ import {
   orders, type Order, type InsertOrder,
   payments, type Payment, type InsertPayment
 } from "@shared/schema";
-import { db } from "./db";
 import { eq } from "drizzle-orm";
+
+// Import SQLiteStorage for local development
+import { SQLiteStorage } from "./storage-sqlite";
+
+// Conditional import for PostgreSQL (only in production)
+let db: any;
+try {
+  if (process.env.NODE_ENV !== 'development' && process.env.DATABASE_URL) {
+    const { db: database } = require("./db");
+    db = database;
+  }
+} catch (error) {
+  // Database not available in development mode
+}
 
 export interface IStorage {
   // Users
@@ -799,4 +812,7 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Use SQLiteStorage for local development, MemStorage for production with proper DB
+export const storage = process.env.NODE_ENV === 'development'
+  ? new SQLiteStorage()
+  : new MemStorage();
