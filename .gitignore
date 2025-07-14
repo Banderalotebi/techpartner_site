@@ -4,4 +4,4 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
-_archived_files
+_archived_filesgithub-actions-key.json
