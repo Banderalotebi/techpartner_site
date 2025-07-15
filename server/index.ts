@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -58,9 +59,8 @@ app.use((req, res, next) => {
     serveStaticFixed(app);
   }
 
-  // Use Google Cloud's PORT environment variable or default to 5000
-  // Google Cloud App Engine automatically sets PORT environment variable
-  const port = Number(process.env.PORT) || 5000;
+  // Use environment PORT or default to 3000 for development
+  const port = Number(process.env.PORT) || 3000;
   const host = "0.0.0.0";
   
   server.listen({

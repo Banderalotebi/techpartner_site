@@ -34,9 +34,10 @@ type RegisterForm = z.infer<typeof registerSchema>;
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [activeTab, setActiveTab] = useState("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -71,6 +72,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
       onSuccess: () => {
         onClose();
         loginForm.reset();
+        onSuccess?.();
       },
     });
   };
@@ -81,6 +83,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
       onSuccess: () => {
         onClose();
         registerForm.reset();
+        onSuccess?.();
       },
     });
   };
