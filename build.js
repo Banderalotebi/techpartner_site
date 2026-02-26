@@ -28,10 +28,50 @@ console.log("Bundling server with esbuild...");
 const viteExcludePlugin = {
   name: "exclude-vite",
   setup(build) {
-    build.onResolve({ filter: /\.\/vite/ }, (args) => {
+    // Replace ./vite with a production stub (avoids runtime require('./vite') failure)
+    build.onResolve({ filter: /^\.\/vite$/ }, (args) => {
       if (args.importer && args.importer.includes("server")) {
-        return { path: args.path, external: true };
+        return { path: "vite-production-stub", namespace: "vite-stub" };
       }
+    });
+
+    build.onLoad({ filter: /.*/, namespace: "vite-stub" }, () => {
+      return {
+        contents: `
+          const path = require('path');
+          const fs = require('fs');
+          const express = require('express');
+
+          function log(message, source) {
+            source = source || "express";
+            const formattedTime = new Date().toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: true,
+            });
+            console.log(formattedTime + " [" + source + "] " + message);
+          }
+
+          function serveStatic(app) {
+            const distPath = path.resolve(__dirname, "public");
+            if (!fs.existsSync(distPath)) {
+              throw new Error("Could not find the build directory: " + distPath + ", make sure to build the client first");
+            }
+            app.use(express.static(distPath));
+            app.use("*", function(_req, res) {
+              res.sendFile(path.resolve(distPath, "index.html"));
+            });
+          }
+
+          async function setupVite(app, server) {
+            throw new Error("setupVite should not be called in production");
+          }
+
+          module.exports = { log, serveStatic, setupVite };
+        `,
+        loader: "js",
+      };
     });
 
     build.onResolve({ filter: /^vite$|@vitejs|@replit\/vite-plugin|vite-plugin/ }, () => {
