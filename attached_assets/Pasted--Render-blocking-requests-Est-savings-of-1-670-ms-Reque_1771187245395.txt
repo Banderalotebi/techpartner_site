@@ -1,0 +1,166 @@
+
+Render blocking requests Est savings of 1,670 ms
+Requests are blocking the page's initial render, which may delay LCP. Deferring or inlining can move these network requests out of the critical path.LCPFCPUnscored
+URL
+Transfer Size
+Duration
+techpartner.sa 1st party
+100.4 KiB	2,580 ms
+/assets/index-DULeQlT5.css(techpartner.sa)
+100.4 KiB
+2,580 ms
+replit.com
+2.5 KiB	780 ms
+…js/replit-dev-banner.js(replit.com)
+2.5 KiB
+780 ms
+Google Fonts cdn 
+1.3 KiB	750 ms
+/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap(fonts.googleapis.com)
+1.3 KiB
+750 ms
+Improve image delivery Est savings of 2,786 KiB
+Reducing the download time of images can improve the perceived load time of the page and LCP. Learn more about optimizing image sizeLCPFCPUnscored
+URL
+Resource Size
+Est Savings
+techpartner.sa 1st party
+2,921.4 KiB	2,785.8 KiB
+Design showcase
+<img src="/assets/image_1751882806746_2-CGl8nBP3.png" alt="Design showcase" class="w-48 sm:w-64 md:w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem] h-auto rounded-xl …">
+/assets/image_175….png(techpartner.sa)
+1,537.2 KiB
+1,524.9 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+1,276.3 KiB
+This image file is larger than it needs to be (1550x1034) for its displayed dimensions (336x224). Use responsive images to reduce the image download size.
+1,464.9 KiB
+Art & illustration
+<img src="/assets/art-and-illustration-1P-w-lOj.png" alt="Art &amp; illustration" class="w-full h-full object-cover group-hover:scale-105 transition-transform dura…">
+/assets/art-and-i….png(techpartner.sa)
+361.1 KiB
+336.6 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+336.6 KiB
+Business & advertising
+<img src="/assets/business-and-advertising-7CTc3DoP.png" alt="Business &amp; advertising" class="w-full h-full object-cover group-hover:scale-105 transition-transform dura…">
+/assets/business-….png(techpartner.sa)
+314.7 KiB
+290.2 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+290.2 KiB
+Packaging & label
+<img src="/assets/packaging-Dsl-jCL2.png" alt="Packaging &amp; label" class="w-full h-full object-cover group-hover:scale-105 transition-transform dura…">
+/assets/packaging-Dsl-jCL2.png(techpartner.sa)
+230.4 KiB
+205.8 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+205.8 KiB
+Custom web and apps development
+<img src="/assets/web-and-app-design-3_0nJrdy.png" alt="Custom web and apps development" class="w-full h-full object-cover group-hover:scale-105 transition-transform dura…">
+/assets/web-and-a….png(techpartner.sa)
+218.0 KiB
+193.5 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+193.5 KiB
+Logo & branding design
+<img src="/assets/logo-and-branding-design-uXKcyTn8.png" alt="Logo &amp; branding design" class="w-full h-full object-cover group-hover:scale-105 transition-transform dura…">
+/assets/logo-and-….png(techpartner.sa)
+217.1 KiB
+192.6 KiB
+Using a modern image format (WebP, AVIF) or increasing the image compression could improve this image's download size.
+192.6 KiB
+TechPartner Logo
+<img src="/assets/logo-tech-partner-big-blue-PUD5UwpI.png" alt="TechPartner Logo" class="h-12 w-auto group-hover:scale-105 transition-transform">
+/assets/logo-tech….png(techpartner.sa)
+43.0 KiB
+42.1 KiB
+This image file is larger than it needs to be (2259x605) for its displayed dimensions (314x84). Use responsive images to reduce the image download size.
+42.1 KiB
+Network dependency tree
+Avoid chaining critical requests by reducing the length of chains, reducing the download size of resources, or deferring the download of unnecessary resources to improve page load.LCPUnscored
+Maximum critical path latency: 1,362 ms
+Initial Navigation
+https://techpartner.sa - 300 ms, 3.71 KiB
+/assets/index-D12StxFN.js(techpartner.sa) - 1,086 ms, 919.56 KiB
+…auth/user(techpartner.sa) - 1,362 ms, 0.44 KiB
+/assets/index-DULeQlT5.css(techpartner.sa) - 687 ms, 100.40 KiB
+/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap(fonts.googleapis.com) - 701 ms, 1.31 KiB
+…v24/pxiEyp8kv….woff2(fonts.gstatic.com) - 1,227 ms, 8.51 KiB
+…v24/pxiByp8kv….woff2(fonts.gstatic.com) - 1,228 ms, 8.35 KiB
+…v24/pxiByp8kv….woff2(fonts.gstatic.com) - 1,228 ms, 8.60 KiB
+…v24/pxiByp8kv….woff2(fonts.gstatic.com) - 1,228 ms, 8.46 KiB
+…js/replit-dev-banner.js(replit.com) - 379 ms, 2.48 KiB
+Preconnected origins
+preconnect hints help the browser establish a connection earlier in the page load, saving time when the first request for that origin is made. The following are the origins that the page preconnected to.
+no origins were preconnected
+Preconnect candidates
+Add preconnect hints to your most important origins, but try to use no more than 4.
+No additional origins are good candidates for preconnecting
+Document request latency Est savings of 2 KiB
+Your first network request is the most important. Reduce its latency by avoiding redirects, ensuring a fast server response, and enabling text compression.LCPFCPUnscored
+Avoids redirects
+Server responds quickly (observed 1 ms)
+No compression applied
+Layout shift culprits
+Layout shifts occur when elements move absent any user interaction. Investigate the causes of layout shifts, such as elements being added, removed, or their fonts changing as the page loads.CLSUnscored
+Element
+Layout shift score
+Total
+0.011
+Design showcase
+<div class="relative flex-shrink-0">
+0.011
+LCP breakdown
+Each subpart has specific improvement strategies. Ideally, most of the LCP time should be spent on loading the resources, not within delays.LCPUnscored
+Subpart
+Duration
+Time to first byte
+0 ms
+Element render delay
+2,430 ms
+Professional design and development solutions for every business need
+<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+3rd parties
+3rd party code can significantly impact load performance. Reduce and defer loading of 3rd party code to prioritize your page's content.Unscored
+3rd party
+Transfer size
+Main thread time
+Google Tag Manager tag-manager 
+395 KiB	177 ms
+/gtag/js?id=G-6X1LQ695SK(www.googletagmanager.com)
+146 KiB
+94 ms
+/gtm.js?id=GTM-KHV9SP5N(www.googletagmanager.com)
+102 KiB
+45 ms
+/gtag/js?id=G-6X1LQ695SK&cx=c&gtm=4e62b1(www.googletagmanager.com)
+146 KiB
+38 ms
+replit.com
+2 KiB	1 ms
+…js/replit-dev-banner.js(replit.com)
+2 KiB
+1 ms
+Google Analytics analytics 
+1 KiB	0 ms
+/g/collect?v=…(www.google-analytics.com)
+1 KiB
+0 ms
+Google Fonts cdn 
+35 KiB	0 ms
+…v24/pxiByp8kv….woff2(fonts.gstatic.com)
+9 KiB
+0 ms
+…v24/pxiEyp8kv….woff2(fonts.gstatic.com)
+9 KiB
+0 ms
+…v24/pxiByp8kv….woff2(fonts.gstatic.com)
+8 KiB
+0 ms
+…v24/pxiByp8kv….woff2(fonts.gstatic.com)
+8 KiB
+0 ms
+/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap(fonts.googleapis.com)
+1 KiB
+0 ms

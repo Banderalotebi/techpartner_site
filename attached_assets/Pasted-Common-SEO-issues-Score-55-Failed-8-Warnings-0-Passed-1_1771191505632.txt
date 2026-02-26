@@ -1,0 +1,446 @@
+Common SEO issues
+Score:
+55
+Failed:
+8
+Warnings:
+0
+Passed:
+14
+Meta Title Test
+100% of top 100 sites passed
+This webpage is not using a title tag! A missing or poor title tag (that does not target important keywords or phrases) will make it difficult for your page to rank well in search engines.
+
+How to fix
+Meta Description Test
+92% of top 100 sites passed
+This webpage is not using a meta description tag! You should include this tag in order to provide a brief description of your page which can be used by search engines. Well-written and inviting meta descriptions may also help click-through rates to your site in search engine results.
+
+How to fix
+Google Search Results Preview Test
+Desktop version
+Mobile version
+Social Media Meta Tags Test
+89% of top 100 sites passed
+This webpage is not using social media meta tags! While this type of meta tags don't affect what people see when they visit the webpage, they exist to provide information about it to search engines and social media platforms.
+
+How to fix
+Most Common Keywords Test
+There is likely no optimal keyword density (search engine algorithms have evolved beyond keyword density metrics as a significant ranking factor). It can be useful, however, to note which keywords appear most often on your page and if they reflect the intended topic of your page. More importantly, the keywords on your page should appear within natural sounding and grammatically correct copy.
+Keywords Usage Test
+48% of top 100 sites passed
+The most common keywords of this webpage are not distributed across the important HTML tags! Primary keywords should appear in title tag, meta description and heading tags to help Search Engines to properly identify the topic of this webpage.
+Keyword
+Title tag
+Meta description
+Headings
+design
+development
+logo
+brand
+custom
+Keywords Cloud Test
+advertisingahmedapplicationsarabiaassessmentblogboutiquebrandbrandingbringbusinessbusinessescategoriesclientscommercecommunitycompletecomplexcomprehensivecontactcreatecustomdelivereddesigndesignerdesignersdesignsdevelopmentdigitalelevateexceptionalexperienceexperiencesexpertfashionfastfeaturesguidelineshappyideasidentityillustrationinfoinformationinspirationjourneylatestlifelogologosmediamobilemodernmohammedneedneedspackagepackagingperfectlypersonalizedplatformportfolioprocessprofessionalprojectprovenqualityreadrecordsrequirementsriyadhsatisfiedsaudiselectionservicessocialsolutionsstackstartstartedstartingstepstudiotailoredteamtechtechnicaltechnologiestechpartnerthousandstracktrustedturnarounduniqueusingviewvisionwebsitewebsiteswellness
+Related Keywords Test
+Competitor Domains Test
+Heading Tags Test
+62% of top 100 sites passed
+This webpage contains headings tags.
+H1 tags
+Design personalized to fit your needs perfectly.
+H2 tags
+Our Design and Development
+Your business,exceptional design.
+Everything begins with a logo.
+Portfolio Highlights
+Meet YourTechPartner Experts
+Our Service Categories & Process
+Latest from Our Blog
+Ready to bring your vision to life?
+Robots.txt Test
+99% of top 100 sites passed
+This website is using a robots.txt file.
+https://techpartner.sa/robots.txt
+Sitemap Test
+83% of top 100 sites passed
+This website has a sitemap file.
+https://techpartner.sa/sitemap.xml
+Image Alt Test
+78% of top 100 sites passed
+All "img" tags from this webpage have the required "alt" attribute.
+Responsive Image Test
+29% of top 100 sites passed
+Not all images in this webpage are properly sized! This webpage is serving images that are larger than needed for the size of the user's viewport.
+
+See results list
+
+How to fix
+Image Aspect Ratio Test
+75% of top 100 sites passed
+Not all image display dimensions match the natural aspect ratio! Fix aspect ratio issues to avoid distorted images on this website!
+
+See results list
+
+How to fix
+Deprecated HTML Tags Test
+94% of top 100 sites passed
+This webpage does not use HTML deprecated tags.
+Google Analytics Test
+72% of top 100 sites passed
+This webpage is using Google Analytics.
+Favicon Test
+100% of top 100 sites passed
+This website either doesn't have a favicon or this has not been referenced correctly!
+
+How to fix
+Backlinks Test
+JS Error Test
+83% of top 100 sites passed
+There are no severe JavaScript errors on this webpage.
+Console Errors Test
+27% of top 100 sites passed
+This webpage has some errors caught by the Chrome DevTools Console!
+
+See results list
+
+How to fix
+Charset Declaration Test
+96% of top 100 sites passed
+This webpage has a character encoding declaration.
+Content-Type: text/html; charset=UTF-8
+Speed optimizations
+Score:
+71
+Failed:
+5
+Warnings:
+2
+Passed:
+13
+HTML Page Size Test
+23% of top 100 sites passed
+The size of this webpage's HTML is 70.12 Kb, and is greater than the average size of 33 Kb! This can lead to slower loading times, lost visitors, and decreased revenue. Good steps to reduce HTML size include: using HTML compression, CSS layouts, external style sheets, and moving javascript to external files.
+
+How to fix
+DOM Size Test
+56% of top 100 sites passed
+The Document Object Model (DOM) of this webpage has 710 nodes which is less than the recommended value of 1,500 nodes.
+HTML Compression/GZIP Test
+99% of top 100 sites passed
+This webpage doesn't use HTML compression! We recommend to compress the HTML code in order to reduce the page size and page loading times - this will help a website to retain visitors and increase page views. If the HTML compression will be enabled, the HTML size will be decreased by 83% - from 70.12 Kb to 12.22 Kb .
+
+How to fix
+Site Loading Speed Test
+71% of top 100 sites passed
+The loading time of this webpage (measured from N. Virginia, US) is around 0.97 seconds and this is under the average loading speed which is 5 seconds.
+JS Execution Time Test
+53% of top 100 sites passed
+The JavaScript code used by this webpage is executed in less than 2 seconds.
+Page Objects Test
+7% of top 100 sites passed
+This webpage is using more than 20 http requests, which can slow down page loading and negatively impact user experience!
+Content size by content type
+Content type
+Percent
+Size
+image
+66.8 %
+2.87 Mb
+javascript
+30.1 %
+1.30 Mb
+css
+2.3 %
+101.31 Kb
+font
+0.7 %
+31.60 Kb
+html
+0.1 %
+3.44 Kb
+other
+0.0 %
+62 B
+TOTAL
+100%
+4.30 Mb
+Requests by content type
+Content type
+Percent
+Requests
+image
+38.1 %
+8
+javascript
+23.8 %
+5
+font
+19.0 %
+4
+css
+9.5 %
+2
+html
+4.8 %
+1
+other
+4.8 %
+1
+TOTAL
+100%
+21
+Content size by domain
+Domain
+Percent
+Size
+techpartner.sa
+90.1 %
+3.87 Mb
+googletagmanager.com
+9.1 %
+402.65 Kb
+fonts.gstatic.com
+0.7 %
+31.60 Kb
+replit.com
+0.1 %
+2.34 Kb
+fonts.googleapis.com
+0.0 %
+1.05 Kb
+TOTAL
+100%
+4.30 Mb
+Requests by domain
+Domain
+Percent
+Requests
+techpartner.sa
+57.1 %
+12
+fonts.gstatic.com
+19.0 %
+4
+googletagmanager.com
+14.3 %
+3
+replit.com
+4.8 %
+1
+fonts.googleapis.com
+4.8 %
+1
+TOTAL
+100%
+21
+CDN Usage Test
+95% of top 100 sites passed
+This webpage is serving all images, javascript and css resources from CDNs.
+Modern Image Format Test
+43% of top 100 sites passed
+This webpage is not serving images in a modern format! Image formats like JPEG 2000, JPEG XR, and WebP often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.
+
+See results list
+
+How to fix
+Image Metadata Test
+72% of top 100 sites passed
+This webpage is not using images with large metadata.
+Image Caching Test
+95% of top 100 sites passed
+This website is using cache headers for images and the browsers will display these images from the cache.
+JavaScript Caching Test
+96% of top 100 sites passed
+This webpage is using cache headers for all JavaScript resources.
+CSS Caching Test
+98% of top 100 sites passed
+This webpage is using cache headers for all CSS resources.
+JavaScript Minification Test
+98% of top 100 sites passed
+All JavaScript files used by this webpage are minified.
+
+See results list
+CSS Minification Test
+100% of top 100 sites passed
+All CSS resources used by this webpage are minified.
+
+See results list
+Render Blocking Resources Test
+15% of top 100 sites passed
+This webpage is using render blocking resources! Eliminating render-blocking resources can help this webpage to load significantly faster and will improve the website experience for your visitors.
+
+See results list
+
+How to fix
+URL Redirects Test
+97% of top 100 sites passed
+This URL doesn't have any redirects (which could potentially cause site indexation issues and site loading delays).
+Time To First Byte Test
+99% of top 100 sites passed
+The Time To First Byte value of this webpage is 0.089 seconds. To provide a good user experience, Google recommends that sites should strive to have a TTFB of 0.8 seconds or less.
+0.089 s0.8 s1.8 s
+First Contentful Paint Test
+90% of top 100 sites passed
+The First Contentful Paint value of this webpage is 2.200 seconds. To provide a good user experience, Google recommends that sites should strive to have a First Contentful Paint value of 1.8 seconds or less.
+2.2 s1.8 s3 s
+
+How to fix
+Largest Contentful Paint Test
+77% of top 100 sites passed
+The Largest Contentful Paint duration of this webpage is 2.82 seconds. To provide a good user experience, Google recommends that sites should strive to have Largest Contentful Paint of 2.5 seconds or less.
+2.82 s2.5 s4 s
+Largest Contentful Paint element within the viewport:
+<img src="/assets/image_1751882806746_2-CGl8nBP3.png" alt="Design showcase" class="w-48 sm:w-64 md:w-80 lg:w-96 xl:w-[28rem] 2xl:w-[3...">
+
+How to fix
+Cumulative Layout Shift Test
+91% of top 100 sites passed
+The CLS score of this webpage is 0.0300. To provide a good user experience, Google recommends that sites should strive to have a CLS score of 0.1 or less.
+0.030.10.25
+DOM element which contributes the most to CLS score:
+Text: Custom Web Development Professional full-stack development solutions using mode...
+Html: <div class="mb-16 bg-gradient-to-br from-blue-600 to-purple-70...">
+Score: 0.0300
+Server and security
+Score:
+74
+Failed:
+2
+Warnings:
+0
+Passed:
+5
+URL Canonicalization Test
+93% of top 100 sites passed
+https://techpartner.sa/ and https://www.techpartner.sa/ should resolve to the same URL, but currently do not.
+
+How to fix
+SSL Checker and HTTPS Test
+100% of top 100 sites passed
+This website is successfully using HTTPS, a secure communication protocol over the Internet.
+The certificate is not used before the activation date.
+The certificate has not expired.
+The hostname "techpartner.sa" is correctly listed in the certificate.
+The certificate should be trusted by all major web browsers.
+The certificate was not revoked.
+The certificate was signed with a secure hash.
+Certificate Chain:
+Server certificate
+Common Name
+techpartner.sa
+Subject Alternative Names
+techpartner.sa
+Not Valid Before
+Sun, February 15, 2026 at 8:15:33 PM GMT+3
+Not Valid After
+Sat, May 16, 2026 at 8:15:32 PM GMT+3
+Signature Algorithm
+ecdsaWithSha384
+Issuer
+E8
+Intermediate certificate
+Common Name
+E8
+Organization
+Let's Encrypt
+Location
+US
+Not Valid Before
+Wed, March 13, 2024 at 3:00:00 AM GMT+3
+Not Valid After
+Sat, March 13, 2027 at 2:59:59 AM GMT+3
+Signature Algorithm
+sha256WithRsaEncryption
+Issuer
+ISRG Root X1
+Root certificate
+Common Name
+ISRG Root X1
+Organization
+Internet Security Research Group
+Location
+US
+Not Valid Before
+Thu, June 4, 2015 at 2:04:38 PM GMT+3
+Not Valid After
+Mon, June 4, 2035 at 2:04:38 PM GMT+3
+Signature Algorithm
+sha256WithRsaEncryption
+Issuer
+ISRG Root X1
+Mixed Content Test (HTTP over HTTPS)
+100% of top 100 sites passed
+This webpage does not use mixed content - both the initial HTML and all other resources are loaded over HTTPS.
+HTTP2 Test
+99% of top 100 sites passed
+This webpage is using the HTTP/2 protocol.
+HSTS Test
+84% of top 100 sites passed
+This webpage is using the Strict-Transport-Security header.
+strict-transport-security:max-age=63072000; includesubdomains
+Plaintext Emails Test
+97% of top 100 sites passed
+We've found 1 email addresses in your page code! We advise you to protect email links in a way that hides them from the spam harvesters.
+
+How to fix
+Unsafe Cross-Origin Links Test
+45% of top 100 sites passed
+This webpage is not using target="_blank" links without rel="noopener" or rel="noreferrer" attribute.
+Mobile usability
+Score:
+100
+Failed:
+0
+Warnings:
+0
+Passed:
+3
+Meta Viewport Test
+92% of top 100 sites passed
+This webpage is using a viewport meta tag.
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+Media Query Responsive Test
+98% of top 100 sites passed
+This webpage is using CSS media queries, which is the base for responsive design functionalities.
+Mobile Snapshot Test
+Mobile view
+Advanced SEO
+Score:
+33
+Failed:
+4
+Warnings:
+0
+Passed:
+5
+Structured Data Test
+66% of top 100 sites passed
+This webpage doesn't take the advantages of HTML Microdata or JSON-LD specifications in order to use structured data! View Google's guide for getting started with structured data.
+
+How to fix
+Custom 404 Error Page Test
+80% of top 100 sites passed
+This website is not using a custom 404 error page! Default 404 error pages result in a poor experience - it can mislead users into thinking an entire site is down or broken, greatly increases the chance they leave the website entirely, and looks unprofessional. We recommend to have a custom 404 error page in order to improve the website's user experience by letting users know that only a specific page is missing/broken (and not the entire site), providing them helpful links, the opportunity to report bugs, and potentially track the source of broken links.
+
+How to fix
+Noindex Tag Test
+99% of top 100 sites passed
+This webpage does not use the noindex meta tag. This means that it can be indexed by search engines.
+Canonical Tag Test
+93% of top 100 sites passed
+This webpage does not use the canonical link tag.
+Nofollow Tag Test
+This webpage does not use the nofollow meta tag. This means that search engines will crawl all links from this webpage.
+Disallow Directive Test
+Your robots.txt file includes a disallow command which instructs search engines to avoid certain parts of your website! You are advised to confirm if access to these resources or pages are intended to be blocked (e.g., if they contain internal-only content or sensitive information).
+Meta Refresh Test
+98% of top 100 sites passed
+This webpage is not using a meta refresh tag.
+SPF Records Test
+94% of top 100 sites passed
+This DNS server is not using an SPF record! SPF (Sender Policy Framework) allows administrators to specify which hosts are allowed to send mail from a given domain by creating a specific SPF record or TXT record in the Domain Name System (DNS). You can find more information about SPF records here.
+
+How to fix
+Ads.txt Validation Test
+67% of top 100 sites passed
+The request of ads.txt file has an unexpected Content-Type header: text/html; charset=UTF-8. In order for this resource to be easily accessed by the DSPs and advertisers, its Content-Type header should be text/plain or text/plain; charset=utf-8.

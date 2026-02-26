@@ -1,0 +1,89 @@
+Create a new Vue app
+Run the following commands to create a new Vue app using Vite:
+
+npm
+pnpm
+yarn
+bun
+terminal
+npm create vite@latest clerk-vue -- --template vue-ts
+cd clerk-vue
+npm install
+2
+Install @clerk/vue
+The Clerk Vue SDK gives you access to prebuilt components, composables, and helpers to make user authentication easier.
+
+Run the following command to install the SDK:
+
+npm
+pnpm
+yarn
+bun
+terminal
+npm install @clerk/vue
+3
+Set your Clerk API keys
+Add your Clerk Publishable Key to your .env file or create the file if it doesn't exist. Retrieve this key anytime from the API keys page.
+
+.env
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_ZXhwZXJ0LWFhcmR2YXJrLTc3LmNsZXJrLmFjY291bnRzLmRldiQ
+4
+Add clerkPlugin to your app
+clerkPlugin provides active session and user context to Clerk's components and composables. It's required to pass your Clerk Publishable Key as an option. You can add an if statement to check that the key is imported properly. This prevents the app from running without the Publishable Key and catches TypeScript errors.
+
+The clerkPlugin accepts optional options, such as { signInForceRedirectUrl: '/dashboard' }.
+
+src/main.ts
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import { clerkPlugin } from '@clerk/vue'
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Add your Clerk Publishable Key to the .env file')
+}
+
+const app = createApp(App)
+app.use(clerkPlugin, { publishableKey: PUBLISHABLE_KEY })
+app.mount('#app')
+5
+Create a header with Clerk components
+You can control which content signed-in and signed-out users can see with Clerk's prebuilt control components. The following example creates a header using the following components:
+
+<SignedIn>: Children of this component can only be seen while signed in.
+<SignedOut>: Children of this component can only be seen while signed out.
+<UserButton />: Shows the signed-in user's avatar. Selecting it opens a dropdown menu with account management options.
+<SignInButton />: An unstyled component that links to the sign-in page or displays the sign-in modal. In this example, since no props or environment variables are set for the sign-in URL, this component links to the Account Portal sign-in page.
+<SignUpButton />: An unstyled component that links to the sign-up page or displays the sign-up modal. In this example, since no props or environment variables are set for the sign-up URL, this component links to the Account Portal sign-up page.
+src/App.vue
+<script setup lang="ts">
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/vue'
+</script>
+
+<template>
+  <header>
+    <!-- Show the sign-in and sign-up buttons when the user is signed out -->
+    <SignedOut>
+      <SignInButton />
+      <SignUpButton />
+    </SignedOut>
+    <!-- Show the user button when the user is signed in -->
+    <SignedIn>
+      <UserButton />
+    </SignedIn>
+  </header>
+</template>
+Run your project
+Run your project with the following command:
+
+npm
+pnpm
+yarn
+bun
+terminal
+npm run dev
+Create your first user
+Visit your app's homepage at http://localhost:5173 and select "Sign up" on the page to create your first user.
+

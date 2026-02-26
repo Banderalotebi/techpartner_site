@@ -1,0 +1,101 @@
+This is the "Silent Failure" loop. Since we have tried the standard fixes and the "nuclear" option, and it *still* fails, the issue is likely **not** your code logic, but an environmental block.
+
+We need to isolate if the problem is **Vite/React** or your **Browser/Network**.
+
+Please perform this **3-minute "Sanity Test"**.
+
+### Step 1: The "No-React" Test
+
+Create a new file named **`test.html`** inside your **`public`** folder (not `src`). Paste this exact code. This removes React, Vite, and Bundlers from the equation.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Translation Test</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <p>This is a test of the Google Translate widget.</p>
+
+    <div id="google_translate_element"></div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
+
+```
+
+**Now, open this file in your browser:** `http://localhost:5173/test.html` (or whatever your local port is).
+
+**Does this page translate?**
+
+* **YES:** The widget works. The problem is definitely **React Strict Mode** or **Vite HMR**. (Go to Fix A).
+* **NO:** The widget is broken on your network. The problem is **CSP, AdBlock, or Browser Settings**. (Go to Fix B).
+
+---
+
+### Fix A: If `test.html` Worked (The React Conflict)
+
+The issue is likely **React Strict Mode** rendering the widget twice, breaking the internal Google instance.
+
+**1. Disable Strict Mode**
+Open your `src/main.jsx` (or `index.tsx`) and remove `<React.StrictMode>`.
+
+```jsx
+// BEFORE
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+// AFTER (Try this)
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <App />
+)
+
+```
+
+**2. The "Ghost" Element**
+Vite's "Hot Module Replacement" (HMR) swaps the page content without refreshing. Google Translate attaches to the *old* DOM element. When Vite swaps it, the widget loses its connection.
+
+* **Solution:** You **must** manually refresh the page (`F5`) after saving code changes to see if it works. You cannot trust the auto-update for this specific widget.
+
+---
+
+### Fix B: If `test.html` Failed (The Network Block)
+
+If even the plain HTML file didn't work, your browser or network is killing the translation request.
+
+**1. Check the Console (F12 -> Console)**
+Do you see red errors like:
+
+* `Refused to load script...` (Content Security Policy issue)
+* `net::ERR_BLOCKED_BY_CLIENT` (AdBlocker is killing it)
+* `403 Forbidden` (Google API blocking your IP/Domain)
+
+**2. Check the `lang` Attribute**
+Inspect your `<html>` tag in the Elements tab.
+
+* **If it says `<html lang="ar">`:** Google thinks the page is *already* Arabic and will not translate it.
+* **Fix:** Ensure it is strictly `<html lang="en">`.
+
+**3. The "Translate" Meta Tag**
+Check your `index.html` for this line. If it exists, **delete it**:
+
+```html
+<meta name="google" content="notranslate" />
+
+```
+
+**Which result did you get from the `test.html` file?**

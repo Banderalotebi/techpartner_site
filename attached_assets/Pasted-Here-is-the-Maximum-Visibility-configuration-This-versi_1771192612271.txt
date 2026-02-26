@@ -1,0 +1,110 @@
+Here is the **"Maximum Visibility"** configuration. This version explicitly welcomes every major AI model and Search Engine while pointing them to all the modern discovery tools available in 2026.
+
+Add this file to your `public/` folder.
+
+### **The "Allow-All" robots.txt**
+
+```text
+# ==========================================================
+# MASTER ROBOTS.TXT (Maximum Visibility & Connectivity)
+# ==========================================================
+
+# 1. EXPLICIT AI & LLM PERMISSIONS (The VIP List)
+# ----------------------------------------------------------
+# We explicitly invite these bots to ensure priority indexing.
+
+# OpenAI (ChatGPT / SearchGPT)
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+# Google (Gemini / Search)
+User-agent: Googlebot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Apple (Apple Intelligence)
+User-agent: Applebot
+Allow: /
+
+# Microsoft (Bing / Copilot)
+User-agent: bingbot
+Allow: /
+
+# Meta (Llama / Facebook)
+User-agent: FacebookBot
+Allow: /
+
+# 2. GENERAL PERMISSION (Everyone Else)
+# ----------------------------------------------------------
+# This wildcard ensures any new or smaller AI agent can 
+# access your content without restriction.
+
+User-agent: *
+Allow: /
+
+# 3. SAFETY & NODE.JS EXCLUSIONS (The "Do Not Touch" List)
+# ----------------------------------------------------------
+# Even with "Allow All," you must protect your server logic.
+
+Disallow: /api/             # Protect backend endpoints
+Disallow: /admin/           # Protect admin panels
+Disallow: /node_modules/    # Block dependency folders
+Disallow: /.env             # Block environment variables (Critical)
+Disallow: /*.json$          # Optional: Block raw JSON files if they aren't content
+Disallow: /private/
+Disallow: /auth/
+
+# 4. DISCOVERY TOOLS (The Connectivity Block)
+# ----------------------------------------------------------
+
+# Standard SEO Sitemap (For Google, Bing, etc.)
+Sitemap: https://www.yoursite.com/sitemap.xml
+
+# AI Content Map (For LLMs & Agents)
+Sitemap: https://www.yoursite.com/llms.txt
+
+# Security Policy (For Security Researchers/Bots)
+Sitemap: https://www.yoursite.com/.well-known/security.txt
+
+# Team Credits (For Human curiosity)
+Sitemap: https://www.yoursite.com/humans.txt
+
+```
+
+### **The "Tools" Explained**
+
+Since you asked to "add all the tools," here is what those links at the bottom actually do and why you need them in your `public/` folder:
+
+1. **`sitemap.xml`**:
+* **Tool For:** Old-school search engines (Google, Bing).
+* **Vite Tip:** Use `vite-plugin-sitemap` to generate this automatically during your build.
+
+
+2. **`llms.txt`**:
+* **Tool For:** AI Agents (ChatGPT, Claude).
+* **What it is:** A Markdown file that strips away your CSS/JS and just gives the AI raw facts. It usually links to a broader `llms-full.txt`.
+
+
+3. **`security.txt`**:
+* **Tool For:** White-hat hackers and security bots.
+* **Standard:** Standardized by RFC 9116. It tells people where to report security vulnerabilities found in your Node.js app.
+
+
+4. **`humans.txt`**:
+* **Tool For:** People.
+* **What it is:** A text file listing who built the site, what tech stack you used (Vite/Node), and your contact info.
+
+
+
+**Would you like me to write the content for the `llms.txt` file so your AI SEO is ready to go?**

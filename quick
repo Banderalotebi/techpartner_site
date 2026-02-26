@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# 🚀 TechPartner Platform - Super Simple Commands
+# ===============================================
+# Ultra-simple commands for common operations
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+echo -e "${BLUE}🚀 TechPartner Platform - Quick Commands${NC}"
+echo ""
+
+case "${1:-help}" in
+    "go")
+        # Super simple deploy
+        echo -e "${GREEN}🚀 Deploying to production...${NC}"
+        ./scripts/git-deploy.sh production "${2:-Auto-deploy $(date)}"
+        ;;
+    "test")
+        # Deploy to staging
+        echo -e "${GREEN}🧪 Deploying to staging...${NC}"
+        ./scripts/git-deploy.sh staging "${2:-Testing $(date)}"
+        ;;
+    "push")
+        # Just push to git
+        echo -e "${GREEN}📤 Pushing to git...${NC}"
+        ./scripts/git-deploy.sh push "${2:-Quick update $(date)}"
+        ;;
+    "check")
+        # Health check
+        ./scripts/health-check.sh
+        ;;
+    "status")
+        # Show status
+        ./scripts/deploy.sh status
+        ;;
+    "logs")
+        # Show logs
+        ./scripts/deploy.sh logs
+        ;;
+    "fix")
+        # Rollback
+        echo -e "${GREEN}🔄 Starting rollback...${NC}"
+        ./scripts/deploy.sh rollback
+        ;;
+    *)
+        echo "Ultra-simple commands:"
+        echo ""
+        echo "  ./quick go      Deploy to production"
+        echo "  ./quick test    Deploy to staging"
+        echo "  ./quick push    Just push to git"
+        echo "  ./quick check   Health check"
+        echo "  ./quick status  Service status"
+        echo "  ./quick logs    View logs"
+        echo "  ./quick fix     Rollback production"
+        echo ""
+        echo "Examples:"
+        echo "  ./quick go \"Added new feature\""
+        echo "  ./quick test \"Testing bug fix\""
+        echo "  ./quick push \"Updated docs\""
+        ;;
+esac

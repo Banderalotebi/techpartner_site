@@ -1,0 +1,52 @@
+Issues to fix
+HIGH
+To address URL canonicalization issues, it is recommended to select a primary URL for your webpage and set up redirects from all other variations to the preferred one.
+Details
+HIGH
+Add a descriptive and relevant title tag to the webpage, targeting important keywords or phrases, as a missing or poor title tag can make it difficult for the page to rank well in search engines.
+Details
+HIGH
+To improve the website experience for your visitors, it is recommended to eliminate any render-blocking resources on this webpage.
+Details
+HIGH
+Add a meta description tag to provide a brief and informative summary of the page's content for search engines.
+Details
+HIGH
+To ensure that Search Engines can accurately identify the topic of this webpage, it is important to include the most common keywords in the title tag, meta description, and heading tags.
+Details
+HIGH
+Using images in a modern format can significantly reduce the file size and improve the loading speed of a webpage, providing a better user experience and potentially increasing engagement.
+Details
+MEDIUM
+Serve properly sized images to reduce page loading times and to improve user's experience.
+Details
+MEDIUM
+Avoid using distorted images, as they can have a negative impact on the user experience.
+Details
+MEDIUM
+By creating a custom 404 error page with helpful links and information, users are more likely to stay on the site and continue to explore.
+Details
+MEDIUM
+Consider using structured data in your webpage as it can help search engines gain a better understanding of your content.
+Details
+MEDIUM
+Using social media meta tags can improve the appearance and content of shared links on social media platforms, potentially increasing click-through rates and engagement with the page.
+Details
+LOW
+Consider reducing the HTML size to improve loading times and retain visitors.
+Details
+LOW
+Enable HTML compression to reduce page size and loading times.
+Details
+LOW
+Resolving errors identified by the Chrome DevTools Console can improve user experience.
+Details
+LOW
+Without an SPF record, spammers can easily spoof emails from this domain, potentially leading to compromised email security and deliverability issues.
+Details
+LOW
+Using more than 20 HTTP requests on a webpage can negatively impact the loading time.
+Details
+LOW
+This website either lacks a favicon or it has not been referenced properly.
+Details

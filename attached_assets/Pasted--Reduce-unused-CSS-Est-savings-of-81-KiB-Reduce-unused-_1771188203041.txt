@@ -1,0 +1,77 @@
+
+Reduce unused CSS Est savings of 81 KiB
+Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by network activity. Learn how to reduce unused CSS.LCPFCPUnscored
+URL
+Transfer Size
+Est Savings
+techpartner.sa 1st party
+99.9 KiB	81.3 KiB
+/assets/index-DULeQlT5.css(techpartner.sa)
+99.9 KiB
+81.3 KiB
+Image elements do not have explicit width and height
+Set an explicit width and height on image elements to reduce layout shifts and improve CLS. Learn how to set image dimensionsCLSUnscored
+URL
+techpartner.sa 1st party
+Design showcase
+<img src="/assets/image_1751882806746_2-CGl8nBP3.png" alt="Design showcase" class="w-48 sm:w-64 md:w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem] h-auto rounded-xl …">
+/assets/image_175….png(techpartner.sa)
+TechPartner Logo
+<img src="/assets/logo-tech-partner-big-blue-PUD5UwpI.png" alt="TechPartner Logo" class="h-12 w-auto group-hover:scale-105 transition-transform">
+/assets/logo-tech….png(techpartner.sa)
+TechPartner Logo
+<img src="/assets/logo-tech-partner-big-blue-PUD5UwpI.png" alt="TechPartner Logo" class="h-14 w-auto">
+/assets/logo-tech….png(techpartner.sa)
+TechPartner Expert Developer
+<img src="/assets/19362653-_Converted_-CB_5hUfO.png" alt="TechPartner Expert Developer" class="w-full h-auto relative z-10">
+/assets/19362653-….png(techpartner.sa)
+Custom Web Development
+<img src="/assets/web-and-app-design-3_0nJrdy.png" alt="Custom Web Development" class="rounded-lg shadow-xl max-w-sm w-full object-cover">
+/assets/web-and-a….png(techpartner.sa)
+Start your brand
+<img src="/assets/logo-and-branding-design-uXKcyTn8.png" alt="Start your brand" class="w-full h-auto rounded-2xl shadow-2xl">
+/assets/logo-and-….png(techpartner.sa)
+Avoid enormous network payloads Total size was 4,403 KiB
+Large network payloads cost users real money and are highly correlated with long load times. Learn how to reduce payload sizes.Unscored
+URL
+Transfer Size
+techpartner.sa 1st party
+3,800.8 KiB
+/assets/image_175….png(techpartner.sa)
+1,537.6 KiB
+/assets/index-D12StxFN.js(techpartner.sa)
+919.6 KiB
+/assets/art-and-i….png(techpartner.sa)
+361.5 KiB
+/assets/business-….png(techpartner.sa)
+315.2 KiB
+/assets/packaging-Dsl-jCL2.png(techpartner.sa)
+230.8 KiB
+/assets/web-and-a….png(techpartner.sa)
+218.5 KiB
+/assets/logo-and-….png(techpartner.sa)
+217.6 KiB
+Google Tag Manager tag-manager 
+394.5 KiB
+/gtag/js?id=G-6X1LQ695SK(www.googletagmanager.com)
+146.4 KiB
+/gtag/js?id=G-6X1LQ695SK&cx=c&gtm=4e62b1(www.googletagmanager.com)
+146.2 KiB
+/gtm.js?id=GTM-KHV9SP5N(www.googletagmanager.com)
+102.0 KiB
+Avoid long main-thread tasks 2 long tasks found
+Lists the longest tasks on the main thread, useful for identifying worst contributors to input delay. Learn how to avoid long main-thread tasksTBTUnscored
+URL
+Start Time
+Duration
+techpartner.sa 1st party
+63 ms
+/assets/index-D12StxFN.js(techpartner.sa)
+10,042 ms
+63 ms
+Google Tag Manager tag-manager 
+59 ms
+/gtag/js?id=G-6X1LQ695SK(www.googletagmanager.com)
+3,658 ms
+59 ms
+More information about the performance of your application. These numbers don't directly affect the Performance score.

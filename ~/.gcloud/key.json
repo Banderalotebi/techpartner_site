@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "glossy-agency-448211-s4",
+  "private_key_id": "bfe340eabc698f2fc830157cadd34bc99ed0d2cc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPGI68crpmruQe\nHQJn3TML++qyInn84MroCmWnNXsx4uHNbHprF6fWNiCjPxht/S+oDaIpCAHvR0mQ\n+7fLZvFHMrbsHztPjHuI8qffI4kCH4r6rqry4uJTLQJxEp6HGVNPeP7jd6g3qWjW\nVcgOfEWsogSnAhjQRUI/+c94vHDiOTn8EAILB79TdGo0sB/2NXkYN8knPI3OhmvY\nZtBQCZlGdlHQvwQTbqNGyWHv62eS9ZvQI+dCWrJDRXN3kjpWzXpJzSWoLNQl01Hb\nNgcJijWemMnhtOPlooPKAY48QLqSTfGaRcoxP2YMa1ks6MbXl4vi1mZcjxPcoUyd\nQeL8F4ULAgMBAAECggEAHCNZjXhHJFmB7CeD4qnW3DyQq7i4K+FcE4cZSYmhLQ1R\nKlgQnFqLPo8sOpkBQJsVE0c8RfMrUZLx4E5F3RmPuKvLlIJ+UlBCjfJhF4/YwP6z\n0cGKGrq0pF3kE7/8vLJL6P9Xh3+8aKnB3kGUW2Y5dO3jH7fJ2YcN4hpwKbUz8lFq\nT3zIjqvB2VnEfY0o4kG1fF2B+SaH7MeQhO5J8K+NfL9VjT1zP3oYqZm4L6R2aBnL\nPrQ3FhJ8+9JK2jFgT7hN1P4V5oYqGfB7k3JhF7CdQ1NzKpO6LwFqJ2R5M8eH3Jlb\nA2dGcI7XsV8B9YpN6F4K+L3qTrO5cW1nE2jH7LkQKBgQD1u2qYcE5F8KgLnJo7Fj\nP9XhE1Y2bK6nL7cQ3A8R4jE1G2nFpL6B9oEcI5Q3VjMwF4hK2dGfJ8L0pYqZ1nNv\nTrO8cW1nE2jH7LkQKBgQDXzY4F5J1oYcG2nF9L6B9oEcI5Q3VjMwF4hK2dGfJ8L0\npYqZ1nNvTrO8cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKB\ngGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW\n1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7\nLkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgG\nqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1n\nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7Lk\nQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO\n5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2\njH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQKBgGqO5cW1nE2jH7LkQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "replit-deployer@glossy-agency-448211-s4.iam.gserviceaccount.com",
+  "client_id": "105815857307443846246",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/replit-deployer%40glossy-agency-448211-s4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

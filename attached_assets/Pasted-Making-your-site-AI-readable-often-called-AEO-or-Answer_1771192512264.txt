@@ -1,0 +1,80 @@
+Making your site **AI-readable** (often called AEO or Answer Engine Optimization) is the 2026 version of SEO. Since you are using **Vite.js** and **Node.js**, you have a high-performance stack, but you need to bridge the gap between "fast for humans" and "scannable for bots."
+
+Most AI crawlers (like GPTBot or ClaudeBot) prefer structured, static data over dynamic, JavaScript-rendered content. Here is how to optimize your stack:
+
+---
+
+## 1. The Technical Foundation (Vite/Node)
+
+By default, Vite often produces a Client-Side Rendered (CSR) app. Many AI crawlers are "lazy" and won't execute your JavaScript, meaning they see an empty `div id="app"`.
+
+* **Move to SSR or SSG:** If your content doesn't change every second, use **Vite SSR** or a framework like **Astro** or **Nuxt/Next** that handles Server-Side Rendering. This ensures the raw HTML contains your text when the AI bot hits your URL.
+* **Use `llms.txt`:** This is a new 2025/2026 standard. Create a file at `/public/llms.txt`. It’s like `robots.txt` but formatted specifically for LLMs to understand your site’s purpose and key links in Markdown.
+* **Pre-render Critical Routes:** If you stay with CSR, use a plugin like `vite-plugin-prerender` to turn your main pages into static HTML files during build time.
+
+---
+
+## 2. Implement "Semantic" Structure
+
+AI doesn't "look" at your site; it "parses" it. If your code is a mess of `<div>` tags, the AI gets lost.
+
+* **Semantic HTML:** Use `<article>`, `<section>`, `<aside>`, and proper `<h1-h6>` hierarchies. AI models use these to weight the importance of information.
+* **JSON-LD (The "Gold Standard"):** Add Schema.org markup. This tells the AI exactly what a piece of data is (e.g., a Price, an FAQ, or an Author).
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Your App Name",
+  "operatingSystem": "Web",
+  "applicationCategory": "DeveloperApplication"
+}
+</script>
+
+```
+
+---
+
+## 3. Configure `robots.txt` for 2026
+
+Standard SEO often blocks "aggressive" bots. For AI readability, you want to explicitly invite the "good" ones while managing your "crawl budget."
+
+Add this to your `public/robots.txt`:
+
+```text
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+```
+
+---
+
+## 4. Content Design for Extraction
+
+AI models often "chunk" your content into small pieces to fit into their context windows.
+
+* **TL;DRs and Summaries:** Place a concise summary at the top of long pages. AI agents love grabbing these for quick answers.
+* **FAQ Sections:** Use a clear Question/Answer format. These are highly "extractable" and often appear as direct citations in tools like Perplexity or SearchGPT.
+* **Avoid Text-in-Images:** If your value proposition is inside a hero banner image, the AI won't see it unless it uses Vision (which is expensive and rarer for bulk crawling). Always provide a text fallback.
+
+---
+
+### Summary Checklist for your Stack
+
+| Feature | Implementation |
+| --- | --- |
+| **Rendering** | Switch Vite to **SSR** or use **Pre-rendering**. |
+| **Discovery** | Add a **`/llms.txt`** file to your public folder. |
+| **Metadata** | Use **JSON-LD** for all core entities (Products, Docs, etc.). |
+| **Connectivity** | Ensure your Node.js API serves clean, meta-tagged headers. |
+
+**Would you like me to generate a template for your `llms.txt` file based on what your site actually does?**

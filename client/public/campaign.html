@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechPartner.sa | AI, Software, & Automation Solutions</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter (English) & Tajawal (Arabic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Base font styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Apply Tajawal font for Arabic */
+        html[lang="ar"] body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: all 0.3s ease-in-out;
+        }
+        .cta-button {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+        }
+        .floating-call {
+            position: fixed;
+            bottom: 20px;
+            z-index: 40;
+        }
+        html[dir="ltr"] .floating-call { right: 20px; }
+        html[dir="rtl"] .floating-call { left: 20px; }
+
+        /* Hide elements by default */
+        .lang-ar, .lang-en {
+            display: none;
+        }
+        
+        /* Success message styles */
+        .success-message {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Sticky Header -->
+    <header id="sticky-header" class="bg-white/80 backdrop-blur-lg shadow-sm sticky-header">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="/">
+                <!-- Corrected Logo URL -->
+                <img src="https://i.ibb.co/pL7qC2K/logo-tech-partner-big-blue.png" alt="TechPartner.sa Logo" class="h-8 md:h-10">
+            </a>
+            <div class="flex items-center gap-4">
+                 <a href="#form-section" class="hidden md:inline-block bg-blue-600 text-white font-bold py-2 px-5 rounded-lg cta-button">
+                    <span class="lang-en">Partner with Us</span>
+                    <span class="lang-ar">اشترك معنا</span>
+                </a>
+                <button id="lang-toggle" class="font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                    <span class="lang-en">AR</span>
+                    <span class="lang-ar">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6">
+
+        <!-- Hero Section -->
+        <section class="text-center pt-16 pb-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                <span class="lang-en">Develop Your Business with<br class="hidden md:inline"> <span class="text-blue-600">AI & Custom Software.</span></span>
+                <span class="lang-ar">طوّر أعمالك بـ<span class="text-blue-600">الذكاء الاصطناعي</span><br class="hidden md:inline"> والبرمجيات المخصصة.</span>
+            </h1>
+            <p class="mt-8 max-w-3xl mx-auto text-lg text-gray-600">
+                <span class="lang-en">We build advanced AI, IoT, Robotics, and automation solutions to solve your biggest challenges. 100% Saudi-based innovation.</span>
+                <span class="lang-ar">نبني حلولاً متقدمة في الذكاء الاصطناعي، إنترنت الأشياء، الروبوتات، والأتمتة لمواجهة أكبر تحدياتك. ابتكار سعودي 100%.</span>
+            </p>
+        </section>
+
+        <!-- Key Benefits Section -->
+        <section class="py-12">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+                <!-- Benefit 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <svg class="w-12 h-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V8.25a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 8.25v10.5A2.25 2.25 0 006.75 21z" /></svg>
+                    <h3 class="mt-4 font-semibold text-gray-900"><span class="lang-en">AI & Automation</span><span class="lang-ar">الذكاء الاصطناعي والأتمتة</span></h3>
+                </div>
+                <!-- Benefit 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <svg class="w-12 h-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+                    <h3 class="mt-4 font-semibold text-gray-900"><span class="lang-en">Custom Software Dev</span><span class="lang-ar">تطوير برمجيات مخصصة</span></h3>
+                </div>
+                <!-- Benefit 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <svg class="w-12 h-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                    <h3 class="mt-4 font-semibold text-gray-900"><span class="lang-en">Mobile App Solutions</span><span class="lang-ar">حلول تطبيقات الجوال</span></h3>
+                </div>
+                <!-- Benefit 4 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <svg class="w-12 h-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5l.415-.207a.75.75 0 011.085.67V10.5m0 0h6m-6 0a.75.75 0 00.75.75h4.5a.75.75 0 00.75-.75m-6 0v1.5a.75.75 0 00.75.75h4.5a.75.75 0 00.75-.75V10.5m-6 0h6m-6 0H6m6 0h.75m-1.5 6H6.375a1.125 1.125 0 01-1.125-1.125V12.25c0-.621.504-1.125 1.125-1.125H9.75v1.5a.75.75 0 01-.75.75H7.5v.75a.75.75 0 01-.75.75h-.75" /></svg>
+                    <h3 class="mt-4 font-semibold text-gray-900"><span class="lang-en">IoT & Robotics</span><span class="lang-ar">إنترنت الأشياء والروبوتات</span></h3>
+                </div>
+                 <!-- Benefit 5 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <svg class="w-12 h-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>
+                    <h3 class="mt-4 font-semibold text-gray-900"><span class="lang-en">Cloud & Data Solutions</span><span class="lang-ar">الحلول السحابية والبيانات</span></h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partner Logos Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                    <span class="lang-en">Trusted Partners & Technologies</span>
+                    <span class="lang-ar">شركاء وتقنيات موثوقة</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    <span class="lang-en">We partner with leading AI platforms and work with prestigious clients to deliver world-class solutions</span>
+                    <span class="lang-ar">نتشارك مع منصات الذكاء الاصطناعي الرائدة ونعمل مع عملاء مرموقين لتقديم حلول عالمية المستوى</span>
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+                <!-- OpenAI ChatGPT Logo -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 w-full max-w-[200px] h-24 flex items-center justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT" class="h-12 w-auto object-contain">
+                </div>
+                
+                <!-- OpenAI Logo -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 w-full max-w-[200px] h-24 flex items-center justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/OpenAI_Logo_%282%29.svg" alt="OpenAI" class="h-12 w-auto object-contain">
+                </div>
+                
+                <!-- Google Gemini Logo -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 w-full max-w-[200px] h-24 flex items-center justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Google_Gemini_logo.svg/1024px-Google_Gemini_logo.svg.png" alt="Google Gemini" class="h-12 w-auto object-contain">
+                </div>
+                
+                <!-- Meta AI Logo -->
+                <div class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 w-full max-w-[200px] h-24 flex items-center justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/1024px-Meta_Platforms_Inc._logo.svg.png" alt="Meta AI" class="h-12 w-auto object-contain">
+                </div>
+            </div>
+            
+            <!-- Additional Partners Text -->
+            <div class="text-center mt-8">
+                <p class="text-sm text-gray-500">
+                    <span class="lang-en">Powered by cutting-edge AI platforms • Trusted by leading tech companies</span>
+                    <span class="lang-ar">مدعوم بمنصات ذكاء اصطناعي متطورة • موثوق من شركات التقنية الرائدة</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- CTA & Form Section -->
+        <section id="form-section" class="py-16">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left Side: Social Proof & Visuals -->
+                <div>
+                    <!-- Social Proof -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-8">
+                        <div class="flex items-center">
+                            <span class="text-yellow-400 text-2xl">⭐⭐⭐⭐⭐</span>
+                        </div>
+                        <p class="mt-4 text-xl italic text-gray-700">
+                            <span class="lang-en">"Their custom AI model increased our operational efficiency by 40% within the first three months."</span>
+                            <span class="lang-ar">"نموذج الذكاء الاصطناعي المخصص الذي طوروه زاد من كفاءتنا التشغيلية بنسبة 40% خلال الأشهر الثلاثة الأولى."</span>
+                        </p>
+                        <p class="mt-4 font-bold text-gray-900 text-right">
+                            <span class="lang-en">— Fatima, Tech Startup in Jeddah</span>
+                            <span class="lang-ar">— فاطمة، شركة تقنية ناشئة في جدة</span>
+                        </p>
+                    </div>
+                    
+                    <div class="text-center text-lg text-gray-600 space-y-2 mb-8">
+                        <p><span class="lang-en"><span class="font-bold text-blue-600">50+ Projects</span> delivered successfully</span><span class="lang-ar">تسليم <span class="font-bold text-blue-600">أكثر من 50 مشروعًا</span> بنجاح</span></p>
+                        <p><span class="lang-en">NEOM, Red Sea Global & Private Sector</span><span class="lang-ar">نيوم، البحر الأحمر العالمية، والقطاع الخاص</span></p>
+                        <p><span class="lang-en">Certified AI & Cloud Engineers</span><span class="lang-ar">مهندسو ذكاء اصطناعي وسحابة معتمدون</span></p>
+                    </div>
+                    
+                    <!-- Visual Section -->
+                    <div class="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop&crop=center" alt="AI Technology Partnership" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Right Side: Form -->
+                <div class="bg-white p-8 rounded-2xl shadow-2xl">
+                    <h2 class="text-3xl font-bold text-center text-gray-900">
+                        <span class="lang-en">Partner with TechPartner</span>
+                        <span class="lang-ar">اشترك مع تيك بارتنر</span>
+                    </h2>
+                    <p class="text-center text-gray-600 mt-2">
+                        <span class="lang-en">Let's discuss how we can collaborate to transform your business with AI.</span>
+                        <span class="lang-ar">دعنا نناقش كيف يمكننا التعاون لتحويل أعمالك باستخدام الذكاء الاصطناعي.</span>
+                    </p>
+                    
+                    <form id="inquiryForm" class="mt-8 space-y-6">
+                        <div>
+                            <label for="full-name" class="block text-sm font-medium text-gray-700 text-start">
+                                <span class="lang-en">Full Name</span><span class="lang-ar">الاسم الكامل</span> <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="fullName" id="full-name" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="company-role" class="block text-sm font-medium text-gray-700 text-start">
+                                <span class="lang-en">Company / Role</span><span class="lang-ar">الشركة / المنصب</span>
+                            </label>
+                            <input type="text" name="companyRole" id="company-role" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="mobile" class="block text-sm font-medium text-gray-700 text-start">
+                                <span class="lang-en">Mobile (WhatsApp)</span><span class="lang-ar">رقم الجوال (واتساب)</span> <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" name="mobile" id="mobile" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                         <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 text-start">
+                                <span class="lang-en">Email (Optional)</span><span class="lang-ar">البريد الإلكتروني (اختياري)</span>
+                            </label>
+                            <input type="email" name="email" id="email" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="project-type" class="block text-sm font-medium text-gray-700 text-start">
+                                <span class="lang-en">Service of Interest</span><span class="lang-ar">الخدمة المطلوبة</span>
+                            </label>
+                            <select id="project-type" name="projectType" class="mt-1 block w-full px-4 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-start">
+                                <option value="ai-automation" class="lang-en">AI & Automation</option>
+                                <option value="ai-automation" class="lang-ar">الذكاء الاصطناعي والأتمتة</option>
+                                <option value="custom-software" class="lang-en">Custom Software</option>
+                                <option value="custom-software" class="lang-ar">برمجيات مخصصة</option>
+                                <option value="mobile-app" class="lang-en">Mobile App</option>
+                                <option value="mobile-app" class="lang-ar">تطبيق جوال</option>
+                                <option value="iot-robotics" class="lang-en">IoT & Robotics</option>
+                                <option value="iot-robotics" class="lang-ar">إنترنت الأشياء والروبوتات</option>
+                                <option value="other" class="lang-en">Other</option>
+                                <option value="other" class="lang-ar">أخرى</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="submit" id="submitBtn" class="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-blue-600 cta-button">
+                                <span id="submitText">
+                                    <span class="lang-en">Start Our Partnership</span>
+                                    <span class="lang-ar">ابدأ شراكتنا</span>
+                                </span>
+                                <span id="loadingSpinner" class="hidden">
+                                    <div class="spinner"></div>
+                                    <span class="lang-en">Submitting...</span>
+                                    <span class="lang-ar">جاري الإرسال...</span>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Success/Error Messages -->
+                    <div id="formMessages"></div>
+                    
+                     <div class="mt-6 text-center text-sm text-gray-500">
+                        <p><span class="lang-en">📞 Fast Response | 📍 In Saudi | 🇸🇦 Arabic Support</span><span class="lang-ar">📞 استجابة سريعة | 📍 داخل السعودية | 🇸🇦 دعم باللغة العربية</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Urgency Section -->
+        <section class="text-center py-12">
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 rounded-lg inline-block rtl:border-l-0 rtl:border-r-4">
+                <h3 class="font-bold text-xl">
+                    <span class="lang-en">Limited Availability for Q3 Projects.</span>
+                    <span class="lang-ar">توفر محدود لمشاريع الربع الثالث.</span>
+                </h3>
+                <p class="mt-1">
+                    <span class="lang-en">We are booking fast. Contact us now to secure your development slot!</span>
+                    <span class="lang-ar">الحجوزات تتم بسرعة. تواصل معنا الآن لتأمين مكانك في جدول التطوير!</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="py-16 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+                <span class="lang-en">Frequently Asked Questions</span>
+                <span class="lang-ar">الأسئلة الشائعة</span>
+            </h2>
+            <div class="space-y-4 text-start">
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-lg text-gray-900"><span class="lang-en">Q: Can you integrate with our existing systems?</span><span class="lang-ar">س: هل يمكنكم التكامل مع أنظمتنا الحالية؟</span></h3>
+                    <p class="mt-1 text-gray-600"><span class="lang-en">A: Yes, our solutions are designed for seamless API-first integration with your existing software and hardware infrastructure.</span><span class="lang-ar">ج: نعم، حلولنا مصممة للتكامل السلس القائم على واجهات برمجة التطبيقات مع البنية التحتية الحالية للبرامج والأجهزة لديكم.</span></p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-lg text-gray-900"><span class="lang-en">Q: What is your development process?</span><span class="lang-ar">س: ما هي عملية التطوير لديكم؟</span></h3>
+                    <p class="mt-1 text-gray-600"><span class="lang-en">A: We follow an agile methodology, starting with a deep-dive discovery session, followed by iterative sprints with constant client feedback and transparent progress tracking.</span><span class="lang-ar">ج: نتبع منهجية رشيقة، تبدأ بجلسة استكشاف عميقة، تليها دورات عمل متكررة مع تواصل مستمر من العميل وتتبع شفاف للتقدم.</span></p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-lg text-gray-900"><span class="lang-en">Q: How long does a project take?</span><span class="lang-ar">س: كم يستغرق المشروع؟</span></h3>
+                    <p class="mt-1 text-gray-600"><span class="lang-en">A: Timelines vary by complexity. A typical MVP (Minimum Viable Product) can be delivered in 8-12 weeks, while larger enterprise solutions may take longer.</span><span class="lang-ar">ج: تختلف الجداول الزمنية حسب التعقيد. يمكن تسليم منتج قابل للتطبيق (MVP) في غضون 8-12 أسبوعًا، بينما قد تستغرق حلول المؤسسات الكبيرة وقتًا أطول.</span></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Floating Call Button for Mobile -->
+    <a href="tel:+966000000000" class="md:hidden floating-call bg-blue-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center cta-button">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+    </a>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p><span class="lang-en">&copy; 2024 TechPartner.sa - All Rights Reserved.</span><span class="lang-ar">&copy; 2024 TechPartner.sa - جميع الحقوق محفوظة.</span></p>
+            <p class="text-sm text-gray-400 mt-2"><span class="lang-en">Your Trusted Partner for Software, AI, and Automation in Saudi Arabia.</span><span class="lang-ar">شريكك الموثوق للبرمجيات والذكاء الاصطناعي والأتمتة في المملكة العربية السعودية.</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const langToggle = document.getElementById('lang-toggle');
+            const htmlEl = document.documentElement;
+
+            const setLanguage = (lang) => {
+                htmlEl.setAttribute('lang', lang);
+                htmlEl.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+
+                // Update visibility for all language-specific elements
+                document.querySelectorAll('.lang-en, .lang-ar').forEach(el => {
+                    const isInline = !el.closest('h1, h2, h3, p, div.space-y-4 > div, option');
+                    if (el.classList.contains(`lang-${lang}`)) {
+                        el.style.display = isInline ? 'inline' : 'block';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+                
+                // Special handling for options in select
+                document.querySelectorAll('select').forEach(select => {
+                    const currentLang = htmlEl.getAttribute('lang');
+                    // Find the first option for the current language and set it as selected
+                    const firstOption = select.querySelector(`option.lang-${currentLang}`);
+                    if (firstOption) {
+                        select.value = firstOption.value;
+                    }
+                });
+
+                localStorage.setItem('language', lang);
+            };
+
+            langToggle.addEventListener('click', () => {
+                const currentLang = htmlEl.getAttribute('lang');
+                const newLang = currentLang === 'en' ? 'ar' : 'en';
+                setLanguage(newLang);
+            });
+
+            // Set initial language from localStorage or default to English
+            const savedLang = localStorage.getItem('language') || 'en';
+            setLanguage(savedLang);
+
+            // Form submission handling
+            const form = document.getElementById('inquiryForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const formMessages = document.getElementById('formMessages');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitText.classList.add('hidden');
+                loadingSpinner.classList.remove('hidden');
+                formMessages.innerHTML = '';
+
+                // Get form data
+                const formData = new FormData(form);
+                const data = {
+                    fullName: formData.get('fullName'),
+                    companyRole: formData.get('companyRole') || null,
+                    mobile: formData.get('mobile'),
+                    email: formData.get('email') || null,
+                    projectType: formData.get('projectType'),
+                    language: htmlEl.getAttribute('lang'),
+                    source: 'campaign'
+                };
+
+                try {
+                    const response = await fetch('/api/submit-inquiry', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Show success message
+                        const currentLang = htmlEl.getAttribute('lang');
+                        const successMessage = currentLang === 'ar' 
+                            ? '✅ تم إرسال طلبك بنجاح! سنتواصل معك قريباً.'
+                            : '✅ Your inquiry has been submitted successfully! We\'ll contact you soon.';
+                        
+                        formMessages.innerHTML = `<div class="success-message">${successMessage}</div>`;
+                        
+                        // Reset form
+                        form.reset();
+                        
+                        // Track conversion (for analytics)
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'conversion', {
+                                'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL'
+                            });
+                        }
+                        
+                    } else {
+                        throw new Error(result.message || 'Submission failed');
+                    }
+
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    const currentLang = htmlEl.getAttribute('lang');
+                    const errorMessage = currentLang === 'ar' 
+                        ? '❌ حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.'
+                        : '❌ An error occurred while submitting your inquiry. Please try again.';
+                    
+                    formMessages.innerHTML = `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">${errorMessage}</div>`;
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitText.classList.remove('hidden');
+                    loadingSpinner.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
