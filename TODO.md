@@ -79,7 +79,7 @@ cd /home/ubuntu/techpartner && git pull origin main && pm2 restart techpartner
 
 ## 📋 Pending Tasks
 
-- [ ] Install `sharp` on EC2: `cd /home/ubuntu/techpartner && npm install sharp`
+- [x] Install `sharp` on EC2: `cd /home/ubuntu/techpartner && npm install sharp`
 - [ ] Implement `/api/blog` route in `server/routes/`
 - [ ] Implement `/api/services` route in `server/routes/`
 - [ ] Set up HTTPS / SSL (Nginx reverse proxy + Let's Encrypt)
