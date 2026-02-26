@@ -102,4 +102,7 @@ await esbuild.build({
   treeShaking: true,
 });
 
+// Ensure dist/ is treated as CommonJS (overrides root "type":"module")
+fs.writeFileSync("dist/package.json", JSON.stringify({ type: "commonjs" }, null, 2));
+
 console.log("Build complete!");
