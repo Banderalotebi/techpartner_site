@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Search, Mail, User, ChevronDown, Menu, X, Phone, Heart, Star, LogOut, Settings, ShoppingBag } from "lucide-react";
+import { Search, Mail, User, ChevronDown, Menu, X, Phone, Heart, Star, LogOut, Settings, ShoppingBag, Globe } from "lucide-react";
 import { AuthModal } from "./AuthModal";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import techPartnerLogo from "@assets/logo-tech-partner-big-blue.png";
 import {
   DropdownMenu,
@@ -19,8 +20,9 @@ export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
+  const { language, setLanguage, isRTL } = useLanguage();
 
-  const getUserInitials = (firstName?: string, lastName?: string) => {
+  const getUserInitials = (firstName?: string | null, lastName?: string | null) => {
     if (firstName && lastName) {
       return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
@@ -52,6 +54,15 @@ export default function Header() {
                 <Heart className="w-4 h-4 text-red-500" />
                 <span>1000+ Happy Clients</span>
               </div>
+              {/* Language Switcher */}
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+                className="flex items-center space-x-1 px-3 py-1 rounded-full border border-gray-300 hover:border-[#01A1C1] hover:text-[#01A1C1] transition-colors text-sm font-medium"
+                title={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>{language === 'en' ? 'عربي' : 'EN'}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -203,6 +214,14 @@ export default function Header() {
             <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
               Contact
             </div>
+            {/* Mobile Language Switcher */}
+            <button
+              onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+              className="flex items-center space-x-2 text-gray-700 font-medium py-2 hover:text-[#01A1C1]"
+            >
+              <Globe className="w-4 h-4" />
+              <span>{language === 'en' ? 'عربي' : 'English'}</span>
+            </button>
             <div className="pt-4 border-t border-gray-200 space-y-3">
               {isAuthenticated && user ? (
                 <>
