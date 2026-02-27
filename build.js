@@ -35,6 +35,11 @@ const viteExcludePlugin = {
       }
     });
 
+    // Mark all requires inside the stub as external
+    build.onResolve({ filter: /.*/, namespace: "vite-stub" }, (args) => {
+      return { path: args.path, external: true };
+    });
+
     build.onLoad({ filter: /.*/, namespace: "vite-stub" }, () => {
       return {
         contents: `
