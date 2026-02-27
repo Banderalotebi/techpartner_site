@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <script type="text/javascript">
+      (function() {
+        var origOnerror = window.onerror;
+        window.onerror = function(msg, source, lineno, colno, error) {
+          if (
+            !source ||
+            (source && (source.indexOf("translate") !== -1 || source.indexOf("element.js") !== -1)) ||
+            (msg && msg.toString().indexOf("translate") !== -1) ||
+            error === null ||
+            error === undefined
+          ) {
+            return true;
+          }
+          if (origOnerror) return origOnerror(msg, source, lineno, colno, error);
+          return false;
+        };
+        window.addEventListener("error", function(e) {
+          if (
+            !e.filename ||
+            (e.filename && (e.filename.indexOf("translate") !== -1 || e.filename.indexOf("element.js") !== -1)) ||
+            e.error === null || e.error === undefined
+          ) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+          }
+        }, true);
+        window.addEventListener("unhandledrejection", function(e) {
+          var r = e.reason;
+          if (!r || (r && String(r).indexOf("translate") !== -1)) {
+            e.preventDefault();
+          }
+        });
+      })();
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KHV9SP5N');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6X1LQ695SK');
+    </script>
+    <script type="module" crossorigin src="/assets/index-CzoWaYpc.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DrVDJ_97.css">
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHV9SP5N"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="google_translate_element" style="display:none"></div>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>

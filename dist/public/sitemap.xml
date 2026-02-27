@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+<!-- Homepage -->
+<url>
+  <loc>https://techpartner.sa/</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar" />
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://techpartner.sa/" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar" />
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://techpartner.sa/" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<!-- About -->
+<url>
+  <loc>https://techpartner.sa/about</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/about" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/about" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/about</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/about" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/about" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<!-- Contact -->
+<url>
+  <loc>https://techpartner.sa/contact</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/contact" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/contact" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/contact</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/contact" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/contact" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<!-- Portfolio -->
+<url>
+  <loc>https://techpartner.sa/portfolio</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/portfolio" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/portfolio" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/portfolio</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/portfolio" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/portfolio" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<!-- Blog -->
+<url>
+  <loc>https://techpartner.sa/blog</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/blog" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/blog" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/blog</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/blog" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/blog" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<!-- Service Categories -->
+<url>
+  <loc>https://techpartner.sa/categories</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/logo-and-identity</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/logo-and-identity" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/logo-and-identity" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/logo-and-identity</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/logo-and-identity" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/logo-and-identity" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/web-and-app-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/web-and-app-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/web-and-app-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/web-and-app-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/web-and-app-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/web-and-app-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/web-development</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/web-development" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/web-development" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/web-development</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/web-development" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/web-development" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/business-advertising</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/business-advertising" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/business-advertising" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/business-advertising</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/business-advertising" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/business-advertising" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/art-illustration</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/art-illustration" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/art-illustration" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/art-illustration</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/art-illustration" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/art-illustration" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/packaging-label</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/packaging-label" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/packaging-label" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/packaging-label</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/packaging-label" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/packaging-label" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/social-media</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/social-media" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/social-media" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/social-media</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/social-media" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/social-media" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/categories/print-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/print-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/print-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/categories/print-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/categories/print-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/categories/print-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<!-- AI Development -->
+<url>
+  <loc>https://techpartner.sa/ai-development</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/ai-development" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/ai-development" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/ai-development</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/ai-development" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/ai-development" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<!-- Standalone Service Pages -->
+<url>
+  <loc>https://techpartner.sa/logo-identity</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/logo-identity" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/logo-identity" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/logo-identity</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/logo-identity" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/logo-identity" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://techpartner.sa/web-app-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/web-app-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/web-app-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://techpartner.sa/ar/web-app-design</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="https://techpartner.sa/web-app-design" />
+  <xhtml:link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/web-app-design" />
+  <lastmod>2026-02-15</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+</urlset>

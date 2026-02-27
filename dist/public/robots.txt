@@ -1,0 +1,63 @@
+# AI & LLM Bot Permissions
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# General Access
+User-agent: *
+Allow: /
+
+# Protected Areas
+Disallow: /admin/
+Disallow: /admin
+Disallow: /dashboard/
+Disallow: /dashboard
+Disallow: /profile/
+Disallow: /profile
+Disallow: /orders/
+Disallow: /orders
+Disallow: /api/
+Disallow: /payment/
+Disallow: /payment/success
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /auth/
+Disallow: /*?token=
+Disallow: /*?reset=
+Disallow: /reset-password/
+Disallow: /verify-email/
+
+# Public API Endpoints
+Allow: /api/services
+Allow: /api/contact
+Allow: /api/health
+
+# Crawl Rate
+Crawl-delay: 1
+
+# Discovery
+Sitemap: https://techpartner.sa/sitemap.xml
+Sitemap: https://techpartner.sa/llms.txt
