@@ -326,12 +326,14 @@ const gscAuth = new google.auth.GoogleAuth({
 });
 const searchconsole = google.searchconsole({ version: 'v1', auth: gscAuth });
 
-// Initialize Nodemailer transporter
+// Initialize Nodemailer transporter (Zoho Mail)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.zoho.com',
+  port: 465,
+  secure: true, // SSL
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
+    user: process.env.ZOHO_USER,
+    pass: process.env.ZOHO_PASSWORD,
   },
 });
 
@@ -424,7 +426,7 @@ router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: `"TechPartner Engineering" <${process.env.GMAIL_USER}>`,
+      from: `"TechPartner Engineering" <${process.env.ZOHO_USER}>`,
       to: targetEmail || 'hello@example.com',
       subject: 'Collaboration with TechPartner',
       text: prospect.draft_email,
