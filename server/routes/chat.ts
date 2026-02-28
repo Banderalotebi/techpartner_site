@@ -1,10 +1,9 @@
 import { Router } from "express";
 import * as fs from "fs";
 import * as path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Use process.cwd() for CommonJS/ESM compatibility
+const __dirname = process.cwd();
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';

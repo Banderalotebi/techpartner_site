@@ -2,19 +2,15 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-// Simple __dirname that works in both ESM and CommonJS
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
 
-// Path to locale files - works in both dev and production (dist)
-// In dev: __dirname is project/server, so ../../client/i18n/locales = project/client/i18n/locales
-// In prod: __dirname is dist/server, so ../client/i18n/locales = dist/client/i18n/locales
+// Path to locale files - works in both dev and production
+// Use process.cwd() which works consistently in both ESM and CommonJS
 const isProduction = process.env.NODE_ENV === 'production';
 const LOCALES_DIR = isProduction 
-  ? path.resolve(__dirname, '../client/i18n/locales')
-  : path.resolve(__dirname, '../../client/i18n/locales');
+  ? path.resolve(process.cwd(), 'dist/client/i18n/locales')
+  : path.resolve(process.cwd(), 'client/i18n/locales');
 
 export interface TranslationRequest {
   text: string;

@@ -2054,13 +2054,10 @@ var import_express6 = require("express");
 var import_axios2 = __toESM(require("axios"), 1);
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
-var import_url = require("url");
-var __filename = (0, import_url.fileURLToPath)(__filename);
-var __dirname2 = import_path.default.dirname(__filename);
 var OLLAMA_HOST = process.env.OLLAMA_HOST || "http://localhost:11434";
 var MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b";
 var isProduction = true;
-var LOCALES_DIR = isProduction ? import_path.default.resolve(__dirname2, "../client/i18n/locales") : import_path.default.resolve(__dirname2, "../../client/i18n/locales");
+var LOCALES_DIR = isProduction ? import_path.default.resolve(process.cwd(), "dist/client/i18n/locales") : import_path.default.resolve(process.cwd(), "client/i18n/locales");
 var TranslationService = class _TranslationService {
   constructor() {
     this.cache = {};
@@ -2452,13 +2449,11 @@ var i18n_default = router6;
 var import_express7 = require("express");
 var fs2 = __toESM(require("fs"), 1);
 var path2 = __toESM(require("path"), 1);
-var import_url2 = require("url");
-var __filename2 = (0, import_url2.fileURLToPath)(__filename2);
-var __dirname3 = path2.dirname(__filename2);
+var __dirname2 = process.cwd();
 var OLLAMA_HOST2 = process.env.OLLAMA_HOST || "http://localhost:11434";
 var MODEL2 = process.env.OLLAMA_MODEL || "llama3.1:8b";
 var chatRouter = (0, import_express7.Router)();
-var AI_KNOWLEDGE_PATH = path2.join(__dirname3, "../data/ai-knowledge.txt");
+var AI_KNOWLEDGE_PATH = path2.join(__dirname2, "../data/ai-knowledge.txt");
 var DEFAULT_SYSTEM_PROMPT = `
 You are the elite AI Sales Assistant and Strategist for "TechPartner", a top-tier SaaS design and development agency in Saudi Arabia. 
 

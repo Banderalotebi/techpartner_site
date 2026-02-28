@@ -4,7 +4,7 @@ module.exports = {
     script: './dist/index.cjs',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 8080
     },
     instances: 1,
     autorestart: true,
