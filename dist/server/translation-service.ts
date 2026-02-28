@@ -1,6 +1,10 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';

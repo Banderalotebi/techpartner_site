@@ -221,21 +221,20 @@ var init_db = __esm({
     import_ws = __toESM(require("ws"), 1);
     init_schema();
     import_serverless.neonConfig.webSocketConstructor = import_ws.default;
-    if (!process.env.DATABASE_URL) {
-      throw new Error(
-        "DATABASE_URL must be set. Did you forget to provision a database?"
-      );
+    pool = null;
+    db = null;
+    if (process.env.DATABASE_URL) {
+      pool = new import_serverless.Pool({ connectionString: process.env.DATABASE_URL });
+      db = (0, import_neon_serverless.drizzle)({ client: pool, schema: schema_exports });
     }
-    pool = new import_serverless.Pool({ connectionString: process.env.DATABASE_URL });
-    db = (0, import_neon_serverless.drizzle)({ client: pool, schema: schema_exports });
   }
 });
 
 // vite-stub:vite-production-stub
 var require_vite_production_stub = __commonJS({
   "vite-stub:vite-production-stub"(exports2, module2) {
-    var path3 = require("path");
-    var fs3 = require("fs");
+    var path4 = require("path");
+    var fs4 = require("fs");
     var express3 = require("express");
     function log2(message, source) {
       source = source || "express";
@@ -248,13 +247,13 @@ var require_vite_production_stub = __commonJS({
       console.log(formattedTime + " [" + source + "] " + message);
     }
     function serveStatic2(app2) {
-      const distPath = path3.resolve(__dirname, "public");
-      if (!fs3.existsSync(distPath)) {
+      const distPath = path4.resolve(__dirname, "public");
+      if (!fs4.existsSync(distPath)) {
         throw new Error("Could not find the build directory: " + distPath + ", make sure to build the client first");
       }
       app2.use(express3.static(distPath));
       app2.use("*", function(_req, res) {
-        res.sendFile(path3.resolve(distPath, "index.html"));
+        res.sendFile(path4.resolve(distPath, "index.html"));
       });
     }
     async function setupVite2(app2, server) {
@@ -266,7 +265,7 @@ var require_vite_production_stub = __commonJS({
 
 // server/index.ts
 var import_config = require("dotenv/config");
-var import_express8 = __toESM(require("express"), 1);
+var import_express9 = __toESM(require("express"), 1);
 
 // server/routes.ts
 var import_http = require("http");
@@ -2055,10 +2054,13 @@ var import_express6 = require("express");
 var import_axios2 = __toESM(require("axios"), 1);
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
+var import_url = require("url");
+var __filename = (0, import_url.fileURLToPath)(__filename);
+var __dirname2 = import_path.default.dirname(__filename);
 var OLLAMA_HOST = process.env.OLLAMA_HOST || "http://localhost:11434";
 var MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b";
 var isProduction = true;
-var LOCALES_DIR = isProduction ? import_path.default.resolve(__dirname, "../client/i18n/locales") : import_path.default.resolve(__dirname, "../../client/i18n/locales");
+var LOCALES_DIR = isProduction ? import_path.default.resolve(__dirname2, "../client/i18n/locales") : import_path.default.resolve(__dirname2, "../../client/i18n/locales");
 var TranslationService = class _TranslationService {
   constructor() {
     this.cache = {};
@@ -2445,6 +2447,116 @@ router6.post("/reload", (req, res) => {
   }
 });
 var i18n_default = router6;
+
+// server/routes/chat.ts
+var import_express7 = require("express");
+var fs2 = __toESM(require("fs"), 1);
+var path2 = __toESM(require("path"), 1);
+var import_url2 = require("url");
+var __filename2 = (0, import_url2.fileURLToPath)(__filename2);
+var __dirname3 = path2.dirname(__filename2);
+var OLLAMA_HOST2 = process.env.OLLAMA_HOST || "http://localhost:11434";
+var MODEL2 = process.env.OLLAMA_MODEL || "llama3.1:8b";
+var chatRouter = (0, import_express7.Router)();
+var AI_KNOWLEDGE_PATH = path2.join(__dirname3, "../data/ai-knowledge.txt");
+var DEFAULT_SYSTEM_PROMPT = `
+You are the elite AI Sales Assistant and Strategist for "TechPartner", a top-tier SaaS design and development agency in Saudi Arabia. 
+
+Your Goals:
+1. Answer customer questions about our services warmly and professionally.
+2. Suggest brilliant project ideas based on their industry.
+3. Convince them why TechPartner is the best choice (we combine futuristic tech with premium design).
+4. If they want a quote or want to start a project, ask them for their Email, Phone Number, and a brief project description.
+
+Our Core Services:
+- Web & App Design and Development
+- Logo and Branding Design
+- Business Advertising & Packaging
+
+Rules:
+- Be concise. Do not write massive essays. 
+- Speak in the language the user speaks to you (Arabic or English).
+- Never make up fake pricing. Say "Our team will provide a custom quote based on your exact needs."
+- Always be helpful and guide users toward starting a project with us.
+`;
+function getSystemPrompt() {
+  try {
+    if (fs2.existsSync(AI_KNOWLEDGE_PATH)) {
+      const knowledge = fs2.readFileSync(AI_KNOWLEDGE_PATH, "utf-8");
+      return `${DEFAULT_SYSTEM_PROMPT}
+
+# Company Knowledge Base:
+${knowledge}`;
+    }
+  } catch (error) {
+    console.error("Error reading AI knowledge file:", error);
+  }
+  return DEFAULT_SYSTEM_PROMPT;
+}
+chatRouter.post("/", async (req, res) => {
+  try {
+    const { messages } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: "Messages array is required" });
+    }
+    const systemPrompt = getSystemPrompt();
+    const formattedMessages = [
+      { role: "system", content: systemPrompt },
+      ...messages
+    ];
+    console.log("Sending chat to Qwen2.5 7B...");
+    const response = await fetch(`${OLLAMA_HOST2}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL2,
+        messages: formattedMessages,
+        stream: false
+        // Set to false to wait for the full response on CPU
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Ollama response error:", errorText);
+      throw new Error("Failed to communicate with local AI");
+    }
+    const data = await response.json();
+    console.log("AI Response received:", data.message?.content?.substring(0, 100) + "...");
+    res.json({ reply: data.message });
+  } catch (error) {
+    console.error("AI Chat Error:", error);
+    res.status(500).json({
+      error: "The AI assistant is currently taking a coffee break.",
+      details: error.message
+    });
+  }
+});
+chatRouter.get("/health", async (req, res) => {
+  try {
+    const response = await fetch("http://localhost:11434/api/tags", {
+      method: "GET"
+    });
+    if (response.ok) {
+      const models = await response.json();
+      res.json({
+        status: "healthy",
+        ollamaConnected: true,
+        availableModels: models.models?.map((m) => m.name) || []
+      });
+    } else {
+      res.json({
+        status: "degraded",
+        ollamaConnected: false
+      });
+    }
+  } catch (error) {
+    res.json({
+      status: "unhealthy",
+      ollamaConnected: false,
+      error: "Cannot connect to Ollama"
+    });
+  }
+});
 
 // server/routes.ts
 var import_bcryptjs = __toESM(require("bcryptjs"), 1);
@@ -2940,6 +3052,7 @@ async function registerRoutes(app2) {
   app2.use("/api", payments_default);
   app2.use("/api", admin_default);
   app2.use("/api/i18n", i18n_default);
+  app2.use("/api/chat", chatRouter);
   const httpServer = (0, import_http.createServer)(app2);
   return httpServer;
 }
@@ -2948,7 +3061,7 @@ async function registerRoutes(app2) {
 var import_vite = __toESM(require_vite_production_stub(), 1);
 
 // server/static-handler.ts
-var import_express7 = __toESM(require("express"), 1);
+var import_express8 = __toESM(require("express"), 1);
 var import_fs2 = __toESM(require("fs"), 1);
 var import_path2 = __toESM(require("path"), 1);
 function serveStaticFixed(app2) {
@@ -2968,7 +3081,7 @@ function serveStaticFixed(app2) {
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
-  app2.use(import_express7.default.static(distPath));
+  app2.use(import_express8.default.static(distPath));
   app2.use((req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
@@ -2979,12 +3092,12 @@ function serveStaticFixed(app2) {
 }
 
 // server/index.ts
-var app = (0, import_express8.default)();
-app.use(import_express8.default.json());
-app.use(import_express8.default.urlencoded({ extended: false }));
+var app = (0, import_express9.default)();
+app.use(import_express9.default.json());
+app.use(import_express9.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
-  const path3 = req.path;
+  const path4 = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
@@ -2993,8 +3106,8 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path3.startsWith("/api")) {
-      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
+    if (path4.startsWith("/api")) {
+      let logLine = `${req.method} ${path4} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }

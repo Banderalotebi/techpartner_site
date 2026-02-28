@@ -6,6 +6,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
+
 export const chatRouter = Router();
 
 // Path to the AI knowledge base (condensed info for faster responses)
@@ -66,11 +69,11 @@ chatRouter.post("/", async (req, res) => {
     console.log("Sending chat to Qwen2.5 7B...");
 
     // Call your local CPU-based Ollama model
-    const response = await fetch("http://localhost:11434/api/chat", {
+    const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "qwen2.5:7b",
+        model: MODEL,
         messages: formattedMessages,
         stream: false, // Set to false to wait for the full response on CPU
       }),
