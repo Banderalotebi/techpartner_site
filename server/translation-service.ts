@@ -1,10 +1,18 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Handle __dirname for both ESM and CommonJS
+let __dirname: string;
+try {
+  // Try ESM approach first
+  const { fileURLToPath } = await import('url');
+  const __filename = fileURLToPath(import.meta.url);
+  __dirname = path.dirname(__filename);
+} catch {
+  // Fallback to CommonJS
+  __dirname = path.resolve();
+}
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
