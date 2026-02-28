@@ -148,11 +148,11 @@ export default function Home() {
 
             <div className="flex-1 min-w-0 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="space-y-3 sm:space-y-4 lg:space-y-6">
-                <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-                  {t('hero.title', 'Design personalized to fit your needs perfectly.')}
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
+                  Professional Web Design & Logo Design in Saudi Arabia
                 </h1>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  {t('hero.subtitle', 'Get custom designs that perfectly match your vision. From logos to websites, our expert designers bring your ideas to life with creativity and precision.')}
+                <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed">
+                  TechPartner offers custom logo design, brand identity, website design, and full-stack web development services in Riyadh and across Saudi Arabia. Starting from 1,500 SAR.
                 </p>
               </div>
               
@@ -669,6 +669,73 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* SEO Footer - Internal Links Section */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* Services Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-[#01A1C1]">Our Services</h3>
+              <ul className="space-y-2">
+                <li><Link href="/categories/logo-and-identity" className="text-gray-400 hover:text-white transition">Logo & Brand Identity</Link></li>
+                <li><Link href="/categories/web-and-app-design" className="text-gray-400 hover:text-white transition">Website Design</Link></li>
+                <li><Link href="/categories/web-development" className="text-gray-400 hover:text-white transition">Web Development</Link></li>
+                <li><Link href="/categories/business-advertising" className="text-gray-400 hover:text-white transition">Business Advertising</Link></li>
+                <li><Link href="/categories/art-illustration" className="text-gray-400 hover:text-white transition">Art & Illustration</Link></li>
+                <li><Link href="/categories/packaging-label" className="text-gray-400 hover:text-white transition">Packaging Design</Link></li>
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-[#01A1C1]">Company</h3>
+              <ul className="space-y-2">
+                <li><Link href="/about" className="text-gray-400 hover:text-white transition">About Us</Link></li>
+                <li><Link href="/portfolio" className="text-gray-400 hover:text-white transition">Our Portfolio</Link></li>
+                <li><Link href="/blog" className="text-gray-400 hover:text-white transition">Blog & Insights</Link></li>
+                <li><Link href="/contact" className="text-gray-400 hover:text-white transition">Contact Us</Link></li>
+                <li><Link href="/categories" className="text-gray-400 hover:text-white transition">All Services</Link></li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-[#01A1C1]">Resources</h3>
+              <ul className="space-y-2">
+                <li><Link href="/ar" className="text-gray-400 hover:text-white transition">الموقع بالعربية</Link></li>
+                <li><Link href="/sitemap" className="text-gray-400 hover:text-white transition">Sitemap</Link></li>
+                <li><a href="/robots.txt" className="text-gray-400 hover:text-white transition">Robots.txt</a></li>
+                <li><Link href="/privacy" className="text-gray-400 hover:text-white transition">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-gray-400 hover:text-white transition">Terms of Service</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-[#01A1C1]">Contact</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>Riyadh, Saudi Arabia</li>
+                <li>Email: info@techpartner.sa</li>
+                <li>Phone: +966 50 123 4567</li>
+                <li>Sun-Thu: 9:00 AM - 6:00 PM</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 text-sm mb-4 md:mb-0">
+              © 2024 TechPartner. All rights reserved. Professional design and web development services in Saudi Arabia.
+            </p>
+            <div className="flex space-x-6">
+              <a href="https://twitter.com/TechPartnerSA" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">Twitter</a>
+              <a href="https://linkedin.com/company/techpartner" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">LinkedIn</a>
+              <a href="https://instagram.com/techpartner.sa" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       <AiChatWidget />
     </div>
