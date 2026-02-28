@@ -2,17 +2,8 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-// Handle __dirname for both ESM and CommonJS
-let __dirname: string;
-try {
-  // Try ESM approach first
-  const { fileURLToPath } = await import('url');
-  const __filename = fileURLToPath(import.meta.url);
-  __dirname = path.dirname(__filename);
-} catch {
-  // Fallback to CommonJS
-  __dirname = path.resolve();
-}
+// Simple __dirname that works in both ESM and CommonJS
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
