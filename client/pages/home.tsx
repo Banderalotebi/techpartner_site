@@ -2,6 +2,7 @@ import { Route, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Users, Award, Clock, Star, MessageCircle } from "lucide-react";
 import AiChatWidget from "@/components/AiChatWidget";
+import SEO, { generateOrganizationSchema, generateLocalBusinessSchema } from "@/components/SEO";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import LoadingSpinner, { ServiceCardSkeleton } from "@/components/LoadingSpinner";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -76,8 +77,60 @@ const services = [
 export default function Home() {
   const { t, language } = useLanguage();
   
+  // SEO Keywords for homepage
+  const seoKeywords = [
+    'web design saudi arabia',
+    'logo design riyadh',
+    'branding agency saudi',
+    'web development company',
+    'ui ux design saudi arabia',
+    'custom web development',
+    'mobile app design',
+    'ecommerce website design',
+    'graphic design saudi',
+    'digital agency riyadh',
+    'techpartner',
+    'تصميم مواقع السعودية',
+    'تصميم شعارات الرياض',
+    'هوية تجارية',
+    'تطوير تطبيقات',
+    'تصميم متاجر الكترونية'
+  ];
+
+  // Homepage structured data
+  const homeStructuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      generateOrganizationSchema(),
+      generateLocalBusinessSchema(),
+      {
+        '@type': 'WebSite',
+        name: 'TechPartner - Premium Design & Development Agency',
+        url: 'https://techpartner.sa',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://techpartner.sa/search?q={search_term_string}',
+          'query-input': 'required name=search_term_string'
+        }
+      }
+    ]
+  };
+  
   return (
     <div className="min-h-screen bg-white" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <SEO
+        title="Premium Web Design & Development Agency Saudi Arabia"
+        description="TechPartner is Saudi Arabia's leading design and development agency. We create stunning logos, websites, and custom web applications. Starting from 1,500 SAR. Get a free quote today!"
+        keywords={seoKeywords}
+        canonical="https://techpartner.sa"
+        ogImage="https://techpartner.sa/og-home.jpg"
+        ogType="website"
+        structuredData={homeStructuredData}
+        alternateLangs={[
+          { lang: 'en', url: 'https://techpartner.sa' },
+          { lang: 'ar', url: 'https://techpartner.sa/ar' }
+        ]}
+      />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-50 to-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -575,440 +628,45 @@ export default function Home() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl lg:text-3xl font-bold text-[#01A1C1] mb-2">
-                    <AnimatedCounter end={99} duration={2000} />%
+                    <AnimatedCounter end={98} duration={2000} />%
                   </div>
                   <div className="text-sm text-gray-600">{t('team.stat3', 'Satisfaction Rate')}</div>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/categories">
-                  <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0189A8] text-white font-semibold px-8 py-4 text-lg w-full sm:w-auto">
-                    {t('team.cta.primary', 'Start Your Project')}
-                    <ArrowRight className="ml-2" size={20} />
-                  </Button>
-                </Link>
-                <Link to="/about">
-                  <Button variant="outline" size="lg" className="border-[#01A1C1] text-[#01A1C1] hover:bg-[#01A1C1] hover:text-white font-semibold px-8 py-4 text-lg w-full sm:w-auto">
-                    {t('team.cta.secondary', 'Meet Our Team')}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Service Categories & Questionnaire Steps */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              {t('process.title', 'Our Service Categories & Process')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t('process.subtitle', 'Comprehensive questionnaire flows designed to understand your exact needs and deliver perfect results')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Logo & Identity - 6 Steps */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🎨</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('process.logo.title', 'Logo & Identity')}</h3>
-                <p className="text-gray-600">{t('process.logo.subtitle', 'Complete brand identity design')}</p>
-              </div>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">1</div>
-                  {t('process.logo.step1', 'Package Selection & Pricing')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">2</div>
-                  {t('process.logo.step2', 'Design Selection from Gallery')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">3</div>
-                  {t('process.logo.step3', 'Brand Details & Information')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">4</div>
-                  {t('process.logo.step4', 'Style Preferences (7 Sliders)')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">5</div>
-                  {t('process.logo.step5', 'Color Selection & Palette')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">6</div>
-                  {t('process.logo.step6', 'Review & Order Confirmation')}
-                </div>
-              </div>
-              
-              <Link to="/categories/logo-and-identity">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  {t('process.logo.cta', 'Start Logo Project')}
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-
-            {/* Custom Web Development - 8 Steps */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-purple-200">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">💻</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('process.dev.title', 'Custom Web Development')}</h3>
-                <p className="text-gray-600">{t('process.dev.subtitle', 'Full-stack development solutions')}</p>
-                <div className="inline-block bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded-full mt-2">
-                  {t('process.dev.featured', 'FEATURED')}
-                </div>
-              </div>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">1</div>
-                  {t('process.dev.step1', 'Project Information & Goals')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">2</div>
-                  {t('process.dev.step2', 'Project Idea & Concept Details')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">3</div>
-                  {t('process.dev.step3', 'Technology Stack Preferences')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">4</div>
-                  {t('process.dev.step4', 'Features & Functionality Requirements')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">5</div>
-                  {t('process.dev.step5', 'Design Guidelines & References')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">6</div>
-                  {t('process.dev.step6', 'User Flows & Experience Design')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">7</div>
-                  {t('process.dev.step7', 'Budget & Timeline Planning')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">8</div>
-                  {t('process.dev.step8', 'Review & Technical Assessment')}
-                </div>
-              </div>
-              
-              <Link to="/categories/web-development">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
-                  {t('process.dev.cta', 'Start Development Project')}
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
-              <div className="text-center mt-3 text-sm text-gray-600">
-                {t('process.dev.pricing', 'Starting from')} <span className="font-bold text-purple-600">25,000 SAR</span>
-              </div>
-            </div>
-
-            {/* Other Categories - General Process */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📋</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('process.other.title', 'All Other Services')}</h3>
-                <p className="text-gray-600">{t('process.other.subtitle', 'Comprehensive project intake')}</p>
-              </div>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">1</div>
-                  {t('process.other.step1', 'Project Information & Contact')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">2</div>
-                  {t('process.other.step2', 'Detailed Project Description')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">3</div>
-                  {t('process.other.step3', 'Timeline & Urgency Assessment')}
-                </div>
-                <div className="flex items-center text-sm text-gray-700">
-                  <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold mr-3">4</div>
-                  {t('process.other.step4', 'File Uploads & References')}
-                </div>
-              </div>
-              
-              <div className="space-y-2 mb-6 text-sm text-gray-600">
-                <div>• {t('service.business.title', 'Business & Advertising')}</div>
-                <div>• {t('service.art.title', 'Art & Illustration')}</div>
-                <div>• {t('service.packaging.title', 'Packaging & Labels')}</div>
-                <div>• {t('service.social.title', 'Social Media Design')}</div>
-                <div>• {t('service.print.title', 'Print Design')}</div>
-              </div>
-              
               <Link to="/categories">
-                <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-                  {t('process.other.cta', 'View All Categories')}
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-8 py-4 text-lg w-full sm:w-auto">
+                  {t('team.cta', 'Start Your Project')}
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Blog Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              {t('blog.section.title', 'Latest from Our')} <span className="text-[#01A1C1]">{t('blog.section.highlight', 'Blog')}</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t('blog.section.subtitle', 'Stay updated with the latest insights, tutorials, and industry trends from our expert team')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {/* Featured Blog Post 1 */}
-            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-8 text-center relative">
-                <div className="text-4xl mb-4 text-white">🎨</div>
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                  <span className="text-xs font-medium text-white">{t('blog.post1.category', 'Brand Identity')}</span>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
-                  <span>{t('blog.post1.date', 'Dec 15, 2024')}</span>
-                  <span>{t('blog.post1.readTime', '8 min read')}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
-                  {t('blog.post1.title', 'The Future of Logo Design in Saudi Arabia\'s Digital Transformation')}
-                </h3>
-                
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  {t('blog.post1.excerpt', 'Explore how Saudi Vision 2030 is reshaping brand identity requirements and what modern businesses need to know about effective logo design.')}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                      AA
-                    </div>
-                    <span>{t('blog.post1.author', 'Ahmed Al-Rashid')}</span>
-                  </div>
-                  
-                  <Link to="/blog">
-                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
-                      {t('blog.readMore', 'Read More')}
-                      <ArrowRight className="ml-1" size={14} />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </article>
-
-            {/* Featured Blog Post 2 */}
-            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
-              <div className="bg-gradient-to-br from-green-500 to-teal-600 p-8 text-center relative">
-                <div className="text-4xl mb-4 text-white">💻</div>
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                  <span className="text-xs font-medium text-white">{t('blog.post2.category', 'Web Development')}</span>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
-                  <span>{t('blog.post2.date', 'Dec 10, 2024')}</span>
-                  <span>{t('blog.post2.readTime', '6 min read')}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
-                  {t('blog.post2.title', 'E-commerce Web Development Trends for MENA Businesses')}
-                </h3>
-                
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  {t('blog.post2.excerpt', 'Discover the latest web development technologies and user experience patterns that drive successful e-commerce platforms in the Middle East.')}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                      FA
-                    </div>
-                    <span>{t('blog.post2.author', 'Fatima Al-Zahra')}</span>
-                  </div>
-                  
-                  <Link to="/blog">
-                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
-                      {t('blog.readMore', 'Read More')}
-                      <ArrowRight className="ml-1" size={14} />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </article>
-
-            {/* Featured Blog Post 3 */}
-            <article className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group">
-              <div className="bg-gradient-to-br from-orange-500 to-red-600 p-8 text-center relative">
-                <div className="text-4xl mb-4 text-white">📱</div>
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                  <span className="text-xs font-medium text-white">{t('blog.post3.category', 'Mobile Design')}</span>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3 text-sm text-gray-500">
-                  <span>{t('blog.post3.date', 'Nov 15, 2024')}</span>
-                  <span>{t('blog.post3.readTime', '9 min read')}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#01A1C1] transition-colors leading-tight">
-                  {t('blog.post3.title', 'Mobile-First Design Strategies for Saudi Market')}
-                </h3>
-                
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                  {t('blog.post3.excerpt', 'With over 95% mobile penetration in Saudi Arabia, learn how to design mobile-first experiences that resonate with local users.')}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                      KS
-                    </div>
-                    <span>{t('blog.post3.author', 'Khalid Al-Sudairi')}</span>
-                  </div>
-                  
-                  <Link to="/blog">
-                    <Button variant="outline" size="sm" className="group-hover:bg-[#01A1C1] group-hover:text-white group-hover:border-[#01A1C1] transition-colors">
-                      {t('blog.readMore', 'Read More')}
-                      <ArrowRight className="ml-1" size={14} />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div className="text-center">
-            <Link to="/blog">
-              <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0189A8] text-white px-8 py-4 text-lg">
-                {t('blog.viewAll', 'View All Blog Posts')}
-                <ArrowRight className="ml-2" size={20} />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Chat with Agent Section */}
-      <section className="py-20 bg-gradient-to-br from-[#01A1C1]/10 to-purple-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center px-4 py-2 bg-[#01A1C1]/20 rounded-full text-sm font-medium text-[#01A1C1]">
-                <MessageCircle className="mr-2" size={16} />
-                {t('chat.badge', 'AI-Powered Support')}
-              </div>
-              
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-                {t('chat.title.line1', 'Chat with Our')}
-                <span className="block text-[#01A1C1]">{t('chat.title.line2', 'AI Agent')}</span>
-              </h2>
-              
-              <p className="text-lg text-gray-600 leading-relaxed">
-                {t('chat.description', 'Get instant answers about our services, pricing, and project ideas. Our AI assistant is available 24/7 to help you start your project journey.')}
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">{t('chat.feature1', 'Instant responses to your questions')}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">{t('chat.feature2', 'Personalized project recommendations')}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">{t('chat.feature3', 'Get custom quotes in minutes')}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 pt-4">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span>{t('chat.status', 'AI Agent Online')}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative flex justify-center">
-              <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md border border-gray-100">
-                <div className="bg-[#01A1C1] text-white p-4 rounded-xl mb-4 flex justify-between items-center">
-                  <div>
-                    <h3 className="font-bold">TechPartner AI</h3>
-                    <p className="text-xs opacity-80">Online & Ready to help</p>
-                  </div>
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                </div>
-                
-                <div className="space-y-3 mb-4">
-                  <div className="bg-gray-100 p-3 rounded-lg rounded-bl-none text-sm text-gray-800">
-                    {t('chat.demo.message1', 'Hi! I\'m the TechPartner AI. How can I help you grow your business today?')}
-                  </div>
-                  <div className="bg-[#01A1C1] text-white p-3 rounded-lg rounded-br-none text-sm self-end ml-8">
-                    {t('chat.demo.message2', 'I need a logo for my new restaurant')}
-                  </div>
-                  <div className="bg-gray-100 p-3 rounded-lg rounded-bl-none text-sm text-gray-800">
-                    {t('chat.demo.message3', 'Great! I can help you create a stunning logo. What type of cuisine does your restaurant serve?')}
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <div className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm text-gray-400">
-                    {t('chat.demo.placeholder', 'Type your message...')}
-                  </div>
-                  <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center">
-                    <ArrowRight className="w-4 h-4 text-white" />
-                  </div>
-                </div>
-
-                <p className="text-xs text-gray-400 text-center mt-4">
-                  {t('chat.demo.note', 'Click the chat button in the corner to start chatting!')}
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-900">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-br from-[#01A1C1] to-[#0891B2]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-            {t('cta.title', 'Ready to bring your vision to life?')}
+            {t('cta.title', 'Ready to Transform Your Business?')}
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            {t('cta.subtitle', 'Join thousands of satisfied clients who\'ve transformed their brands with our design services.')}
+          <p className="text-xl text-blue-100 mb-8">
+            {t('cta.subtitle', 'Let\'s create something amazing together. Get started with your project today.')}
           </p>
-          <Link to="/categories">
-            <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-8 py-4 text-lg">
-              {t('cta.button', 'Get Started Today')}
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/categories">
+              <Button size="lg" className="bg-white text-[#01A1C1] hover:bg-gray-100 px-8 py-4 text-lg">
+                {t('cta.primary', 'Get Started')}
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg">
+                {t('cta.secondary', 'Contact Us')}
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
