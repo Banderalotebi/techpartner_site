@@ -14,6 +14,8 @@ import inquiryRoutes from "./routes/inquiry";
 import emailTestRoutes from "./routes/email-test";
 import paymentRoutes from "./routes/payments";
 import adminRoutes from "./routes/admin";
+import blogRoutes from "./routes/blog";
+import i18nRoutes from "./routes/i18n";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 
@@ -605,17 +607,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Services endpoint — returns categories with their packages
+  app.get("/api/services", async (req, res) => {
+    try {
+      const categories = await storage.getServiceCategories();
+      const packages = await storage.getServicePackages();
+
+      const services = categories.map((cat: any) => ({
+        ...cat,
+        packages: packages.filter((pkg: any) => pkg.categoryId === cat.id),
+      }));
+
+      res.json(services);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      res.status(500).json({ message: "Failed to fetch services" });
+    }
+  });
+
+  // Register blog routes
+  app.use('/api', blogRoutes);
+
   // Register inquiry routes
   app.use('/api', inquiryRoutes);
-  
+
   // Register email test routes (development only)
   app.use('/api', emailTestRoutes);
-  
+
   // Register payment routes
   app.use('/api', paymentRoutes);
 
   // Register admin routes
   app.use('/api', adminRoutes);
+
+  // Register i18n routes
+  app.use('/api/i18n', i18nRoutes);
 
   const httpServer = createServer(app);
   return httpServer;

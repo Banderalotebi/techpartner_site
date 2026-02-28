@@ -36,29 +36,7 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/orders" component={Orders} />
-      <Route path="/categories" component={CategoryPage} />
-      <Route path="/categories/logo-and-identity" component={LogoIdentityPage} />
-      <Route path="/categories/web-and-app-design" component={WebAppDesignPage} />
-      <Route path="/categories/web-development" component={WebAppDesignPage} />
-      <Route path="/categories/business-advertising" component={CategoryPage} />
-      <Route path="/categories/art-illustration" component={CategoryPage} />
-      <Route path="/categories/packaging-label" component={CategoryPage} />
-      <Route path="/categories/social-media" component={CategoryPage} />
-      <Route path="/categories/print-design" component={CategoryPage} />
-      <Route path="/logo-identity" component={LogoIdentityPage} />
-      <Route path="/web-app-design" component={WebAppDesignPage} />
-      <Route path="/about" component={AboutPage} />
-      <Route path="/contact" component={ContactPage} />
-      <Route path="/portfolio" component={PortfolioPage} />
-      <Route path="/blog" component={BlogPage} />
-      <Route path="/admin" component={AdminPage} />
-      <Route path="/payment/success" component={PaymentSuccess} />
-      <Route path="/category/:slug" component={CategoryPage} />
-      {/* Arabic Routes */}
+      {/* ARABIC ROUTES - MUST BE FIRST */}
       <Route path="/ar" component={Home} />
       <Route path="/ar/" component={Home} />
       <Route path="/ar/dashboard" component={Dashboard} />
@@ -82,6 +60,32 @@ function Router() {
       <Route path="/ar/admin" component={AdminPage} />
       <Route path="/ar/payment/success" component={PaymentSuccess} />
       <Route path="/ar/category/:slug" component={CategoryPage} />
+      
+      {/* ENGLISH ROUTES */}
+      <Route path="/" component={Home} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/orders" component={Orders} />
+      <Route path="/categories" component={CategoryPage} />
+      <Route path="/categories/logo-and-identity" component={LogoIdentityPage} />
+      <Route path="/categories/web-and-app-design" component={WebAppDesignPage} />
+      <Route path="/categories/web-development" component={WebAppDesignPage} />
+      <Route path="/categories/business-advertising" component={CategoryPage} />
+      <Route path="/categories/art-illustration" component={CategoryPage} />
+      <Route path="/categories/packaging-label" component={CategoryPage} />
+      <Route path="/categories/social-media" component={CategoryPage} />
+      <Route path="/categories/print-design" component={CategoryPage} />
+      <Route path="/logo-identity" component={LogoIdentityPage} />
+      <Route path="/web-app-design" component={WebAppDesignPage} />
+      <Route path="/about" component={AboutPage} />
+      <Route path="/contact" component={ContactPage} />
+      <Route path="/portfolio" component={PortfolioPage} />
+      <Route path="/blog" component={BlogPage} />
+      <Route path="/admin" component={AdminPage} />
+      <Route path="/payment/success" component={PaymentSuccess} />
+      <Route path="/category/:slug" component={CategoryPage} />
+      
+      {/* 404 FALLBACK */}
       <Route component={NotFound} />
     </Switch>
   );
