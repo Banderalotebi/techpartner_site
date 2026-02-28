@@ -135,7 +135,7 @@ ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << 'E
     node build.js
     
     print_status "Restarting PM2..."
-    pm2 restart techpartner || pm2 start dist/index.cjs --name techpartner
+    pm2 restart ecosystem.config.cjs || pm2 start ecosystem.config.cjs
     
     print_status "Waiting for application to start..."
     sleep 5
@@ -144,9 +144,9 @@ ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << 'E
     pm2 status
     
     print_status "Checking application health..."
-    curl -f http://localhost:3000 > /dev/null 2>&1
+    curl -f http://localhost:8080/api/health > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-        print_success "Application is running!"
+        print_success "Application is running on port 8080!"
     else
         print_error "Application health check failed"
         pm2 logs techpartner --lines 20
@@ -162,9 +162,9 @@ if [ $? -eq 0 ]; then
     print_success "🎉 EC2 Deployment completed successfully!"
     echo ""
     echo -e "${BLUE}Your application should be live at:${NC}"
-    echo -e "${GREEN}http://${EC2_HOST}:3000${NC}"
+    echo -e "${GREEN}http://${EC2_HOST}${NC} (via nginx on port 80)"
+    echo -e "${BLUE}Direct access:${NC} http://${EC2_HOST}:8080"
 else
     print_error "EC2 deployment failed"
     exit 1
 fi
-

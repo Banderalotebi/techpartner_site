@@ -66,12 +66,12 @@ fi
 # Step 4: Restart PM2
 print_status "Restarting PM2..."
 if command -v pm2 &> /dev/null; then
-    pm2 restart techpartner || pm2 start dist/index.cjs --name techpartner
+    pm2 restart ecosystem.config.cjs || pm2 start ecosystem.config.cjs
     if [ $? -eq 0 ]; then
         print_success "PM2 restarted successfully"
     else
         print_warning "PM2 start failed, starting fresh..."
-        pm2 start dist/index.cjs --name techpartner
+        pm2 start ecosystem.config.cjs
     fi
 else
     print_warning "PM2 not found, please install it: npm install -g pm2"
@@ -80,10 +80,10 @@ fi
 # Step 5: Check application health
 print_status "Checking application health..."
 sleep 3
-if curl -f http://localhost:3000 > /dev/null 2>&1; then
-    print_success "Application is running at http://localhost:3000"
+if curl -f http://localhost:8080/api/health > /dev/null 2>&1; then
+    print_success "Application is running at http://localhost:8080"
 else
-    print_warning "Application health check failed"
+    print_warning "Application health check failed on port 8080"
     print_status "Check logs with: pm2 logs techpartner"
 fi
 
@@ -134,4 +134,3 @@ echo "• Check your production deployment"
 echo "• Monitor application logs: pm2 logs techpartner"
 echo "• Check status: pm2 status"
 echo ""
-
