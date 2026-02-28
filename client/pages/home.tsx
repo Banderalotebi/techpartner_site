@@ -1,6 +1,7 @@
 import { Route, Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Users, Award, Clock, Star } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Award, Clock, Star, MessageCircle } from "lucide-react";
+import AiChatWidget from "@/components/AiChatWidget";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import LoadingSpinner, { ServiceCardSkeleton } from "@/components/LoadingSpinner";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -911,6 +912,88 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Chat with Agent Section */}
+      <section className="py-20 bg-gradient-to-br from-[#01A1C1]/10 to-purple-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center px-4 py-2 bg-[#01A1C1]/20 rounded-full text-sm font-medium text-[#01A1C1]">
+                <MessageCircle className="mr-2" size={16} />
+                {t('chat.badge', 'AI-Powered Support')}
+              </div>
+              
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
+                {t('chat.title.line1', 'Chat with Our')}
+                <span className="block text-[#01A1C1]">{t('chat.title.line2', 'AI Agent')}</span>
+              </h2>
+              
+              <p className="text-lg text-gray-600 leading-relaxed">
+                {t('chat.description', 'Get instant answers about our services, pricing, and project ideas. Our AI assistant is available 24/7 to help you start your project journey.')}
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
+                  <span className="text-gray-700">{t('chat.feature1', 'Instant responses to your questions')}</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
+                  <span className="text-gray-700">{t('chat.feature2', 'Personalized project recommendations')}</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
+                  <span className="text-gray-700">{t('chat.feature3', 'Get custom quotes in minutes')}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 pt-4">
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span>{t('chat.status', 'AI Agent Online')}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative flex justify-center">
+              <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md border border-gray-100">
+                <div className="bg-[#01A1C1] text-white p-4 rounded-xl mb-4 flex justify-between items-center">
+                  <div>
+                    <h3 className="font-bold">TechPartner AI</h3>
+                    <p className="text-xs opacity-80">Online & Ready to help</p>
+                  </div>
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                
+                <div className="space-y-3 mb-4">
+                  <div className="bg-gray-100 p-3 rounded-lg rounded-bl-none text-sm text-gray-800">
+                    {t('chat.demo.message1', 'Hi! I\'m the TechPartner AI. How can I help you grow your business today?')}
+                  </div>
+                  <div className="bg-[#01A1C1] text-white p-3 rounded-lg rounded-br-none text-sm self-end ml-8">
+                    {t('chat.demo.message2', 'I need a logo for my new restaurant')}
+                  </div>
+                  <div className="bg-gray-100 p-3 rounded-lg rounded-bl-none text-sm text-gray-800">
+                    {t('chat.demo.message3', 'Great! I can help you create a stunning logo. What type of cuisine does your restaurant serve?')}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm text-gray-400">
+                    {t('chat.demo.placeholder', 'Type your message...')}
+                  </div>
+                  <div className="w-8 h-8 bg-[#01A1C1] rounded-full flex items-center justify-center">
+                    <ArrowRight className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-400 text-center mt-4">
+                  {t('chat.demo.note', 'Click the chat button in the corner to start chatting!')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gray-900">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
@@ -928,6 +1011,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <AiChatWidget />
     </div>
   );
 }
