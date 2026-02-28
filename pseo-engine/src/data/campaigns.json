@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "riyadh",
+    "city_ar": "الرياض",
+    "city_en": "Riyadh",
+    "industry": "Government & Enterprise",
+    "search_volume": "High"
+  },
+  {
+    "slug": "jeddah",
+    "city_ar": "جدة",
+    "city_en": "Jeddah",
+    "industry": "Commercial & Startups",
+    "search_volume": "High"
+  },
+  {
+    "slug": "dammam",
+    "city_ar": "الدمام",
+    "city_en": "Dammam",
+    "industry": "Logistics & Energy",
+    "search_volume": "Medium"
+  },
+  {
+    "slug": "makkah",
+    "city_ar": "مكة المكرمة",
+    "city_en": "Makkah",
+    "industry": "Hospitality & Tourism",
+    "search_volume": "High"
+  },
+  {
+    "slug": "madinah",
+    "city_ar": "المدينة المنورة",
+    "city_en": "Madinah",
+    "industry": "Religious Tourism",
+    "search_volume": "High"
+  },
+  {
+    "slug": "khobar",
+    "city_ar": "الخبر",
+    "city_en": "Khobar",
+    "industry": "Oil & Gas Technology",
+    "search_volume": "Medium"
+  },
+  {
+    "slug": "tabuk",
+    "city_ar": "تبوك",
+    "city_en": "Tabuk",
+    "industry": "NEOM & Future Tech",
+    "search_volume": "High"
+  },
+  {
+    "slug": "abha",
+    "city_ar": "أبها",
+    "city_en": "Abha",
+    "industry": "Agriculture & Tourism",
+    "search_volume": "Medium"
+  }
+]

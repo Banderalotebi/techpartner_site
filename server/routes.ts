@@ -19,6 +19,9 @@ import i18nRoutes from "./routes/i18n";
 import { chatRouter } from "./routes/chat";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
+import { seoOrchestrator } from "./seo-agent";
+import { trackingRouter } from "./routes/tracking";
+import Database from 'better-sqlite3';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for Google Cloud App Engine
@@ -646,6 +649,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register chat routes
   app.use("/api/chat", chatRouter);
+
+  // Initialize SEO Database
+  const db = new Database('seo-prospects.db');
+  db.pragma('journal_mode = WAL');
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS prospects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      url TEXT UNIQUE,
+      approved BOOLEAN,
+      reason TEXT,
+      draft_email TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  const insertProspect = db.prepare(`
+    INSERT OR IGNORE INTO prospects (url, approved, reason, draft_email) 
+    VALUES (?, ?, ?, ?)
+  `);
+
+  // SEO Analysis endpoint
+  app.post("/api/seo/analyze", async (req, res) => {
+    try {
+      const { url, content } = req.body;
+
+      if (!url || !content) {
+        return res.status(400).json({ error: "Missing url or content" });
+      }
+
+      // Trigger the LangGraph State Machine
+      const finalState = await seoOrchestrator.invoke({
+        prospectUrl: url,
+        scrapedContent: content,
+        isRelevant: false,
+        analysisReason: "",
+        draftEmail: "",
+      });
+
+      // Save to database
+      insertProspect.run(
+        finalState.prospectUrl, 
+        finalState.isRelevant ? 1 : 0, 
+        finalState.analysisReason, 
+        finalState.draftEmail || null
+      );
+
+      // Return the AI's decision and the drafted email (if applicable)
+      res.json({
+        url: finalState.prospectUrl,
+        approved: finalState.isRelevant,
+        reason: finalState.analysisReason,
+        draft: finalState.draftEmail || null,
+      });
+
+    } catch (error) {
+      console.error("SEO Agent Error:", error);
+      res.status(500).json({ error: "Agent execution failed." });
+    }
+  });
+
+  // Register tracking router for /go/ links
+  app.use("/go", trackingRouter);
 
   const httpServer = createServer(app);
   return httpServer;

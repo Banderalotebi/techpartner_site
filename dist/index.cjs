@@ -265,7 +265,7 @@ var require_vite_production_stub = __commonJS({
 
 // server/index.ts
 var import_config = require("dotenv/config");
-var import_express9 = __toESM(require("express"), 1);
+var import_express10 = __toESM(require("express"), 1);
 
 // server/routes.ts
 var import_http = require("http");
@@ -1743,6 +1743,11 @@ var requireAdmin = async (req, res, next) => {
 };
 
 // server/routes/admin.ts
+var import_better_sqlite3 = __toESM(require("better-sqlite3"), 1);
+var import_child_process = require("child_process");
+var import_nodemailer2 = __toESM(require("nodemailer"), 1);
+var import_data = require("@google-analytics/data");
+var import_googleapis = require("googleapis");
 var router4 = (0, import_express4.Router)();
 router4.get("/admin/dashboard", requireAuth, requireAdmin, async (req, res) => {
   try {
@@ -1958,6 +1963,154 @@ router4.post("/admin/payments/manual", requireAuth, requireAdmin, async (req, re
   } catch (error) {
     console.error("Create manual payment error:", error);
     res.status(500).json({ error: "Failed to create manual payment" });
+  }
+});
+var seoDb = new import_better_sqlite3.default("seo-prospects.db");
+var analyticsDataClient = new import_data.BetaAnalyticsDataClient();
+var propertyId = process.env.GA4_PROPERTY_ID;
+var gscAuth = new import_googleapis.google.auth.GoogleAuth({
+  keyFile: "./google-credentials.json",
+  scopes: ["https://www.googleapis.com/auth/webmasters.readonly"]
+});
+var searchconsole = import_googleapis.google.searchconsole({ version: "v1", auth: gscAuth });
+var transporter = import_nodemailer2.default.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD
+  }
+});
+var requireAdminSecret = (req, res, next) => {
+  const providedToken = req.headers["x-admin-token"];
+  if (!providedToken || providedToken !== process.env.ADMIN_SECRET) {
+    console.warn("[Security] Unauthorized access attempt to Admin SEO API.");
+    return res.status(401).json({ error: "Access Denied." });
+  }
+  next();
+};
+router4.get("/admin/seo/stats", requireAdminSecret, (req, res) => {
+  try {
+    const prospects = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1`).get();
+    const queue = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1 AND draft_email IS NOT NULL`).get();
+    res.json({
+      totalProspects: prospects.count,
+      pendingDrafts: queue.count,
+      systemStatus: "Online",
+      lastRun: (/* @__PURE__ */ new Date()).toISOString()
+    });
+  } catch (error) {
+    console.error("SEO Stats Error:", error);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+router4.get("/admin/seo/queue", requireAdminSecret, (req, res) => {
+  try {
+    const queue = seoDb.prepare(`
+      SELECT id, url, reason, draft_email, created_at 
+      FROM prospects 
+      WHERE approved = 1 AND draft_email IS NOT NULL
+      ORDER BY created_at DESC LIMIT 50
+    `).all();
+    res.json(queue);
+  } catch (error) {
+    console.error("SEO Queue Error:", error);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+router4.post("/admin/seo/trigger/:job", requireAdminSecret, (req, res) => {
+  const job = req.params.job;
+  const allowedJobs = {
+    "scout": "npx tsx scripts/seo-scout.ts",
+    "build-pseo": "cd pseo-engine && npm run build",
+    "syndicate": "npx tsx scripts/syndicate.ts",
+    "generate-images": "npx tsx scripts/generate-image.ts batch"
+  };
+  if (!allowedJobs[job]) {
+    return res.status(400).json({ error: "Invalid job command." });
+  }
+  console.log(`[Admin] Manually triggering job: ${job}`);
+  (0, import_child_process.exec)(allowedJobs[job], (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Exec error: ${error}`);
+      return res.status(500).json({ error: "Script failed to run.", details: stderr });
+    }
+    res.json({ message: `Job ${job} executed successfully.`, output: stdout });
+  });
+});
+router4.post("/admin/seo/approve/:id", requireAdminSecret, async (req, res) => {
+  const prospectId = req.params.id;
+  const { targetEmail } = req.body;
+  try {
+    const prospect = seoDb.prepare(`SELECT * FROM prospects WHERE id = ?`).get(prospectId);
+    if (!prospect || !prospect.draft_email) {
+      return res.status(404).json({ error: "Draft not found." });
+    }
+    await transporter.sendMail({
+      from: `"TechPartner Engineering" <${process.env.GMAIL_USER}>`,
+      to: targetEmail || "hello@example.com",
+      subject: "Collaboration with TechPartner",
+      text: prospect.draft_email
+    });
+    seoDb.prepare(`UPDATE prospects SET approved = 2 WHERE id = ?`).run(prospectId);
+    console.log(`\u2705 [Admin] Pitch sent to ${targetEmail} for prospect ${prospect.url}`);
+    res.json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Email failed:", error);
+    res.status(500).json({ error: "Failed to send email." });
+  }
+});
+router4.get("/admin/seo/traffic", requireAdminSecret, async (req, res) => {
+  try {
+    if (!propertyId) throw new Error("GA4 Property ID is missing.");
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
+      metrics: [
+        { name: "activeUsers" },
+        { name: "screenPageViews" },
+        { name: "sessions" }
+      ]
+    });
+    const row = response.rows?.[0];
+    const data = {
+      activeUsers: row?.metricValues?.[0]?.value || "0",
+      pageViews: row?.metricValues?.[1]?.value || "0",
+      sessions: row?.metricValues?.[2]?.value || "0"
+    };
+    res.json(data);
+  } catch (error) {
+    console.error("GA4 Fetch Error:", error);
+    res.status(500).json({ error: "Failed to fetch analytics data." });
+  }
+});
+router4.get("/admin/seo/search-console", requireAdminSecret, async (req, res) => {
+  try {
+    const today = /* @__PURE__ */ new Date();
+    const thirtyDaysAgo = /* @__PURE__ */ new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    const formatDate = (date) => date.toISOString().split("T")[0];
+    const siteUrl = process.env.GSC_SITE_URL || "sc-domain:techpartner.sa";
+    const response = await searchconsole.searchanalytics.query({
+      siteUrl,
+      requestBody: {
+        startDate: formatDate(thirtyDaysAgo),
+        endDate: formatDate(today),
+        dimensions: ["query"],
+        rowLimit: 5,
+        orderBy: [{ fieldName: "clicks", sortOrder: "DESCENDING" }]
+      }
+    });
+    const keywords = (response.data.rows || []).map((row) => ({
+      query: row.keys?.[0] || "Unknown",
+      clicks: row.clicks || 0,
+      impressions: row.impressions || 0,
+      ctr: ((row.ctr || 0) * 100).toFixed(2) + "%",
+      position: (row.position || 0).toFixed(1)
+    }));
+    res.json(keywords);
+  } catch (error) {
+    console.error("GSC Fetch Error:", error);
+    res.status(500).json({ error: "Failed to fetch Search Console data." });
   }
 });
 var admin_default = router4;
@@ -2555,6 +2708,130 @@ chatRouter.get("/health", async (req, res) => {
 
 // server/routes.ts
 var import_bcryptjs = __toESM(require("bcryptjs"), 1);
+
+// server/seo-agent.ts
+var import_langgraph = require("@langchain/langgraph");
+var import_ollama = require("@langchain/ollama");
+var import_prompts = require("@langchain/core/prompts");
+var AgentState = import_langgraph.Annotation.Root({
+  prospectUrl: (0, import_langgraph.Annotation)(),
+  scrapedContent: (0, import_langgraph.Annotation)(),
+  isRelevant: (0, import_langgraph.Annotation)(),
+  analysisReason: (0, import_langgraph.Annotation)(),
+  draftEmail: (0, import_langgraph.Annotation)()
+});
+var llm = new import_ollama.ChatOllama({
+  baseUrl: "http://localhost:11434",
+  model: "qwen2.5:7b",
+  temperature: 0.2
+  // Low temperature for logical analysis
+});
+async function analyzeProspect(state) {
+  console.log(`[Agent] Analyzing prospect: ${state.prospectUrl}`);
+  const prompt = import_prompts.PromptTemplate.fromTemplate(`
+    You are the SEO Director for TechPartner (a web design and SaaS agency).
+    Review this scraped website content and decide if we should try to get a backlink from them.
+    We want tech blogs, business sites, or software directories. We do NOT want spam sites.
+    
+    Website Content: {content}
+    
+    Respond in strict JSON format:
+    {{
+      "isRelevant": true/false,
+      "reason": "short explanation"
+    }}
+  `);
+  const chain = prompt.pipe(llm);
+  const response = await chain.invoke({ content: state.scrapedContent });
+  try {
+    const result = JSON.parse(response.content);
+    return {
+      isRelevant: result.isRelevant,
+      analysisReason: result.reason
+    };
+  } catch (e) {
+    console.error("Failed to parse LLM JSON", e);
+    return { isRelevant: false, analysisReason: "Failed to parse AI output." };
+  }
+}
+async function draftPitch(state) {
+  console.log(`[Agent] Drafting pitch for: ${state.prospectUrl}`);
+  const prompt = import_prompts.PromptTemplate.fromTemplate(`
+    You are writing an outreach email for TechPartner.
+    The target website is about: {reason}
+    
+    Write a short, highly personalized email asking to collaborate or share our web design tool.
+    Do not sound like a bot. Keep it under 4 sentences.
+  `);
+  const chain = prompt.pipe(llm);
+  const response = await chain.invoke({ reason: state.analysisReason });
+  return { draftEmail: response.content };
+}
+function routeProspect(state) {
+  if (state.isRelevant) {
+    console.log("[Agent] Prospect is relevant. Routing to Draft Pitch.");
+    return "draftPitch";
+  }
+  console.log("[Agent] Prospect rejected. Ending workflow.");
+  return import_langgraph.END;
+}
+var builder = new import_langgraph.StateGraph(AgentState).addNode("analyzeProspect", analyzeProspect).addNode("draftPitch", draftPitch).addEdge(import_langgraph.START, "analyzeProspect").addConditionalEdges("analyzeProspect", routeProspect).addEdge("draftPitch", import_langgraph.END);
+var seoOrchestrator = builder.compile();
+
+// server/routes/tracking.ts
+var import_express8 = require("express");
+var import_crypto = __toESM(require("crypto"), 1);
+var import_node_fetch = __toESM(require("node-fetch"), 1);
+var trackingRouter = (0, import_express8.Router)();
+var linkDatabase = {
+  "medium-astrolabe": "https://techpartner.sa/blog/digital-astrolabe",
+  "devto-beit-alfanous": "https://techpartner.sa/portfolio/beit-alfanous",
+  "widget-timer": "https://techpartner.sa/tools/live-coaching",
+  "default": "https://techpartner.sa/"
+};
+trackingRouter.get("/:campaign", async (req, res) => {
+  const campaign = req.params.campaign;
+  const userAgent = req.headers["user-agent"] || "unknown";
+  const userIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "0.0.0.0";
+  const referrer = req.headers.referer || "direct";
+  const destinationUrl = linkDatabase[campaign] || linkDatabase["default"];
+  trackClickAsynchronously({
+    campaign,
+    userIp,
+    userAgent,
+    referrer
+  }).catch((err) => console.error("Background tracking failed:", err));
+  return res.redirect(301, destinationUrl);
+});
+async function trackClickAsynchronously(data) {
+  const clientId = import_crypto.default.createHash("sha256").update(`${data.userIp}-${data.userAgent}`).digest("hex");
+  console.log(`[Tracker] Logging click for campaign: ${data.campaign} | Client: ${clientId.substring(0, 8)}`);
+  const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID;
+  const GA_API_SECRET = process.env.GA_API_SECRET;
+  if (!GA_MEASUREMENT_ID || !GA_API_SECRET) {
+    console.log("[Tracker] GA credentials missing, skipping API call.");
+    return;
+  }
+  await (0, import_node_fetch.default)(`https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASUREMENT_ID}&api_secret=${GA_API_SECRET}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: clientId,
+      events: [{
+        name: "syndicate_link_click",
+        // Custom GA4 event
+        params: {
+          campaign_id: data.campaign,
+          source: data.referrer,
+          engagement_time_msec: "100"
+        }
+      }]
+    })
+  });
+}
+
+// server/routes.ts
+var import_better_sqlite32 = __toESM(require("better-sqlite3"), 1);
 async function registerRoutes(app2) {
   app2.get("/api/health", (req, res) => {
     res.status(200).json({
@@ -3048,6 +3325,53 @@ async function registerRoutes(app2) {
   app2.use("/api", admin_default);
   app2.use("/api/i18n", i18n_default);
   app2.use("/api/chat", chatRouter);
+  const db3 = new import_better_sqlite32.default("seo-prospects.db");
+  db3.pragma("journal_mode = WAL");
+  db3.exec(`
+    CREATE TABLE IF NOT EXISTS prospects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      url TEXT UNIQUE,
+      approved BOOLEAN,
+      reason TEXT,
+      draft_email TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  const insertProspect = db3.prepare(`
+    INSERT OR IGNORE INTO prospects (url, approved, reason, draft_email) 
+    VALUES (?, ?, ?, ?)
+  `);
+  app2.post("/api/seo/analyze", async (req, res) => {
+    try {
+      const { url, content } = req.body;
+      if (!url || !content) {
+        return res.status(400).json({ error: "Missing url or content" });
+      }
+      const finalState = await seoOrchestrator.invoke({
+        prospectUrl: url,
+        scrapedContent: content,
+        isRelevant: false,
+        analysisReason: "",
+        draftEmail: ""
+      });
+      insertProspect.run(
+        finalState.prospectUrl,
+        finalState.isRelevant ? 1 : 0,
+        finalState.analysisReason,
+        finalState.draftEmail || null
+      );
+      res.json({
+        url: finalState.prospectUrl,
+        approved: finalState.isRelevant,
+        reason: finalState.analysisReason,
+        draft: finalState.draftEmail || null
+      });
+    } catch (error) {
+      console.error("SEO Agent Error:", error);
+      res.status(500).json({ error: "Agent execution failed." });
+    }
+  });
+  app2.use("/go", trackingRouter);
   const httpServer = (0, import_http.createServer)(app2);
   return httpServer;
 }
@@ -3056,7 +3380,7 @@ async function registerRoutes(app2) {
 var import_vite = __toESM(require_vite_production_stub(), 1);
 
 // server/static-handler.ts
-var import_express8 = __toESM(require("express"), 1);
+var import_express9 = __toESM(require("express"), 1);
 var import_fs2 = __toESM(require("fs"), 1);
 var import_path2 = __toESM(require("path"), 1);
 function serveStaticFixed(app2) {
@@ -3076,7 +3400,7 @@ function serveStaticFixed(app2) {
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
-  app2.use(import_express8.default.static(distPath));
+  app2.use(import_express9.default.static(distPath));
   app2.use((req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
@@ -3087,9 +3411,9 @@ function serveStaticFixed(app2) {
 }
 
 // server/index.ts
-var app = (0, import_express9.default)();
-app.use(import_express9.default.json());
-app.use(import_express9.default.urlencoded({ extended: false }));
+var app = (0, import_express10.default)();
+app.use(import_express10.default.json());
+app.use(import_express10.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path4 = req.path;

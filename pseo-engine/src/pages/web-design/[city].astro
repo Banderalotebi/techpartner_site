@@ -1,0 +1,313 @@
+---
+// This block runs ONLY on the server during the build process.
+// It never ships to the browser.
+
+import campaigns from '../../data/campaigns.json';
+
+// 1. getStaticPaths tells Astro exactly which pages to generate
+export async function getStaticPaths() {
+  return campaigns.map((data) => {
+    return {
+      params: { city: data.slug }, // Defines the URL (e.g., /web-design/riyadh)
+      props: { data },             // Passes the data to the HTML template below
+    };
+  });
+}
+
+const { city } = Astro.params;
+const { data } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Elite SaaS & Web Design in {data.city_en} | TechPartner</title>
+    <meta name="description" content={`TechPartner is the premier software agency for ${data.industry} companies in ${data.city_en}, Saudi Arabia. We build custom SaaS solutions, web applications, and digital platforms.`} />
+    
+    <link rel="canonical" href={`https://techpartner.sa/web-design/${data.slug}`} />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content={`Elite SaaS & Web Design in ${data.city_en} | TechPartner`} />
+    <meta property="og:description" content={`Premier software agency for ${data.industry} in ${data.city_en}, Saudi Arabia`} />
+    <meta property="og:url" content={`https://techpartner.sa/web-design/${data.slug}`} />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`SaaS Web Design ${data.city_en} | TechPartner`} />
+    <meta name="twitter:description" content={`Custom software solutions for ${data.industry} in ${data.city_en}`} />
+    
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #fafafa 0%, #f0f4f8 100%);
+        color: #333;
+        line-height: 1.6;
+      }
+      
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      
+      header {
+        text-align: center;
+        margin-bottom: 50px;
+        padding: 40px 0;
+        background: linear-gradient(135deg, #01A1C1 0%, #0288a3 100%);
+        color: white;
+        border-radius: 12px;
+        margin: -40px -20px 50px -20px;
+        padding: 60px 20px;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+      
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+      
+      .city-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        padding: 8px 20px;
+        border-radius: 20px;
+        margin-top: 15px;
+        font-size: 0.9rem;
+      }
+      
+      .content-card {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+      }
+      
+      h2 {
+        color: #01A1C1;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+      }
+      
+      p {
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        color: #555;
+      }
+      
+      ul {
+        margin: 20px 0;
+        padding-left: 25px;
+      }
+      
+      li {
+        margin-bottom: 12px;
+        font-size: 1.05rem;
+        color: #444;
+      }
+      
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #01A1C1 0%, #0288a3 100%);
+        color: white;
+        padding: 15px 35px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(1, 161, 193, 0.3);
+      }
+      
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+      
+      .feature-card {
+        background: #f8fafc;
+        padding: 25px;
+        border-radius: 8px;
+        border-left: 4px solid #01A1C1;
+      }
+      
+      .feature-card h3 {
+        color: #01A1C1;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+      }
+      
+      .feature-card p {
+        font-size: 0.95rem;
+        margin: 0;
+        color: #666;
+      }
+      
+      .stats-bar {
+        display: flex;
+        justify-content: space-around;
+        background: #f8fafc;
+        padding: 30px;
+        border-radius: 8px;
+        margin: 30px 0;
+        text-align: center;
+      }
+      
+      .stat {
+        flex: 1;
+      }
+      
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #01A1C1;
+      }
+      
+      .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+      }
+      
+      footer {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 50px;
+      }
+      
+      .arabic-name {
+        font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
+        direction: rtl;
+      }
+      
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+        
+        .content-card {
+          padding: 25px;
+        }
+        
+        .stats-bar {
+          flex-direction: column;
+          gap: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="container">
+      <header>
+        <h1>Transforming {data.industry} in {data.city_en}</h1>
+        <p class="subtitle">Elite SaaS & Web Design Solutions</p>
+        <div class="city-badge">
+          <span class="arabic-name">{data.city_ar}</span> • {data.city_en}
+        </div>
+      </header>
+      
+      <div class="content-card">
+        <h2>Why TechPartner in {data.city_en}?</h2>
+        <p>
+          Businesses in <strong>{data.city_en} ({data.city_ar})</strong> are scaling fast. 
+          At TechPartner, we build the high-performance digital infrastructure you need to dominate your market.
+        </p>
+        
+        <div class="stats-bar">
+          <div class="stat">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Saudi-Based Team</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Projects Delivered</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Local Support</div>
+          </div>
+        </div>
+        
+        <ul>
+          <li>Blazing fast load times (like this very page - 100/100 Core Web Vitals)</li>
+          <li>Deep expertise in the {data.industry} sector</li>
+          <li>Local context and native Arabic/English UI integration</li>
+          <li>Custom SaaS development tailored to Saudi market needs</li>
+          <li>Full compliance with Saudi data residency requirements</li>
+        </ul>
+        
+        <a href="https://techpartner.sa/contact" class="cta-button">
+          Get a Quote for Your {data.city_en} Project
+        </a>
+      </div>
+      
+      <div class="content-card">
+        <h2>Our Services in {data.city_en}</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>🚀 SaaS Development</h3>
+            <p>Custom cloud-based software solutions for {data.industry} businesses</p>
+          </div>
+          <div class="feature-card">
+            <h3>🎨 Web Design</h3>
+            <p>Stunning, conversion-optimized websites that represent your brand</p>
+          </div>
+          <div class="feature-card">
+            <h3>📱 Mobile Apps</h3>
+            <p>Native and cross-platform mobile applications for iOS and Android</p>
+          </div>
+          <div class="feature-card">
+            <h3>🤖 AI Integration</h3>
+            <p>Cutting-edge AI and automation solutions for modern businesses</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <h2>Serving the {data.industry} Sector</h2>
+        <p>
+          {data.city_en} is a hub for {data.industry.toLowerCase()} in Saudi Arabia. 
+          We understand the unique challenges and opportunities in this market, and we build 
+          technology solutions that give you a competitive edge.
+        </p>
+        <p>
+          Whether you're a startup looking to disrupt the market or an established enterprise 
+          seeking digital transformation, TechPartner has the expertise to deliver results.
+        </p>
+        <a href="https://techpartner.sa/services" class="cta-button">
+          Explore Our Services
+        </a>
+      </div>
+    </div>
+    
+    <footer>
+      <p>&copy; 2024 TechPartner. All rights reserved.</p>
+      <p>Premium SaaS & Web Design Agency in Saudi Arabia</p>
+    </footer>
+    
+  </body>
+</html>
