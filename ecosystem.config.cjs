@@ -1,9 +1,7 @@
 module.exports = {
   apps: [{
     name: 'techpartner',
-    script: 'dist/server/index.ts',
-    interpreter: 'npx',
-    interpreter_args: 'tsx',
+    script: './dist/index.cjs',
     env: {
       NODE_ENV: 'production',
       PORT: 3000
