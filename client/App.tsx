@@ -93,6 +93,7 @@ function Router() {
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AiChatWidget from "@/components/AiChatWidget";
 
 function App() {
   return (
@@ -108,6 +109,7 @@ function App() {
               <Footer />
             </div>
             <Toaster />
+            <AiChatWidget />
           </TooltipProvider>
         </AuthProvider>
       </LanguageProvider>
