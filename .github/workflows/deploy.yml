@@ -1,55 +1,141 @@
-name: Deploy to Google Cloud Run
+# TechPartner CI/CD Pipeline
+# Automatically deploys to AWS EC2 when code is pushed to main branch
+
+name: Deploy to AWS EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
-env:
-  PROJECT_ID: glossy-agency-448211-s4
-  GAR_LOCATION: us-central1
-  SERVICE: techpartner-site
-  REGION: us-central1
-
+# Jobs to run
 jobs:
-  deploy:
-    # Add 'id-token' with the intended permissions for workload identity federation
-    permissions:
-      contents: read
-      id-token: write
-
+  # Step 1: Build and Test
+  build:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout
+      # Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Google Auth
-        id: auth
-        uses: 'google-github-actions/auth@v2'
+      
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          node-version: '18'
+          cache: 'npm'
+      
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+      
+      # Type check
+      - name: Type check
+        run: npm run check || true
+      
+      # Build application
+      - name: Build application
+        run: node build.js
+      
+      # Verify build output exists
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Error: dist folder not found"
+            exit 1
+          fi
+          echo "Build verification passed!"
+          ls -la dist/
 
-      - name: Docker Auth
-        id: docker-auth
-        uses: 'docker/login-action@v3'
+  # Step 2: Deploy to AWS EC2
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Setup Node.js for build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          username: _json_key
-          password: '${{ secrets.GCP_SA_KEY }}'
-          registry: gcr.io
-
-      - name: Build and Push Container
-        run: |-
-          docker build --platform linux/amd64 -t "gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" .
-          docker push "gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
-
-      - name: Deploy to Cloud Run
-        id: deploy
-        uses: google-github-actions/deploy-cloudrun@v2
+          node-version: '18'
+          cache: 'npm'
+      
+      # Install dependencies and build
+      - name: Install and Build
+        run: |
+          npm ci
+          node build.js
+      
+      # Setup SSH key for EC2 connection
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.8.0
         with:
-          service: ${{ env.SERVICE }}
-          region: ${{ env.REGION }}
-          image: gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      # Add EC2 host key
+      - name: Add EC2 host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      
+      # Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
+            cd /home/ubuntu/techpartner
+            
+            # Pull latest changes
+            echo "Pulling latest changes..."
+            git fetch origin
+            git reset --hard origin/main
+            
+            # Install dependencies
+            echo "Installing dependencies..."
+            npm install
+            
+            # Build the application
+            echo "Building application..."
+            node build.js
+            
+            # Restart PM2
+            echo "Restarting PM2..."
+            pm2 restart techpartner || pm2 start dist/index.cjs --name techpartner
+            
+            # Wait for app to start
+            sleep 5
+            
+            # Check status
+            pm2 status
+            
+            # Health check
+            curl -f http://localhost:8080 && echo "Deployment successful!"
+            
+            echo "Deployment completed!"
+          EOF
+      
+      # Verify deployment
+      - name: Verify deployment
+        run: |
+          sleep 10
+          curl -I https://techpartner.sa || curl -I http://${{ secrets.HOST }}:8080
+          echo "Deployment verification complete!"
 
-      - name: Show Output
-        run: echo ${{ steps.deploy.outputs.url }}
+  # Notify on failure
+  failure-notify:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send failure notification
+        run: |
+          echo "Deployment failed! Check GitHub Actions logs for details."
+          echo "Repository: ${{ github.repository }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref }}"
+

@@ -4,7 +4,8 @@ import { ArrowRight, CheckCircle, Users, Award, Clock, Star } from "lucide-react
 import AnimatedCounter from "@/components/AnimatedCounter";
 import LoadingSpinner, { ServiceCardSkeleton } from "@/components/LoadingSpinner";
 import { useSEO } from "@/hooks/useSEO";
-import heroImage from "@assets/image_1751882806746 2.png";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 import techPartnerDeveloper from "@assets/19362653-[Converted].png";
 import logoDesignImage from "@assets/logo and branding desgin.png";
 import webDesignImage from "@assets/web and app desgin.png";
@@ -13,6 +14,7 @@ import artIllustrationImage from "@assets/art and illustration.png";
 import packagingLabelImage from "@assets/packaging.png";
 import startBrandImage from "@assets/logo and branding desgin.png";
 import fullStackImage from "@assets/web and app desgin.png";
+import heroImage from "@assets/image_1751876489221.png";
 
 const HeroSVG = () => (
   <svg width="605" height="428" viewBox="0 0 605 428" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-w-lg">
@@ -28,43 +30,45 @@ const HeroSVG = () => (
 const services = [
   {
     id: 1,
-    title: "Logo & branding design",
+    titleKey: "service.logo.title",
     image: logoDesignImage,
-    description: "Create a memorable brand identity that stands out"
+    descriptionKey: "service.logo.description"
   },
   {
     id: 2,
-    title: "Website & app design",
+    titleKey: "service.web.title",
     image: webDesignImage,
-    description: "Modern, responsive designs for digital experiences"
+    descriptionKey: "service.web.description"
   },
   {
     id: 3,
-    title: "Business & advertising",
+    titleKey: "service.business.title",
     image: businessAdvertisingImage,
-    description: "Professional marketing materials that convert"
+    descriptionKey: "service.business.description"
   },
   {
     id: 4,
-    title: "Art & illustration",
+    titleKey: "service.art.title",
     image: artIllustrationImage,
-    description: "Custom artwork and illustrations for any project"
+    descriptionKey: "service.art.description"
   },
   {
     id: 5,
-    title: "Packaging & label",
+    titleKey: "service.packaging.title",
     image: packagingLabelImage,
-    description: "Product packaging that attracts and sells"
+    descriptionKey: "service.packaging.description"
   },
   {
     id: 6,
-    title: "Custom web and apps development",
+    titleKey: "service.development.title",
     image: fullStackImage,
-    description: "Professional custom development using modern full stack solutions"
+    descriptionKey: "service.development.description"
   }
 ];
 
 export default function Home() {
+  const { t, isRTL } = useLanguage();
+  
   useSEO({
     path: '/',
     en: {
@@ -103,29 +107,28 @@ export default function Home() {
             <div className="flex-1 min-w-0 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                 <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-                  Design personalized to fit your needs perfectly.
+                  {t('hero.title', 'Design personalized to fit your needs perfectly.')}
                 </h1>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Get custom designs that perfectly match your vision. From logos to websites, 
-                  our expert designers bring your ideas to life with creativity and precision.
+                  {t('hero.subtitle', 'Get custom designs that perfectly match your vision. From logos to websites, our expert designers bring your ideas to life with creativity and precision.')}
                 </p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                 <Link to="/categories">
                   <Button size="sm" className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto">
-                    Start Your Project
+                    {t('hero.cta.primary', 'Start Your Project')}
                     <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                   </Button>
                 </Link>
                 <Link to="/portfolio">
                   <Button variant="outline" size="sm" className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg border-gray-300 w-full sm:w-auto">
-                    View Portfolio
+                    {t('hero.cta.secondary', 'View Portfolio')}
                   </Button>
                 </Link>
                 <Link to="/blog">
                   <Button variant="outline" size="sm" className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg border-[#01A1C1] text-[#01A1C1] hover:bg-[#01A1C1] hover:text-white w-full sm:w-auto">
-                    Read Blog
+                    {t('nav.blog', 'Read Blog')}
                   </Button>
                 </Link>
               </div>
@@ -139,10 +142,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Our Design and Development
+              {t('services.title', 'Our Design and Development')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Professional design and development solutions for every business need
+              {t('services.subtitle', 'Professional design and development solutions for every business need')}
             </p>
           </div>
 
@@ -150,38 +153,37 @@ export default function Home() {
           <div className="mb-16 bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 text-white">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
-                <h3 className="text-3xl font-bold mb-4">Custom Web Development</h3>
+                <h3 className="text-3xl font-bold mb-4">{t('development.title', 'Custom Web Development')}</h3>
                 <p className="text-blue-100 mb-6 text-lg">
-                  Professional full-stack development solutions using modern technologies. 
-                  From simple websites to complex web applications with complete technical requirements gathering.
+                  {t('development.subtitle', 'Professional full-stack development solutions using modern technologies. From simple websites to complex web applications with complete technical requirements gathering.')}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>Custom UI/UX Design</span>
+                    <span>{t('development.feature1', 'Custom UI/UX Design')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>Full-Stack Development</span>
+                    <span>{t('development.feature2', 'Full-Stack Development')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>CMS Integration & Backend</span>
+                    <span>{t('development.feature3', 'CMS Integration & Backend')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>8-Step Technical Assessment</span>
+                    <span>{t('development.feature4', '8-Step Technical Assessment')}</span>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                   <Link to="/categories/web-development">
                     <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 font-semibold">
-                      Start Development Project
+                      {t('development.cta', 'Start Development Project')}
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
                   <div className="text-sm text-blue-100">
-                    Starting from <span className="font-bold text-white">25,000 SAR</span>
+                    {t('development.pricing', 'Starting from')} <span className="font-bold text-white">{t('development.price', '25,000 SAR')}</span>
                   </div>
                 </div>
               </div>
@@ -224,16 +226,16 @@ export default function Home() {
                       <div className="aspect-square overflow-hidden">
                         <img 
                           src={service.image} 
-                          alt={service.title}
+                          alt={t(service.titleKey, service.titleKey)}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#01A1C1] transition-colors">
-                          {service.title}
+                          {t(service.titleKey, service.titleKey)}
                         </h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                          {service.description}
+                          {t(service.descriptionKey, service.descriptionKey)}
                         </p>
                       </div>
                     </div>
@@ -252,34 +254,32 @@ export default function Home() {
             {/* Left Content */}
             <div className="space-y-6">
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                Your business,<br />
-                <span className="text-[#01A1C1]">exceptional design.</span>
+                {t('business.title.part1', 'Your business')},<br />
+                <span className="text-[#01A1C1]">{t('business.title.part2', 'exceptional design')}.</span>
               </h2>
               
               <p className="text-lg text-gray-700 leading-relaxed">
-                Our trusted designer community specializes in logos, websites, packaging design, and more. 
-                We've assisted thousands of businesses in launching, growing, expanding, and rebranding 
-                with custom, professional design.
+                {t('business.description', 'Our trusted designer community specializes in logos, websites, packaging design, and more. We\'ve assisted thousands of businesses in launching, growing, expanding, and rebranding with custom, professional design.')}
               </p>
 
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">Expert designers with proven track records</span>
+                  <span className="text-gray-700">{t('business.feature1', 'Expert designers with proven track records')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">Custom solutions tailored to your brand</span>
+                  <span className="text-gray-700">{t('business.feature2', 'Custom solutions tailored to your brand')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-[#01A1C1] rounded-full"></div>
-                  <span className="text-gray-700">Fast turnaround with unlimited revisions</span>
+                  <span className="text-gray-700">{t('business.feature3', 'Fast turnaround with unlimited revisions')}</span>
                 </div>
               </div>
 
               <Link to="/categories">
                 <Button size="lg" className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-8 py-4 text-lg mt-6">
-                  Start Your Brand
+                  {t('business.cta', 'Start Your Brand')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
@@ -309,10 +309,10 @@ export default function Home() {
           {/* Main Heading */}
           <div className="text-center mb-12">
             <h2 className="text-4xl font-medium text-[#313030] mb-6" style={{ fontFamily: 'Poppins', fontSize: '40px', lineHeight: '30px' }}>
-              Everything begins with a logo.
+              {t('logo.main.title', 'Everything begins with a logo.')}
             </h2>
             <p className="text-lg text-black max-w-4xl mx-auto leading-relaxed" style={{ fontFamily: 'Poppins', fontSize: '18px', lineHeight: '44px' }}>
-              Whether you're starting fresh or refining your brand, our solutions are tailored to suit your business and elevate your branding
+              {t('logo.main.subtitle', 'Whether you\'re starting fresh or refining your brand, our solutions are tailored to suit your business and elevate your branding')}
             </p>
           </div>
 
@@ -326,14 +326,14 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-medium text-black mb-4" style={{ fontFamily: 'Poppins', fontSize: '26px', lineHeight: '44px' }}>
-                Try Our AI Logo Maker
+                {t('logo.ai.title', 'Try Our AI Logo Maker')}
               </h3>
               <p className="text-[#313030] mb-6 leading-relaxed" style={{ fontFamily: 'Poppins', fontSize: '18px', lineHeight: '38px' }}>
-                Easily craft your unique logo in just minutes with our intuitive, AI-powered tool. It's effortless and provides the ideal starting point or inspiration for our expert designers to elevate your branding journey to new heights.
+                {t('logo.ai.description', 'Easily craft your unique logo in just minutes with our intuitive, AI-powered tool. It\'s effortless and provides the ideal starting point or inspiration for our expert designers to elevate your branding journey to new heights.')}
               </p>
               <div className="flex items-center justify-center space-x-2">
                 <span className="text-lg font-medium text-black" style={{ fontFamily: 'Poppins', fontSize: '20px', lineHeight: '38px' }}>
-                  Create a logo, it's free
+                  {t('logo.ai.cta', 'Create a logo, it\'s free')}
                 </span>
                 <ArrowRight className="w-6 h-6 text-black" />
               </div>
@@ -347,14 +347,14 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-medium text-black mb-4" style={{ fontFamily: 'Poppins', fontSize: '26px', lineHeight: '44px' }}>
-                Start a logo contest.
+                {t('logo.contest.title', 'Start a logo contest.')}
               </h3>
               <p className="text-[#313030] mb-6 leading-relaxed" style={{ fontFamily: 'Poppins', fontSize: '18px', lineHeight: '38px' }}>
-                Elevate your branding journey with a wide array of custom logo options from our talented community of freelancers. Experience next-level creative direction, unmatched expertise, and personalized solutions tailored to your unique business needs.
+                {t('logo.contest.description', 'Elevate your branding journey with a wide array of custom logo options from our talented community of freelancers. Experience next-level creative direction, unmatched expertise, and personalized solutions tailored to your unique business needs.')}
               </p>
               <div className="flex items-center justify-center space-x-2">
                 <span className="text-lg font-medium text-black" style={{ fontFamily: 'Poppins', fontSize: '20px', lineHeight: '38px' }}>
-                  Logos from SAR1500
+                  {t('logo.contest.pricing', 'Logos from SAR1500')}
                 </span>
                 <ArrowRight className="w-6 h-6 text-black" />
               </div>
@@ -368,10 +368,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Portfolio Highlights
+              {t('portfolio.title', 'Portfolio Highlights')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See the exceptional work we've delivered for clients across various industries
+              {t('portfolio.subtitle', 'See the exceptional work we\'ve delivered for clients across various industries')}
             </p>
           </div>
 
@@ -386,8 +386,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Tech Solutions Inc.</h4>
-                  <p className="text-gray-600 text-sm">Logo design, business cards, and brand guidelines</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('portfolio.example1.client', 'Tech Solutions Inc.')}</h4>
+                  <p className="text-gray-600 text-sm">{t('portfolio.example1.description', 'Logo design, business cards, and brand guidelines')}</p>
                 </div>
               </div>
             </div>
@@ -402,8 +402,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Boutique Fashion</h4>
-                  <p className="text-gray-600 text-sm">Modern e-commerce website with custom features</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('portfolio.example2.client', 'Boutique Fashion')}</h4>
+                  <p className="text-gray-600 text-sm">{t('portfolio.example2.description', 'Modern e-commerce website with custom features')}</p>
                 </div>
               </div>
             </div>
@@ -418,8 +418,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h4 className="font-semibold text-gray-900 mb-2">Wellness Studio</h4>
-                  <p className="text-gray-600 text-sm">Instagram templates and brand consistency</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('portfolio.example3.client', 'Wellness Studio')}</h4>
+                  <p className="text-gray-600 text-sm">{t('portfolio.example3.description', 'Instagram templates and brand consistency')}</p>
                 </div>
               </div>
             </div>
@@ -428,8 +428,8 @@ export default function Home() {
           {/* Testimonials */}
           <div className="bg-gray-50 rounded-3xl p-12">
             <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">What Our Clients Say</h3>
-              <p className="text-gray-600">Real feedback from satisfied customers</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">{t('testimonials.title', 'What Our Clients Say')}</h3>
+              <p className="text-gray-600">{t('testimonials.subtitle', 'Real feedback from satisfied customers')}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -440,15 +440,15 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 italic">
-                  "Outstanding complete brand identity package. The 6-step logo design process made everything clear and professional."
+                  {t('testimonials.review1.text', '"Outstanding complete brand identity package. The 6-step logo design process made everything clear and professional."')}
                 </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
                     AS
                   </div>
                   <div className="ml-4">
-                    <div className="font-semibold text-gray-900">Ahmed Salem</div>
-                    <div className="text-gray-600 text-sm">CEO, Saudi Tech Solutions</div>
+                    <div className="font-semibold text-gray-900">{t('testimonials.review1.name', 'Ahmed Salem')}</div>
+                    <div className="text-gray-600 text-sm">{t('testimonials.review1.title', 'CEO, Saudi Tech Solutions')}</div>
                   </div>
                 </div>
               </div>
@@ -460,15 +460,15 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 italic">
-                  "The 8-step custom web development process was thorough. They built exactly the e-commerce platform we needed."
+                  {t('testimonials.review2.text', '"The 8-step custom web development process was thorough. They built exactly the e-commerce platform we needed."')}
                 </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
                     LM
                   </div>
                   <div className="ml-4">
-                    <div className="font-semibold text-gray-900">Layla Mohammed</div>
-                    <div className="text-gray-600 text-sm">Owner, Riyadh Fashion Boutique</div>
+                    <div className="font-semibold text-gray-900">{t('testimonials.review2.name', 'Layla Mohammed')}</div>
+                    <div className="text-gray-600 text-sm">{t('testimonials.review2.title', 'Owner, Riyadh Fashion Boutique')}</div>
                   </div>
                 </div>
               </div>
@@ -480,15 +480,15 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 italic">
-                  "Comprehensive project questionnaire helped them understand our needs. Professional social media and print designs."
+                  {t('testimonials.review3.text', '"Comprehensive project questionnaire helped them understand our needs. Professional social media and print designs."')}
                 </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
                     MK
                   </div>
                   <div className="ml-4">
-                    <div className="font-semibold text-gray-900">Mohammed Khalid</div>
-                    <div className="text-gray-600 text-sm">Director, Wellness Studio Jeddah</div>
+                    <div className="font-semibold text-gray-900">{t('testimonials.review3.name', 'Mohammed Khalid')}</div>
+                    <div className="text-gray-600 text-sm">{t('testimonials.review3.title', 'Director, Wellness Studio Jeddah')}</div>
                   </div>
                 </div>
               </div>
@@ -534,18 +534,15 @@ export default function Home() {
               <div>
                 <div className="inline-flex items-center px-4 py-2 bg-[#01A1C1]/10 rounded-full text-sm font-medium text-[#01A1C1] mb-4">
                   <Users className="mr-2" size={16} />
-                  Expert Development Team
+                  {t('team.badge', 'Expert Development Team')}
                 </div>
                 
                 <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                  Meet Your
-                  <span className="block text-[#01A1C1]">TechPartner Experts</span>
+                  {t('team.title', 'Meet Your TechPartner Experts')}
                 </h2>
                 
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Our skilled developers and designers bring years of experience in creating 
-                  cutting-edge digital solutions. From complex web applications to stunning 
-                  brand identities, we're your dedicated technology partners.
+                  {t('team.description', 'Our skilled developers and designers bring years of experience in creating cutting-edge digital solutions. From complex web applications to stunning brand identities, we\'re your dedicated technology partners.')}
                 </p>
               </div>
 

@@ -15,6 +15,7 @@ import emailTestRoutes from "./routes/email-test";
 import paymentRoutes from "./routes/payments";
 import adminRoutes from "./routes/admin";
 import blogRoutes from "./routes/blog";
+import i18nRoutes from "./routes/i18n";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 
@@ -638,6 +639,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register admin routes
   app.use('/api', adminRoutes);
+
+  // Register i18n routes
+  app.use('/api/i18n', i18nRoutes);
 
   const httpServer = createServer(app);
   return httpServer;

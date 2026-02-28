@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# TechPartner Site - Server & Docker Update Script
+# TechPartner Site - Server Update Script (Non-Docker/EC2 Deployment)
+# =====================================================================
+
 echo "🚀 Starting TechPartner Site Update..."
 
 # Colors for output
@@ -27,13 +29,19 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Step 1: Stop existing containers
-print_status "Stopping existing containers..."
-docker-compose down
+# Step 1: Install dependencies
+print_status "Installing dependencies..."
+npm install
+if [ $? -eq 0 ]; then
+    print_success "Dependencies installed successfully"
+else
+    print_error "Failed to install dependencies"
+    exit 1
+fi
 
-# Step 2: Build latest application
-print_status "Building latest application..."
-npm run build
+# Step 2: Build the application
+print_status "Building the application..."
+node build.js
 if [ $? -eq 0 ]; then
     print_success "Application built successfully"
 else
@@ -41,58 +49,58 @@ else
     exit 1
 fi
 
-# Step 3: Update database schemas
-print_status "Updating database schemas..."
-cd server && npx prisma db push && npx prisma generate
-if [ $? -eq 0 ]; then
-    print_success "Database schemas updated"
-    cd ..
+# Step 3: Update database schemas (if using Prisma)
+print_status "Checking database schemas..."
+if [ -d "server/prisma" ]; then
+    cd server && npx prisma db push && npx prisma generate
+    if [ $? -eq 0 ]; then
+        print_success "Database schemas updated"
+        cd ..
+    else
+        print_warning "Database update had issues, continuing..."
+        cd ..
+    fi
 else
-    print_warning "Database update had issues, continuing..."
-    cd ..
+    print_warning "No Prisma schema found, skipping database update"
 fi
 
-# Step 4: Build new Docker image
-print_status "Building new Docker image..."
-docker-compose build --no-cache
-if [ $? -eq 0 ]; then
-    print_success "Docker image built successfully"
+# Step 4: Restart PM2 (if running)
+print_status "Checking PM2 status..."
+if command -v pm2 &> /dev/null; then
+    pm2 restart techpartner
+    if [ $? -eq 0 ]; then
+        print_success "PM2 restarted successfully"
+    else
+        print_warning "PM2 restart failed, starting fresh..."
+        pm2 start dist/index.cjs --name techpartner
+    fi
 else
-    print_error "Docker build failed"
-    exit 1
+    print_warning "PM2 not found, please start the server manually"
 fi
 
-# Step 5: Start updated containers
-print_status "Starting updated containers..."
-docker-compose up -d
-if [ $? -eq 0 ]; then
-    print_success "Containers started successfully"
-else
-    print_error "Failed to start containers"
-    exit 1
-fi
+# Step 5: Wait for services to be ready
+print_status "Waiting for application to start..."
+sleep 5
 
-# Step 6: Wait for services to be ready
-print_status "Waiting for services to be ready..."
-sleep 10
-
-# Step 7: Check if application is running
+# Step 6: Check if application is running
 print_status "Checking application health..."
 if curl -f http://localhost:3000 > /dev/null 2>&1; then
     print_success "Application is running at http://localhost:3000"
 else
     print_warning "Application might still be starting up"
+    print_status "Check logs with: pm2 logs techpartner"
 fi
 
-# Step 8: Show running containers
-print_status "Current running containers:"
-docker-compose ps
+# Step 7: Show PM2 status
+print_status "Current PM2 status:"
+pm2 status
 
 echo ""
 print_success "🎉 Update completed successfully!"
 echo ""
 echo -e "${BLUE}Next steps:${NC}"
 echo "1. Check your application at http://localhost:3000"
-echo "2. Monitor logs with: docker-compose logs -f"
-echo "3. Stop services with: docker-compose down"
+echo "2. Monitor logs with: pm2 logs techpartner"
+echo "3. Check status with: pm2 status"
 echo ""
+

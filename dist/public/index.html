@@ -1,67 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <script type="text/javascript">
-      (function() {
-        var origOnerror = window.onerror;
-        window.onerror = function(msg, source, lineno, colno, error) {
-          if (
-            !source ||
-            (source && (source.indexOf("translate") !== -1 || source.indexOf("element.js") !== -1)) ||
-            (msg && msg.toString().indexOf("translate") !== -1) ||
-            error === null ||
-            error === undefined
-          ) {
-            return true;
+
+    <!-- ── Base SEO (overridden per-page by useSEO hook) ─────────────────── -->
+    <title>TechPartner | Professional Design &amp; Web Development in Saudi Arabia</title>
+    <meta name="description" content="TechPartner offers professional logo design, brand identity, web design, and custom web development services in Saudi Arabia. Starting from 1,500 SAR. Get your free consultation today." />
+    <meta name="keywords" content="logo design Saudi Arabia, brand identity Riyadh, web development KSA, custom website design, تصميم شعار, تطوير مواقع, هوية تجارية, تك بارتنر" />
+    <meta name="author" content="TechPartner" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#01A1C1" />
+
+    <!-- ── Favicon ────────────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- ── Canonical & hreflang ───────────────────────────────────────────── -->
+    <link rel="canonical" href="https://techpartner.sa/" />
+    <link rel="alternate" hreflang="en" href="https://techpartner.sa/" />
+    <link rel="alternate" hreflang="ar" href="https://techpartner.sa/ar/" />
+    <link rel="alternate" hreflang="x-default" href="https://techpartner.sa/" />
+
+    <!-- ── Open Graph ─────────────────────────────────────────────────────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TechPartner" />
+    <meta property="og:title" content="TechPartner | Professional Design &amp; Web Development in Saudi Arabia" />
+    <meta property="og:description" content="TechPartner offers professional logo design, brand identity, web design, and custom web development services in Saudi Arabia. Starting from 1,500 SAR." />
+    <meta property="og:url" content="https://techpartner.sa/" />
+    <meta property="og:image" content="https://techpartner.sa/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TechPartner - Professional Design &amp; Development" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_SA" />
+
+    <!-- ── Twitter Card ───────────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TechPartnerSA" />
+    <meta name="twitter:title" content="TechPartner | Professional Design &amp; Web Development in Saudi Arabia" />
+    <meta name="twitter:description" content="Professional logo design, brand identity, web design, and custom web development in Saudi Arabia. Starting from 1,500 SAR." />
+    <meta name="twitter:image" content="https://techpartner.sa/og-image.png" />
+
+    <!-- ── JSON-LD Structured Data ────────────────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://techpartner.sa/#organization",
+          "name": "TechPartner",
+          "alternateName": "تك بارتنر",
+          "url": "https://techpartner.sa",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://techpartner.sa/og-image.png",
+            "width": 1200,
+            "height": 630
+          },
+          "description": "Professional design and web development agency in Saudi Arabia specializing in logo design, brand identity, web design, and custom web development.",
+          "foundingLocation": {
+            "@type": "Place",
+            "name": "Riyadh, Saudi Arabia"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+966-50-123-4567",
+            "contactType": "customer service",
+            "email": "info@techpartner.sa",
+            "availableLanguage": ["English", "Arabic"],
+            "areaServed": "SA"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Riyadh",
+            "addressCountry": "SA"
+          },
+          "sameAs": []
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "https://techpartner.sa/#localbusiness",
+          "name": "TechPartner",
+          "alternateName": "تك بارتنر",
+          "image": "https://techpartner.sa/og-image.png",
+          "url": "https://techpartner.sa",
+          "telephone": "+966-50-123-4567",
+          "email": "info@techpartner.sa",
+          "priceRange": "SAR 1,500 - SAR 100,000+",
+          "currenciesAccepted": "SAR",
+          "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Riyadh",
+            "addressLocality": "Riyadh",
+            "addressRegion": "Riyadh Province",
+            "addressCountry": "SA"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 24.7136,
+            "longitude": 46.6753
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Sunday","Monday","Tuesday","Wednesday","Thursday"],
+              "opens": "09:00",
+              "closes": "18:00"
+            }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Design & Development Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Logo & Brand Identity Design",
+                  "description": "Custom logo design and complete brand identity packages"
+                },
+                "price": "1500",
+                "priceCurrency": "SAR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Web Design & Development",
+                  "description": "Professional website design and development services"
+                },
+                "price": "5000",
+                "priceCurrency": "SAR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Custom Web Application Development",
+                  "description": "Full-stack custom web application development"
+                },
+                "price": "25000",
+                "priceCurrency": "SAR"
+              }
+            ]
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "150",
+            "bestRating": "5",
+            "worstRating": "1"
           }
-          if (origOnerror) return origOnerror(msg, source, lineno, colno, error);
-          return false;
-        };
-        window.addEventListener("error", function(e) {
-          if (
-            !e.filename ||
-            (e.filename && (e.filename.indexOf("translate") !== -1 || e.filename.indexOf("element.js") !== -1)) ||
-            e.error === null || e.error === undefined
-          ) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            return false;
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://techpartner.sa/#website",
+          "url": "https://techpartner.sa",
+          "name": "TechPartner",
+          "description": "Professional design and web development services in Saudi Arabia",
+          "publisher": {
+            "@id": "https://techpartner.sa/#organization"
+          },
+          "inLanguage": ["en-US", "ar-SA"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://techpartner.sa/categories?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
           }
-        }, true);
-        window.addEventListener("unhandledrejection", function(e) {
-          var r = e.reason;
-          if (!r || (r && String(r).indexOf("translate") !== -1)) {
-            e.preventDefault();
-          }
-        });
-      })();
+        }
+      ]
+    }
     </script>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KHV9SP5N');</script>
-    <!-- End Google Tag Manager -->
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-6X1LQ695SK');
-    </script>
-    <script type="module" crossorigin src="/assets/index-CzoWaYpc.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DrVDJ_97.css">
+    <script type="module" crossorigin src="/assets/index-BpQb9FcU.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DB2ZO50E.css">
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHV9SP5N"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div id="google_translate_element" style="display:none"></div>
     <div id="root"></div>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
