@@ -8,6 +8,9 @@ var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -68,7 +71,6 @@ var init_schema = __esm({
       phone: (0, import_pg_core.text)("phone"),
       address: (0, import_pg_core.text)("address"),
       profileImage: (0, import_pg_core.text)("profile_image"),
-      googleId: (0, import_pg_core.text)("google_id"),
       role: (0, import_pg_core.text)("role").notNull().default("client"),
       // 'client' or 'admin'
       isActive: (0, import_pg_core.boolean)("is_active").notNull().default(true),
@@ -210,26 +212,61 @@ __export(db_exports, {
   db: () => db,
   pool: () => pool
 });
-var import_pg, import_node_postgres, pool, db;
+var import_serverless, import_neon_serverless, import_ws, pool, db;
 var init_db = __esm({
   "server/db.ts"() {
     "use strict";
-    import_pg = require("pg");
-    import_node_postgres = require("drizzle-orm/node-postgres");
+    import_serverless = require("@neondatabase/serverless");
+    import_neon_serverless = require("drizzle-orm/neon-serverless");
+    import_ws = __toESM(require("ws"), 1);
     init_schema();
+    import_serverless.neonConfig.webSocketConstructor = import_ws.default;
     if (!process.env.DATABASE_URL) {
       throw new Error(
         "DATABASE_URL must be set. Did you forget to provision a database?"
       );
     }
-    pool = new import_pg.Pool({ connectionString: process.env.DATABASE_URL });
-    db = (0, import_node_postgres.drizzle)({ client: pool, schema: schema_exports });
+    pool = new import_serverless.Pool({ connectionString: process.env.DATABASE_URL });
+    db = (0, import_neon_serverless.drizzle)({ client: pool, schema: schema_exports });
+  }
+});
+
+// vite-stub:vite-production-stub
+var require_vite_production_stub = __commonJS({
+  "vite-stub:vite-production-stub"(exports2, module2) {
+    var path2 = require("path");
+    var fs2 = require("fs");
+    var express3 = require("express");
+    function log2(message, source) {
+      source = source || "express";
+      const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      });
+      console.log(formattedTime + " [" + source + "] " + message);
+    }
+    function serveStatic2(app2) {
+      const distPath = path2.resolve(__dirname, "public");
+      if (!fs2.existsSync(distPath)) {
+        throw new Error("Could not find the build directory: " + distPath + ", make sure to build the client first");
+      }
+      app2.use(express3.static(distPath));
+      app2.use("*", function(_req, res) {
+        res.sendFile(path2.resolve(distPath, "index.html"));
+      });
+    }
+    async function setupVite2(app2, server) {
+      throw new Error("setupVite should not be called in production");
+    }
+    module2.exports = { log: log2, serveStatic: serveStatic2, setupVite: setupVite2 };
   }
 });
 
 // server/index.ts
 var import_config = require("dotenv/config");
-var import_express6 = __toESM(require("express"), 1);
+var import_express8 = __toESM(require("express"), 1);
 
 // server/routes.ts
 var import_http = require("http");
@@ -1942,6 +1979,434 @@ router4.post("/admin/payments/manual", requireAuth, requireAdmin, async (req, re
 });
 var admin_default = router4;
 
+// server/routes/blog.ts
+var import_express5 = require("express");
+var router5 = (0, import_express5.Router)();
+var blogPosts = [
+  {
+    id: 1,
+    title: "How to Build a Strong Brand Identity",
+    titleAr: "\u0643\u064A\u0641 \u062A\u0628\u0646\u064A \u0647\u0648\u064A\u0629 \u0639\u0644\u0627\u0645\u0629 \u062A\u062C\u0627\u0631\u064A\u0629 \u0642\u0648\u064A\u0629",
+    slug: "how-to-build-strong-brand-identity",
+    excerpt: "A strong brand identity is more than just a logo. Learn the key elements that make your brand memorable and trustworthy.",
+    excerptAr: "\u0647\u0648\u064A\u0629 \u0627\u0644\u0639\u0644\u0627\u0645\u0629 \u0627\u0644\u062A\u062C\u0627\u0631\u064A\u0629 \u0627\u0644\u0642\u0648\u064A\u0629 \u0623\u0643\u062B\u0631 \u0645\u0646 \u0645\u062C\u0631\u062F \u0634\u0639\u0627\u0631. \u062A\u0639\u0631\u0641 \u0639\u0644\u0649 \u0627\u0644\u0639\u0646\u0627\u0635\u0631 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629 \u0627\u0644\u062A\u064A \u062A\u062C\u0639\u0644 \u0639\u0644\u0627\u0645\u062A\u0643 \u0627\u0644\u062A\u062C\u0627\u0631\u064A\u0629 \u0644\u0627 \u062A\u064F\u0646\u0633\u0649 \u0648\u062C\u062F\u064A\u0631\u0629 \u0628\u0627\u0644\u062B\u0642\u0629.",
+    content: "Building a strong brand identity requires consistency, clarity, and creativity. Start with your brand values, define your target audience, and create visual elements that reflect your personality.",
+    category: "Branding",
+    author: "TechPartner Team",
+    publishedAt: "2025-01-15T10:00:00Z",
+    imageUrl: "/assets/art-and-illustration.png",
+    tags: ["branding", "logo", "identity", "design"],
+    readTime: 5
+  },
+  {
+    id: 2,
+    title: "Top Web Design Trends in 2025",
+    titleAr: "\u0623\u0628\u0631\u0632 \u0627\u062A\u062C\u0627\u0647\u0627\u062A \u062A\u0635\u0645\u064A\u0645 \u0627\u0644\u0648\u064A\u0628 \u0641\u064A 2025",
+    slug: "top-web-design-trends-2025",
+    excerpt: "Discover the latest web design trends shaping the digital landscape in 2025, from AI-driven layouts to immersive experiences.",
+    excerptAr: "\u0627\u0643\u062A\u0634\u0641 \u0623\u062D\u062F\u062B \u0627\u062A\u062C\u0627\u0647\u0627\u062A \u062A\u0635\u0645\u064A\u0645 \u0627\u0644\u0648\u064A\u0628 \u0627\u0644\u062A\u064A \u062A\u0634\u0643\u0644 \u0627\u0644\u0645\u0634\u0647\u062F \u0627\u0644\u0631\u0642\u0645\u064A \u0641\u064A 2025\u060C \u0645\u0646 \u0627\u0644\u062A\u062E\u0637\u064A\u0637\u0627\u062A \u0627\u0644\u0645\u062F\u0639\u0648\u0645\u0629 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A \u0625\u0644\u0649 \u0627\u0644\u062A\u062C\u0627\u0631\u0628 \u0627\u0644\u063A\u0627\u0645\u0631\u0629.",
+    content: "2025 brings exciting new trends in web design including dark mode by default, micro-animations, AI-personalized content, and accessibility-first design principles.",
+    category: "Web Design",
+    author: "TechPartner Team",
+    publishedAt: "2025-01-20T10:00:00Z",
+    imageUrl: "/assets/web-and-app-design.png",
+    tags: ["web design", "trends", "UI", "UX"],
+    readTime: 7
+  },
+  {
+    id: 3,
+    title: "The Importance of Packaging Design for Your Product",
+    titleAr: "\u0623\u0647\u0645\u064A\u0629 \u062A\u0635\u0645\u064A\u0645 \u0627\u0644\u062A\u063A\u0644\u064A\u0641 \u0644\u0645\u0646\u062A\u062C\u0643",
+    slug: "importance-of-packaging-design",
+    excerpt: "Great packaging design can be the difference between a product that sells and one that sits on the shelf. Here's why it matters.",
+    excerptAr: "\u064A\u0645\u0643\u0646 \u0623\u0646 \u064A\u0643\u0648\u0646 \u062A\u0635\u0645\u064A\u0645 \u0627\u0644\u062A\u063A\u0644\u064A\u0641 \u0627\u0644\u0631\u0627\u0626\u0639 \u0647\u0648 \u0627\u0644\u0641\u0631\u0642 \u0628\u064A\u0646 \u0645\u0646\u062A\u062C \u064A\u064F\u0628\u0627\u0639 \u0648\u0645\u0646\u062A\u062C \u064A\u0628\u0642\u0649 \u0639\u0644\u0649 \u0627\u0644\u0631\u0641. \u0625\u0644\u064A\u0643 \u0633\u0628\u0628 \u0623\u0647\u0645\u064A\u062A\u0647.",
+    content: "Packaging design communicates your brand values at the point of sale. It should be functional, attractive, and aligned with your overall brand identity.",
+    category: "Packaging",
+    author: "TechPartner Team",
+    publishedAt: "2025-02-01T10:00:00Z",
+    imageUrl: "/assets/packaging.png",
+    tags: ["packaging", "product design", "branding"],
+    readTime: 4
+  },
+  {
+    id: 4,
+    title: "Why Your Business Needs a Professional Logo",
+    titleAr: "\u0644\u0645\u0627\u0630\u0627 \u062A\u062D\u062A\u0627\u062C \u0634\u0631\u0643\u062A\u0643 \u0625\u0644\u0649 \u0634\u0639\u0627\u0631 \u0627\u062D\u062A\u0631\u0627\u0641\u064A",
+    slug: "why-business-needs-professional-logo",
+    excerpt: "Your logo is the face of your business. Investing in a professional logo design pays dividends in brand recognition and trust.",
+    excerptAr: "\u0634\u0639\u0627\u0631\u0643 \u0647\u0648 \u0648\u062C\u0647 \u0639\u0645\u0644\u0643. \u0627\u0644\u0627\u0633\u062A\u062B\u0645\u0627\u0631 \u0641\u064A \u062A\u0635\u0645\u064A\u0645 \u0634\u0639\u0627\u0631 \u0627\u062D\u062A\u0631\u0627\u0641\u064A \u064A\u0639\u0648\u062F \u0628\u0641\u0648\u0627\u0626\u062F \u0643\u0628\u064A\u0631\u0629 \u0641\u064A \u0627\u0644\u062A\u0639\u0631\u0641 \u0639\u0644\u0649 \u0627\u0644\u0639\u0644\u0627\u0645\u0629 \u0627\u0644\u062A\u062C\u0627\u0631\u064A\u0629 \u0648\u0627\u0644\u062B\u0642\u0629.",
+    content: "A professional logo establishes credibility, differentiates you from competitors, and creates a lasting first impression. It's the cornerstone of your visual identity.",
+    category: "Logo Design",
+    author: "TechPartner Team",
+    publishedAt: "2025-02-10T10:00:00Z",
+    imageUrl: "/assets/logo-and-branding-design.png",
+    tags: ["logo", "branding", "business", "design"],
+    readTime: 6
+  }
+];
+router5.get("/blog", (req, res) => {
+  const { category, limit } = req.query;
+  let posts = [...blogPosts];
+  if (category) {
+    posts = posts.filter((p) => p.category.toLowerCase() === String(category).toLowerCase());
+  }
+  if (limit) {
+    posts = posts.slice(0, parseInt(String(limit), 10));
+  }
+  res.json(posts);
+});
+router5.get("/blog/:slug", (req, res) => {
+  const post = blogPosts.find((p) => p.slug === req.params.slug);
+  if (!post) {
+    return res.status(404).json({ error: "Blog post not found" });
+  }
+  res.json(post);
+});
+var blog_default = router5;
+
+// server/routes/i18n.ts
+var import_express6 = require("express");
+
+// server/translation-service.ts
+var import_axios2 = __toESM(require("axios"), 1);
+var OLLAMA_HOST = process.env.OLLAMA_HOST || "http://localhost:11434";
+var MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b";
+var TranslationService = class _TranslationService {
+  static instance;
+  cache = {};
+  supportedLanguages = ["en", "ar"];
+  constructor() {
+    this.loadCacheFromStorage();
+  }
+  static getInstance() {
+    if (!_TranslationService.instance) {
+      _TranslationService.instance = new _TranslationService();
+    }
+    return _TranslationService.instance;
+  }
+  /**
+   * Translate text using Ollama AI
+   */
+  async translate(request) {
+    const { text: text2, sourceLang, targetLang, context } = request;
+    const cacheKey = this.getCacheKey(text2, sourceLang, targetLang);
+    if (this.cache[cacheKey]?.[targetLang]) {
+      console.log(`[Translation] Cache hit for: "${text2.substring(0, 50)}..."`);
+      return this.cache[cacheKey][targetLang];
+    }
+    if (sourceLang === targetLang) {
+      return text2;
+    }
+    try {
+      console.log(`[Translation] Translating to ${targetLang}: "${text2.substring(0, 50)}..."`);
+      const translatedText = await this.translateWithOllama(text2, sourceLang, targetLang, context);
+      this.storeInCache(text2, sourceLang, targetLang, translatedText);
+      return translatedText;
+    } catch (error) {
+      console.error("[Translation] Error:", error.message);
+      return text2;
+    }
+  }
+  /**
+   * Translate using Ollama AI
+   */
+  async translateWithOllama(text2, sourceLang, targetLang, context) {
+    const targetLangName = this.getLanguageName(targetLang);
+    const sourceLangName = this.getLanguageName(sourceLang);
+    let prompt = `You are a professional translator. Translate the following ${sourceLangName} text to ${targetLangName}.
+    
+IMPORTANT RULES:
+- Return ONLY the translated text
+- Do NOT add explanations, notes, or context
+- Do NOT include the original text
+- Do NOT add quotes around the translation
+- Preserve any placeholders like {{variable}} or HTML tags
+- Keep the same tone and style`;
+    if (context) {
+      prompt += `
+Context: ${context}`;
+    }
+    prompt += `
+
+Text to translate:
+${text2}
+
+Translation (only the translated text, no explanations):`;
+    const response = await import_axios2.default.post(`${OLLAMA_HOST}/api/generate`, {
+      model: MODEL,
+      prompt,
+      stream: false,
+      options: {
+        temperature: 0.1,
+        num_predict: 1024,
+        stop: ["\n\n", "Note:", "Explanation:", "Context:"]
+      }
+    });
+    let translated = response.data.response.trim();
+    translated = translated.replace(/^["']|["']$/g, "").replace(/^(Translation|Translated text|Arabic|English)[:.]?\s*/i, "").replace(/\n.*$/s, "").trim();
+    return translated;
+  }
+  /**
+   * Batch translate multiple texts
+   */
+  async translateBatch(texts, sourceLang, targetLang) {
+    const promises = texts.map(
+      (text2) => this.translate({ text: text2, sourceLang, targetLang })
+    );
+    return Promise.all(promises);
+  }
+  /**
+   * Get all translations for a language
+   */
+  async getTranslationsForLanguage(lang) {
+    const translations = {};
+    Object.keys(this.cache).forEach((key) => {
+      if (this.cache[key][lang]) {
+        translations[key] = this.cache[key][lang];
+      }
+    });
+    return translations;
+  }
+  /**
+   * Store translation in cache
+   */
+  storeInCache(originalText, sourceLang, targetLang, translatedText) {
+    const cacheKey = this.getCacheKey(originalText, sourceLang, targetLang);
+    if (!this.cache[cacheKey]) {
+      this.cache[cacheKey] = {};
+    }
+    this.cache[cacheKey][targetLang] = translatedText;
+    this.cache[cacheKey][sourceLang] = originalText;
+    this.saveCacheToStorage();
+  }
+  /**
+   * Generate cache key
+   */
+  getCacheKey(text2, sourceLang, targetLang) {
+    const hash = this.simpleHash(text2);
+    return `${sourceLang}_${hash}`;
+  }
+  /**
+   * Simple hash function
+   */
+  simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(36);
+  }
+  /**
+   * Get language name
+   */
+  getLanguageName(lang) {
+    const names = {
+      "en": "English",
+      "ar": "Modern Standard Arabic (\u0641\u0635\u062D\u0649)",
+      "fr": "French",
+      "es": "Spanish",
+      "de": "German"
+    };
+    return names[lang] || lang;
+  }
+  /**
+   * Get supported languages
+   */
+  getSupportedLanguages() {
+    return this.supportedLanguages;
+  }
+  /**
+   * Add custom translation
+   */
+  addCustomTranslation(key, lang, translation) {
+    if (!this.cache[key]) {
+      this.cache[key] = {};
+    }
+    this.cache[key][lang] = translation;
+    this.saveCacheToStorage();
+  }
+  /**
+   * Load cache from storage
+   */
+  loadCacheFromStorage() {
+    try {
+      console.log("[Translation] Cache initialized");
+    } catch (error) {
+      console.error("[Translation] Error loading cache:", error);
+    }
+  }
+  /**
+   * Save cache to storage
+   */
+  saveCacheToStorage() {
+    try {
+    } catch (error) {
+      console.error("[Translation] Error saving cache:", error);
+    }
+  }
+  /**
+   * Clear cache
+   */
+  clearCache() {
+    this.cache = {};
+    console.log("[Translation] Cache cleared");
+  }
+  /**
+   * Get cache stats
+   */
+  getCacheStats() {
+    let totalTranslations = 0;
+    const totalKeys = Object.keys(this.cache).length;
+    Object.values(this.cache).forEach((langMap) => {
+      totalTranslations += Object.keys(langMap).length;
+    });
+    return { totalKeys, totalTranslations };
+  }
+  /**
+   * Auto-translate content object
+   */
+  async autoTranslateContent(content, targetLang, sourceLang = "en") {
+    const translated = {};
+    for (const [key, value] of Object.entries(content)) {
+      translated[key] = await this.translate({
+        text: value,
+        sourceLang,
+        targetLang,
+        context: `UI text for key: ${key}`
+      });
+    }
+    return translated;
+  }
+};
+var translationService = TranslationService.getInstance();
+
+// server/routes/i18n.ts
+var router6 = (0, import_express6.Router)();
+router6.get("/translations/:lang", async (req, res) => {
+  try {
+    const { lang } = req.params;
+    const supportedLanguages = translationService.getSupportedLanguages();
+    if (!supportedLanguages.includes(lang)) {
+      return res.status(400).json({
+        error: "Unsupported language",
+        supportedLanguages
+      });
+    }
+    const translations = await translationService.getTranslationsForLanguage(lang);
+    res.json({
+      language: lang,
+      translations,
+      count: Object.keys(translations).length
+    });
+  } catch (error) {
+    console.error("[i18n] Error fetching translations:", error);
+    res.status(500).json({ error: "Failed to fetch translations" });
+  }
+});
+router6.post("/translate", async (req, res) => {
+  try {
+    const { text: text2, sourceLang = "en", targetLang, context } = req.body;
+    if (!text2 || !targetLang) {
+      return res.status(400).json({
+        error: "Missing required fields: text and targetLang"
+      });
+    }
+    const supportedLanguages = translationService.getSupportedLanguages();
+    if (!supportedLanguages.includes(targetLang)) {
+      return res.status(400).json({
+        error: "Unsupported target language",
+        supportedLanguages
+      });
+    }
+    const translated = await translationService.translate({
+      text: text2,
+      sourceLang,
+      targetLang,
+      context
+    });
+    res.json({
+      original: text2,
+      translated,
+      sourceLang,
+      targetLang
+    });
+  } catch (error) {
+    console.error("[i18n] Error translating:", error);
+    res.status(500).json({ error: "Translation failed" });
+  }
+});
+router6.post("/translate-batch", async (req, res) => {
+  try {
+    const { texts, sourceLang = "en", targetLang } = req.body;
+    if (!Array.isArray(texts) || !targetLang) {
+      return res.status(400).json({
+        error: "Missing required fields: texts (array) and targetLang"
+      });
+    }
+    const translations = await translationService.translateBatch(
+      texts,
+      sourceLang,
+      targetLang
+    );
+    res.json({
+      translations,
+      sourceLang,
+      targetLang,
+      count: translations.length
+    });
+  } catch (error) {
+    console.error("[i18n] Error batch translating:", error);
+    res.status(500).json({ error: "Batch translation failed" });
+  }
+});
+router6.get("/languages", (req, res) => {
+  const languages = translationService.getSupportedLanguages();
+  res.json({
+    languages,
+    defaultLanguage: "en"
+  });
+});
+router6.get("/cache-stats", (req, res) => {
+  const stats = translationService.getCacheStats();
+  res.json(stats);
+});
+router6.post("/clear-cache", async (req, res) => {
+  try {
+    translationService.clearCache();
+    res.json({ message: "Cache cleared successfully" });
+  } catch (error) {
+    console.error("[i18n] Error clearing cache:", error);
+    res.status(500).json({ error: "Failed to clear cache" });
+  }
+});
+router6.post("/auto-translate", async (req, res) => {
+  try {
+    const { content, targetLang, sourceLang = "en" } = req.body;
+    if (!content || typeof content !== "object" || !targetLang) {
+      return res.status(400).json({
+        error: "Missing required fields: content (object) and targetLang"
+      });
+    }
+    const translated = await translationService.autoTranslateContent(
+      content,
+      targetLang,
+      sourceLang
+    );
+    res.json({
+      original: content,
+      translated,
+      sourceLang,
+      targetLang
+    });
+  } catch (error) {
+    console.error("[i18n] Error auto-translating:", error);
+    res.status(500).json({ error: "Auto-translation failed" });
+  }
+});
+var i18n_default = router6;
+
 // server/routes.ts
 var import_bcryptjs = __toESM(require("bcryptjs"), 1);
 async function registerRoutes(app2) {
@@ -2416,172 +2881,71 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to update order" });
     }
   });
+  app2.get("/api/services", async (req, res) => {
+    try {
+      const categories = await storage.getServiceCategories();
+      const packages = await storage.getServicePackages();
+      const services = categories.map((cat) => ({
+        ...cat,
+        packages: packages.filter((pkg) => pkg.categoryId === cat.id)
+      }));
+      res.json(services);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      res.status(500).json({ message: "Failed to fetch services" });
+    }
+  });
+  app2.use("/api", blog_default);
   app2.use("/api", inquiry_default);
   app2.use("/api", email_test_default);
   app2.use("/api", payments_default);
   app2.use("/api", admin_default);
+  app2.use("/api/i18n", i18n_default);
   const httpServer = (0, import_http.createServer)(app2);
   return httpServer;
 }
 
-// server/static-handler.ts
-var import_express5 = __toESM(require("express"), 1);
-var import_fs2 = __toESM(require("fs"), 1);
-var import_path2 = __toESM(require("path"), 1);
+// server/index.ts
+var import_vite = __toESM(require_vite_production_stub(), 1);
 
-// server/image-optimizer.ts
-var import_sharp = __toESM(require("sharp"), 1);
+// server/static-handler.ts
+var import_express7 = __toESM(require("express"), 1);
 var import_fs = __toESM(require("fs"), 1);
 var import_path = __toESM(require("path"), 1);
-var import_crypto = __toESM(require("crypto"), 1);
-var CACHE_DIR = import_path.default.resolve(process.cwd(), ".image-cache");
-if (!import_fs.default.existsSync(CACHE_DIR)) {
-  import_fs.default.mkdirSync(CACHE_DIR, { recursive: true });
-}
-function getCacheKey(filePath, width, quality, format) {
-  const hash = import_crypto.default.createHash("md5").update(`${filePath}-${width}-${quality}-${format}`).digest("hex");
-  return import_path.default.join(CACHE_DIR, `${hash}.${format}`);
-}
-function getOriginalFormat(ext) {
-  const map = {
-    ".jpg": "jpeg",
-    ".jpeg": "jpeg",
-    ".png": "png",
-    ".gif": "gif"
-  };
-  return map[ext.toLowerCase()] || "png";
-}
-function imageOptimizerMiddleware(distPath) {
-  const assetsPath = import_path.default.resolve(distPath, "assets");
-  return async (req, res, next) => {
-    const reqPath = req.path;
-    if (!reqPath.startsWith("/assets/") || !/\.(png|jpg|jpeg|gif)$/i.test(reqPath)) {
-      return next();
-    }
-    const fileName = reqPath.replace("/assets/", "");
-    const filePath = import_path.default.resolve(assetsPath, fileName);
-    if (!filePath.startsWith(assetsPath)) {
-      return next();
-    }
-    if (!import_fs.default.existsSync(filePath)) {
-      return next();
-    }
-    const accept = req.headers.accept || "";
-    const supportsAvif = accept.includes("image/avif");
-    const supportsWebp = accept.includes("image/webp");
-    const ext = import_path.default.extname(filePath);
-    const originalFormat = getOriginalFormat(ext);
-    const format = supportsAvif ? "avif" : supportsWebp ? "webp" : originalFormat;
-    const widthParam = req.query.w ? parseInt(req.query.w, 10) : void 0;
-    const quality = req.query.q ? parseInt(req.query.q, 10) : 80;
-    const width = widthParam && widthParam > 0 && widthParam <= 2e3 ? widthParam : void 0;
-    const cacheKey = getCacheKey(filePath, width, quality, format);
-    if (import_fs.default.existsSync(cacheKey)) {
-      const stat = import_fs.default.statSync(cacheKey);
-      const etag = `"${stat.size}-${stat.mtimeMs}"`;
-      if (req.headers["if-none-match"] === etag) {
-        return res.status(304).end();
-      }
-      res.set({
-        "Content-Type": `image/${format}`,
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "ETag": etag,
-        "Vary": "Accept"
-      });
-      return res.sendFile(cacheKey);
-    }
-    try {
-      let pipeline = (0, import_sharp.default)(filePath);
-      if (width) {
-        pipeline = pipeline.resize(width, void 0, { withoutEnlargement: true });
-      }
-      if (format === "avif") {
-        pipeline = pipeline.avif({ quality });
-      } else if (format === "webp") {
-        pipeline = pipeline.webp({ quality });
-      } else if (format === "jpeg") {
-        pipeline = pipeline.jpeg({ quality });
-      } else {
-        pipeline = pipeline.png({ quality: Math.min(quality, 100) });
-      }
-      const buffer = await pipeline.toBuffer();
-      import_fs.default.writeFileSync(cacheKey, buffer);
-      const etag = `"${buffer.length}-${Date.now()}"`;
-      res.set({
-        "Content-Type": `image/${format}`,
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "ETag": etag,
-        "Vary": "Accept"
-      });
-      res.end(buffer);
-    } catch (err) {
-      console.error("Image optimization error:", err);
-      next();
-    }
-  };
-}
-
-// server/static-handler.ts
 function serveStaticFixed(app2) {
-  const distPath = import_path2.default.resolve(process.cwd(), "dist", "public");
+  const distPath = import_path.default.resolve(process.cwd(), "dist", "public");
   console.log("Current working directory:", process.cwd());
   console.log("Looking for static files at:", distPath);
-  console.log("Directory exists:", import_fs2.default.existsSync(distPath));
-  if (import_fs2.default.existsSync(distPath)) {
-    console.log("Files in dist/public:", import_fs2.default.readdirSync(distPath));
-    const assetsPath = import_path2.default.join(distPath, "assets");
-    if (import_fs2.default.existsSync(assetsPath)) {
-      console.log("Files in assets:", import_fs2.default.readdirSync(assetsPath).slice(0, 5));
+  console.log("Directory exists:", import_fs.default.existsSync(distPath));
+  if (import_fs.default.existsSync(distPath)) {
+    console.log("Files in dist/public:", import_fs.default.readdirSync(distPath));
+    const assetsPath = import_path.default.join(distPath, "assets");
+    if (import_fs.default.existsSync(assetsPath)) {
+      console.log("Files in assets:", import_fs.default.readdirSync(assetsPath).slice(0, 5));
     }
   }
-  if (!import_fs2.default.existsSync(distPath)) {
+  if (!import_fs.default.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
-  app2.use(imageOptimizerMiddleware(distPath));
-  app2.use(import_express5.default.static(distPath, {
-    maxAge: "1y",
-    immutable: true,
-    etag: true,
-    lastModified: true,
-    setHeaders: (res, filePath) => {
-      if (/\.(js|css)$/.test(filePath)) {
-        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-      } else if (/\.(woff2?|ttf|eot|otf)$/.test(filePath)) {
-        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-      } else if (/\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/.test(filePath)) {
-        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-      } else if (/\.html$/.test(filePath)) {
-        res.setHeader("Cache-Control", "no-cache");
-      }
-    }
-  }));
+  app2.use(import_express7.default.static(distPath));
   app2.use((req, res, next) => {
     if (req.path.startsWith("/api/")) {
       return next();
     }
-    res.set("Cache-Control", "no-cache");
-    res.sendFile(import_path2.default.resolve(distPath, "index.html"));
+    console.log("Serving SPA fallback for:", req.path);
+    res.sendFile(import_path.default.resolve(distPath, "index.html"));
   });
 }
 
 // server/index.ts
-function log(message, source = "express") {
-  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-var app = (0, import_express6.default)();
-app.use(import_express6.default.json());
-app.use(import_express6.default.urlencoded({ extended: false }));
+var app = (0, import_express8.default)();
+app.use(import_express8.default.json());
+app.use(import_express8.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
-  const path3 = req.path;
+  const path2 = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
@@ -2590,15 +2954,15 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path3.startsWith("/api")) {
-      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
+    if (path2.startsWith("/api")) {
+      let logLine = `${req.method} ${path2} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "\u2026";
       }
-      log(logLine);
+      (0, import_vite.log)(logLine);
     }
   });
   next();
@@ -2611,22 +2975,21 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
     throw err;
   });
-  if (false) {
-    const { setupVite } = await null;
-    await setupVite(app, server);
+  if (app.get("env") === "development") {
+    await (0, import_vite.setupVite)(app, server);
   } else {
     serveStaticFixed(app);
   }
-  const port = Number(process.env.PORT) || 5e3;
+  const port = Number(process.env.PORT) || 3e3;
   const host = "0.0.0.0";
   server.listen({
     port,
     host,
     reusePort: true
   }, () => {
-    log(`TechPartner Platform serving on port ${port}`);
+    (0, import_vite.log)(`TechPartner Platform serving on port ${port}`);
     if (true) {
-      log("Running in production mode");
+      (0, import_vite.log)("Running in production mode for Google Cloud App Engine");
     }
   });
 })();

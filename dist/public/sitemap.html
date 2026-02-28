@@ -65,7 +65,7 @@
             position: relative;
         }
         .section li:before {
-            content: "\2192";
+            content: "→";
             color: #667eea;
             position: absolute;
             left: 0;
@@ -91,7 +91,7 @@
             margin-bottom: 8px;
         }
         .nested-list li:before {
-            content: "\2022";
+            content: "•";
             color: #a0aec0;
         }
         .footer {
@@ -101,12 +101,34 @@
             color: #718096;
             border-top: 1px solid #e2e8f0;
         }
+        .language-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .language-toggle a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background 0.2s ease;
+        }
+        .language-toggle a:hover {
+            background: #5a67d8;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>TechPartner Site Map</h1>
         <p class="subtitle">Complete navigation guide to all pages and services</p>
+    </div>
+
+    <div class="language-toggle">
+        <a href="/sitemap">English</a>
+        <a href="/ar/sitemap">العربية</a>
     </div>
 
     <div class="sitemap-grid">
@@ -117,39 +139,34 @@
                 <li><a href="/about">About Us</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/portfolio">Portfolio</a></li>
+                <li><a href="/case-studies">Case Studies</a></li>
                 <li><a href="/blog">Blog</a></li>
             </ul>
         </div>
 
         <div class="section">
-            <h2>Service Categories</h2>
+            <h2>Our Services</h2>
             <ul>
-                <li><a href="/categories">All Categories</a>
+                <li><a href="/services">All Services</a>
                     <ul class="nested-list">
-                        <li><a href="/categories/logo-and-identity">Logo & Identity Design</a></li>
-                        <li><a href="/categories/web-and-app-design">Web & App Design</a></li>
-                        <li><a href="/categories/web-development">Web Development</a></li>
-                        <li><a href="/categories/business-advertising">Business & Advertising</a></li>
-                        <li><a href="/categories/art-illustration">Art & Illustration</a></li>
-                        <li><a href="/categories/packaging-label">Packaging & Label</a></li>
-                        <li><a href="/categories/social-media">Social Media</a></li>
-                        <li><a href="/categories/print-design">Print Design</a></li>
+                        <li><a href="/services/logo-identity">Logo & Identity Design</a></li>
+                        <li><a href="/services/web-app-design">Web & App Design</a></li>
+                        <li><a href="/services/web-development">Web Development</a></li>
+                        <li><a href="/services/ui-ux-design">UI/UX Design</a></li>
+                        <li><a href="/services/mobile-app-development">Mobile App Development</a></li>
+                        <li><a href="/services/branding-marketing">Branding & Marketing</a></li>
+                        <li><a href="/services/digital-marketing">Digital Marketing</a></li>
+                        <li><a href="/services/content-creation">Content Creation</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
 
         <div class="section">
-            <h2>Service Pages</h2>
-            <ul>
-                <li><a href="/logo-identity">Logo & Identity</a></li>
-                <li><a href="/web-app-design">Web & App Design</a></li>
-            </ul>
-        </div>
-
-        <div class="section">
             <h2>User Account</h2>
             <ul>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
                 <li><a href="/dashboard">Dashboard</a> <small>(Members Only)</small></li>
                 <li><a href="/profile">Profile</a> <small>(Members Only)</small></li>
                 <li><a href="/orders">My Orders</a> <small>(Members Only)</small></li>
@@ -157,18 +174,38 @@
         </div>
 
         <div class="section">
+            <h2>Legal & Policies</h2>
+            <ul>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/terms-of-service">Terms of Service</a></li>
+                <li><a href="/refund-policy">Refund Policy</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Arabic Pages</h2>
+            <ul>
+                <li><a href="/ar">الصفحة الرئيسية</a></li>
+                <li><a href="/ar/services">خدماتنا</a></li>
+                <li><a href="/ar/about">من نحن</a></li>
+                <li><a href="/ar/contact">اتصل بنا</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
             <h2>Getting Started</h2>
             <ul>
-                <li><strong>Browse Services:</strong> Explore our <a href="/categories">service categories</a></li>
+                <li><strong>New Users:</strong> Start with <a href="/register">Registration</a></li>
+                <li><strong>Browse Services:</strong> Explore our <a href="/services">service offerings</a></li>
                 <li><strong>View Work:</strong> Check our <a href="/portfolio">portfolio</a></li>
                 <li><strong>Get Quote:</strong> <a href="/contact">Contact us</a> for a custom quote</li>
-                <li><strong>Place Order:</strong> Order through your <a href="/dashboard">dashboard</a></li>
+                <li><strong>Place Order:</strong> Create account and order through <a href="/dashboard">dashboard</a></li>
             </ul>
         </div>
     </div>
 
     <div class="footer">
-        <p>&copy; 2026 TechPartner. All rights reserved.</p>
+        <p>&copy; 2025 TechPartner. All rights reserved.</p>
         <p>For technical support, visit our <a href="/contact">contact page</a></p>
     </div>
 </body>

@@ -1,4 +1,0 @@
-Contact: mailto:info@techpartner.sa
-Preferred-Languages: en, ar
-Canonical: https://techpartner.sa/.well-known/security.txt
-Expires: 2027-02-15T00:00:00.000Z

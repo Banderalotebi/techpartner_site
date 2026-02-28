@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Search, Mail, User, ChevronDown, Menu, X, Phone, Heart, Star, LogOut, Settings, ShoppingBag, Globe } from "lucide-react";
 import { AuthModal } from "./AuthModal";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
-import techPartnerLogo from "@assets/logo tech partner  big blue.png";
+import techPartnerLogo from "@assets/logo-tech-partner-big-blue.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,13 +20,46 @@ export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
-  const { language, setLanguage, isRTL } = useLanguage();
+  const { language, setLanguage, isRTL, t } = useLanguage();
+  const [location, setLocation] = useLocation();
 
   const getUserInitials = (firstName?: string | null, lastName?: string | null) => {
     if (firstName && lastName) {
       return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
     return user?.email?.[0]?.toUpperCase() || "U";
+  };
+
+  // Handle language switch with URL update
+  const handleLanguageSwitch = () => {
+    const newLang = language === 'en' ? 'ar' : 'en';
+    const currentPath = location;
+    
+    // Update language state
+    setLanguage(newLang);
+    
+    // Update URL with language prefix
+    if (newLang === 'ar') {
+      // Switching to Arabic - add /ar prefix
+      if (!currentPath.startsWith('/ar')) {
+        const newPath = '/ar' + currentPath;
+        setLocation(newPath);
+      }
+    } else {
+      // Switching to English - remove /ar prefix
+      if (currentPath.startsWith('/ar')) {
+        const newPath = currentPath.substring(3) || '/';
+        setLocation(newPath);
+      }
+    }
+  };
+
+  // Get localized link path
+  const getLocalizedPath = (path: string): string => {
+    if (language === 'ar') {
+      return '/ar' + path;
+    }
+    return path;
   };
 
   return (
@@ -48,15 +81,15 @@ export default function Header() {
             <div className="flex items-center space-x-4 text-gray-600">
               <div className="flex items-center space-x-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span>4.9/5 Rating</span>
+                <span>4.9/5 {t('testimonials.title', 'Rating')}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Heart className="w-4 h-4 text-red-500" />
-                <span>1000+ Happy Clients</span>
+                <span>1000+ {t('stats.clients', 'Happy Clients')}</span>
               </div>
               {/* Language Switcher */}
               <button
-                onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+                onClick={handleLanguageSwitch}
                 className="flex items-center space-x-1 px-3 py-1 rounded-full border border-gray-300 hover:border-[#01A1C1] hover:text-[#01A1C1] transition-colors text-sm font-medium"
                 title={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
               >
@@ -83,33 +116,33 @@ export default function Header() {
 
         {/* Enhanced Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
-          <Link to="/categories">
+          <Link to={getLocalizedPath('/categories')}>
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
-              Services
+              {t('nav.services', 'Services')}
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
-          <Link to="/portfolio">
+          <Link to={getLocalizedPath('/portfolio')}>
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
-              Portfolio
+              {t('nav.portfolio', 'Portfolio')}
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
-          <Link to="/about">
+          <Link to={getLocalizedPath('/about')}>
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
-              About
+              {t('nav.about', 'About')}
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
-          <Link to="/blog">
+          <Link to={getLocalizedPath('/blog')}>
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
-              Blog
+              {t('nav.blog', 'Blog')}
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
-          <Link to="/contact">
+          <Link to={getLocalizedPath('/contact')}>
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
-              Contact
+              {t('nav.contact', 'Contact')}
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
@@ -139,27 +172,27 @@ export default function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile">
+                    <Link to={getLocalizedPath('/profile')}>
                       <Settings className="mr-2 h-4 w-4" />
-                      <span>Edit Profile</span>
+                      <span>{t('profile.edit', 'Edit Profile')}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/orders">
+                    <Link to={getLocalizedPath('/orders')}>
                       <ShoppingBag className="mr-2 h-4 w-4" />
-                      <span>Order History</span>
+                      <span>{t('orders.history', 'Order History')}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard">
+                    <Link to={getLocalizedPath('/dashboard')}>
                       <Mail className="mr-2 h-4 w-4" />
-                      <span>Dashboard</span>
+                      <span>{t('nav.dashboard', 'Dashboard')}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => logout()}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>{t('auth.logout', 'Log out')}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -169,13 +202,14 @@ export default function Header() {
                   onClick={() => setIsAuthModalOpen(true)}
                   className="text-gray-700 font-medium hover:text-[#01A1C1] transition-colors"
                 >
-                  Log in
+                  {t('auth.login', 'Log in')}
                 </button>
-                <Link to="/categories">
-                  <Button className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-6 py-2 rounded-full">
-                    Get Started
-                  </Button>
-                </Link>
+            <Link to={getLocalizedPath('/categories')}>
+              <Button className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-6 py-2 rounded-full">
+                {t('hero.cta.primary', 'Get Started')}
+              </Button>
+            </Link>
+
               </>
             )}
           </div>
@@ -200,23 +234,29 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="px-6 py-4 space-y-4">
-            <Link to="/categories">
+            <Link to={getLocalizedPath('/categories')}>
               <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
-                Services
+                {t('nav.services', 'Services')}
               </div>
             </Link>
-            <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
-              Portfolio
-            </div>
-            <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
-              About
-            </div>
-            <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
-              Contact
-            </div>
+            <Link to={getLocalizedPath('/portfolio')}>
+              <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
+                {t('nav.portfolio', 'Portfolio')}
+              </div>
+            </Link>
+            <Link to={getLocalizedPath('/about')}>
+              <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
+                {t('nav.about', 'About')}
+              </div>
+            </Link>
+            <Link to={getLocalizedPath('/contact')}>
+              <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
+                {t('nav.contact', 'Contact')}
+              </div>
+            </Link>
             {/* Mobile Language Switcher */}
             <button
-              onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
+              onClick={handleLanguageSwitch}
               className="flex items-center space-x-2 text-gray-700 font-medium py-2 hover:text-[#01A1C1]"
             >
               <Globe className="w-4 h-4" />
@@ -235,7 +275,7 @@ export default function Header() {
                     onClick={() => logout()}
                     className="block w-full text-left text-gray-700 font-medium py-2 hover:text-[#01A1C1]"
                   >
-                    Log out
+                    {t('auth.logout', 'Log out')}
                   </button>
                 </>
               ) : (
@@ -244,11 +284,11 @@ export default function Header() {
                     onClick={() => setIsAuthModalOpen(true)}
                     className="block w-full text-left text-gray-700 font-medium py-2 hover:text-[#01A1C1]"
                   >
-                    Log in
+                    {t('auth.login', 'Log in')}
                   </button>
-                  <Link to="/categories">
+                  <Link to={getLocalizedPath('/categories')}>
                     <Button className="w-full bg-[#01A1C1] hover:bg-[#0891B2] text-white">
-                      Get Started
+                      {t('hero.cta.primary', 'Get Started')}
                     </Button>
                   </Link>
                 </>
