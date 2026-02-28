@@ -234,8 +234,8 @@ var init_db = __esm({
 // vite-stub:vite-production-stub
 var require_vite_production_stub = __commonJS({
   "vite-stub:vite-production-stub"(exports2, module2) {
-    var path2 = require("path");
-    var fs2 = require("fs");
+    var path3 = require("path");
+    var fs3 = require("fs");
     var express3 = require("express");
     function log2(message, source) {
       source = source || "express";
@@ -248,13 +248,13 @@ var require_vite_production_stub = __commonJS({
       console.log(formattedTime + " [" + source + "] " + message);
     }
     function serveStatic2(app2) {
-      const distPath = path2.resolve(__dirname, "public");
-      if (!fs2.existsSync(distPath)) {
+      const distPath = path3.resolve(__dirname, "public");
+      if (!fs3.existsSync(distPath)) {
         throw new Error("Could not find the build directory: " + distPath + ", make sure to build the client first");
       }
       app2.use(express3.static(distPath));
       app2.use("*", function(_req, res) {
-        res.sendFile(path2.resolve(distPath, "index.html"));
+        res.sendFile(path3.resolve(distPath, "index.html"));
       });
     }
     async function setupVite2(app2, server) {
@@ -283,20 +283,6 @@ try {
 } catch (error) {
 }
 var MemStorage = class {
-  users;
-  serviceCategories;
-  servicePackages;
-  projectBriefs;
-  quizResponses;
-  orders;
-  payments;
-  currentUserId;
-  currentCategoryId;
-  currentPackageId;
-  currentBriefId;
-  currentQuizId;
-  currentOrderId;
-  currentPaymentId;
   constructor() {
     this.users = /* @__PURE__ */ new Map();
     this.serviceCategories = /* @__PURE__ */ new Map();
@@ -838,10 +824,8 @@ var import_zod2 = require("zod");
 // server/email.ts
 var import_nodemailer = __toESM(require("nodemailer"), 1);
 var EmailService = class {
-  transporter = null;
-  fromEmail;
-  isDevelopment;
   constructor() {
+    this.transporter = null;
     this.fromEmail = process.env.FROM_EMAIL || "noreply@techpartner.sa";
     this.isDevelopment = false;
     if (this.shouldCreateTransporter()) {
@@ -2069,20 +2053,62 @@ var import_express6 = require("express");
 
 // server/translation-service.ts
 var import_axios2 = __toESM(require("axios"), 1);
+var import_fs = __toESM(require("fs"), 1);
+var import_path = __toESM(require("path"), 1);
 var OLLAMA_HOST = process.env.OLLAMA_HOST || "http://localhost:11434";
 var MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b";
+var isProduction = true;
+var LOCALES_DIR = isProduction ? import_path.default.resolve(__dirname, "../client/i18n/locales") : import_path.default.resolve(__dirname, "../../client/i18n/locales");
 var TranslationService = class _TranslationService {
-  static instance;
-  cache = {};
-  supportedLanguages = ["en", "ar"];
   constructor() {
-    this.loadCacheFromStorage();
+    this.cache = {};
+    this.supportedLanguages = ["en", "ar"];
+    this.fileTranslationsLoaded = false;
+    this.loadTranslationsFromFiles();
   }
   static getInstance() {
     if (!_TranslationService.instance) {
       _TranslationService.instance = new _TranslationService();
     }
     return _TranslationService.instance;
+  }
+  /**
+   * Load translations from JSON locale files
+   */
+  loadTranslationsFromFiles() {
+    if (this.fileTranslationsLoaded) return;
+    try {
+      const enPath = import_path.default.join(LOCALES_DIR, "en.json");
+      if (import_fs.default.existsSync(enPath)) {
+        const enData = JSON.parse(import_fs.default.readFileSync(enPath, "utf-8"));
+        Object.entries(enData).forEach(([key, value]) => {
+          this.cache[key] = { en: value };
+        });
+        console.log(`[i18n] Loaded ${Object.keys(enData).length} English translations from file`);
+      }
+      const arPath = import_path.default.join(LOCALES_DIR, "ar.json");
+      if (import_fs.default.existsSync(arPath)) {
+        const arData = JSON.parse(import_fs.default.readFileSync(arPath, "utf-8"));
+        Object.entries(arData).forEach(([key, value]) => {
+          if (!this.cache[key]) {
+            this.cache[key] = {};
+          }
+          this.cache[key].ar = value;
+        });
+        console.log(`[i18n] Loaded ${Object.keys(arData).length} Arabic translations from file`);
+      }
+      this.fileTranslationsLoaded = true;
+    } catch (error) {
+      console.error("[i18n] Error loading locale files:", error);
+    }
+  }
+  /**
+   * Reload translations from files (for admin to trigger refresh)
+   */
+  reloadFromFiles() {
+    this.fileTranslationsLoaded = false;
+    this.cache = {};
+    this.loadTranslationsFromFiles();
   }
   /**
    * Translate text using Ollama AI
@@ -2403,6 +2429,19 @@ router6.post("/auto-translate", async (req, res) => {
   } catch (error) {
     console.error("[i18n] Error auto-translating:", error);
     res.status(500).json({ error: "Auto-translation failed" });
+  }
+});
+router6.post("/reload", (req, res) => {
+  try {
+    translationService.reloadFromFiles();
+    const stats = translationService.getCacheStats();
+    res.json({
+      message: "Translations reloaded from files",
+      stats
+    });
+  } catch (error) {
+    console.error("[i18n] Error reloading translations:", error);
+    res.status(500).json({ error: "Failed to reload translations" });
   }
 });
 var i18n_default = router6;
@@ -2910,21 +2949,21 @@ var import_vite = __toESM(require_vite_production_stub(), 1);
 
 // server/static-handler.ts
 var import_express7 = __toESM(require("express"), 1);
-var import_fs = __toESM(require("fs"), 1);
-var import_path = __toESM(require("path"), 1);
+var import_fs2 = __toESM(require("fs"), 1);
+var import_path2 = __toESM(require("path"), 1);
 function serveStaticFixed(app2) {
-  const distPath = import_path.default.resolve(process.cwd(), "dist", "public");
+  const distPath = import_path2.default.resolve(process.cwd(), "dist", "public");
   console.log("Current working directory:", process.cwd());
   console.log("Looking for static files at:", distPath);
-  console.log("Directory exists:", import_fs.default.existsSync(distPath));
-  if (import_fs.default.existsSync(distPath)) {
-    console.log("Files in dist/public:", import_fs.default.readdirSync(distPath));
-    const assetsPath = import_path.default.join(distPath, "assets");
-    if (import_fs.default.existsSync(assetsPath)) {
-      console.log("Files in assets:", import_fs.default.readdirSync(assetsPath).slice(0, 5));
+  console.log("Directory exists:", import_fs2.default.existsSync(distPath));
+  if (import_fs2.default.existsSync(distPath)) {
+    console.log("Files in dist/public:", import_fs2.default.readdirSync(distPath));
+    const assetsPath = import_path2.default.join(distPath, "assets");
+    if (import_fs2.default.existsSync(assetsPath)) {
+      console.log("Files in assets:", import_fs2.default.readdirSync(assetsPath).slice(0, 5));
     }
   }
-  if (!import_fs.default.existsSync(distPath)) {
+  if (!import_fs2.default.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
@@ -2935,7 +2974,7 @@ function serveStaticFixed(app2) {
       return next();
     }
     console.log("Serving SPA fallback for:", req.path);
-    res.sendFile(import_path.default.resolve(distPath, "index.html"));
+    res.sendFile(import_path2.default.resolve(distPath, "index.html"));
   });
 }
 
@@ -2945,7 +2984,7 @@ app.use(import_express8.default.json());
 app.use(import_express8.default.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
-  const path2 = req.path;
+  const path3 = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
@@ -2954,8 +2993,8 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path2.startsWith("/api")) {
-      let logLine = `${req.method} ${path2} ${res.statusCode} in ${duration}ms`;
+    if (path3.startsWith("/api")) {
+      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }

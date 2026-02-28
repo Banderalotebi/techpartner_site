@@ -663,8 +663,19 @@ const defaultTranslations: Record<Language, Record<string, string>> = {
 };
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = useState<Language>('en');
-  const [translations, setTranslations] = useState<Record<string, string>>(defaultTranslations.en);
+  // Detect language from URL path on initial load
+  const getInitialLanguage = (): Language => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path.startsWith('/ar') || path.startsWith('/ar/')) {
+        return 'ar';
+      }
+    }
+    return 'en';
+  };
+
+  const [language, setLanguage] = useState<Language>(getInitialLanguage());
+  const [translations, setTranslations] = useState<Record<string, string>>(defaultTranslations[getInitialLanguage()]);
 
   useEffect(() => {
     setTranslations(defaultTranslations[language]);

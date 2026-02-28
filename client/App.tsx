@@ -1,10 +1,10 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import Home from "@/pages/home";
 import CategoryPage from "@/pages/category";
 import LogoIdentityPage from "@/pages/logo-identity";
@@ -19,8 +19,21 @@ import BlogPage from "@/pages/blog";
 import AdminPage from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import NotFound from "@/pages/not-found";
+import { useEffect } from "react";
 
 function Router() {
+  const [location] = useLocation();
+  const { setLanguage } = useLanguage();
+
+  // Auto-detect language from URL and sync with LanguageContext
+  useEffect(() => {
+    if (location.startsWith("/ar") || location.startsWith("/ar/")) {
+      setLanguage("ar");
+    } else {
+      setLanguage("en");
+    }
+  }, [location, setLanguage]);
+
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -45,6 +58,30 @@ function Router() {
       <Route path="/admin" component={AdminPage} />
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/category/:slug" component={CategoryPage} />
+      {/* Arabic Routes */}
+      <Route path="/ar" component={Home} />
+      <Route path="/ar/" component={Home} />
+      <Route path="/ar/dashboard" component={Dashboard} />
+      <Route path="/ar/profile" component={Profile} />
+      <Route path="/ar/orders" component={Orders} />
+      <Route path="/ar/categories" component={CategoryPage} />
+      <Route path="/ar/categories/logo-and-identity" component={LogoIdentityPage} />
+      <Route path="/ar/categories/web-and-app-design" component={WebAppDesignPage} />
+      <Route path="/ar/categories/web-development" component={WebAppDesignPage} />
+      <Route path="/ar/categories/business-advertising" component={CategoryPage} />
+      <Route path="/ar/categories/art-illustration" component={CategoryPage} />
+      <Route path="/ar/categories/packaging-label" component={CategoryPage} />
+      <Route path="/ar/categories/social-media" component={CategoryPage} />
+      <Route path="/ar/categories/print-design" component={CategoryPage} />
+      <Route path="/ar/logo-identity" component={LogoIdentityPage} />
+      <Route path="/ar/web-app-design" component={WebAppDesignPage} />
+      <Route path="/ar/about" component={AboutPage} />
+      <Route path="/ar/contact" component={ContactPage} />
+      <Route path="/ar/portfolio" component={PortfolioPage} />
+      <Route path="/ar/blog" component={BlogPage} />
+      <Route path="/ar/admin" component={AdminPage} />
+      <Route path="/ar/payment/success" component={PaymentSuccess} />
+      <Route path="/ar/category/:slug" component={CategoryPage} />
       <Route component={NotFound} />
     </Switch>
   );
