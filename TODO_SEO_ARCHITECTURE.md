@@ -56,7 +56,7 @@ All 6 phases of the SEO architecture have been successfully implemented.
 - [x] GSC Integration - Top search queries with rankings
 - [x] SQLite Queue Management - View and approve AI-drafted emails
 - [x] Manual Job Triggers - Run scout, build pSEO, syndicate, generate images
-- [x] Email Engine - Approve & Send via Nodemailer/Gmail
+- [x] Email Engine - Approve & Send via Nodemailer/Zoho Mail
 - [x] Security Layer - Admin secret token authentication
 
 ## Files Created/Modified:
@@ -83,9 +83,9 @@ GA4_PROPERTY_ID=your_ga4_property_id
 GOOGLE_APPLICATION_CREDENTIALS="./google-credentials.json"
 GSC_SITE_URL=sc-domain:techpartner.sa
 
-# Email & Security
-GMAIL_USER=your_email@gmail.com
-GMAIL_APP_PASSWORD=your_google_app_password
+# Email & Security (Zoho Mail)
+ZOHO_USER=info@techpartner.sa
+ZOHO_PASSWORD=your_zoho_password
 ADMIN_SECRET=your_secure_admin_secret
 VITE_ADMIN_SECRET=your_secure_admin_secret
 HASHNODE_PUBLICATION_ID=your_publication_id
@@ -138,6 +138,12 @@ npx tsx scripts/generate-image.ts single "Article Title" article-slug
 - **pSEO**: Astro generates 8 city-specific landing pages
 - **AI Images**: Qwen 2.5 + Stable Diffusion XL generates featured images
 - **Command Center**: React dashboard with GA4/GSC live data, email approval queue, manual job triggers
+
+## Email Configuration (Zoho Mail):
+- **SMTP Server**: smtp.zoho.com
+- **Port**: 465 (SSL)
+- **Username**: info@techpartner.sa
+- **Authentication**: Required
 
 ## Dashboard Features:
 1. **Traffic Overview**: Live GA4 metrics (Active Users, Page Views, Sessions)
