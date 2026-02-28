@@ -23,6 +23,22 @@ for (const f of ["sitemap.xml", "sitemap.html", "robots.txt"]) {
   }
 }
 
+// Copy i18n locale files to dist
+console.log("Copying i18n locale files...");
+const localesSrcDir = path.resolve("client/i18n/locales");
+const localesDestDir = path.resolve("dist/client/i18n/locales");
+if (fs.existsSync(localesSrcDir)) {
+  fs.mkdirSync(localesDestDir, { recursive: true });
+  const localeFiles = fs.readdirSync(localesSrcDir).filter(f => f.endsWith('.json'));
+  for (const file of localeFiles) {
+    fs.copyFileSync(
+      path.join(localesSrcDir, file),
+      path.join(localesDestDir, file)
+    );
+    console.log(`  Copied ${file}`);
+  }
+}
+
 console.log("Bundling server with esbuild...");
 
 const viteExcludePlugin = {

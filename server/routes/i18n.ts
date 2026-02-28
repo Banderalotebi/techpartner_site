@@ -173,4 +173,22 @@ router.post('/auto-translate', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * POST /api/i18n/reload
+ * Reload translations from locale files
+ */
+router.post('/reload', (req: Request, res: Response) => {
+  try {
+    (translationService as any).reloadFromFiles();
+    const stats = translationService.getCacheStats();
+    res.json({ 
+      message: 'Translations reloaded from files',
+      stats
+    });
+  } catch (error: any) {
+    console.error('[i18n] Error reloading translations:', error);
+    res.status(500).json({ error: 'Failed to reload translations' });
+  }
+});
+
 export default router;

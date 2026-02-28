@@ -1,7 +1,17 @@
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
+
+// Path to locale files - works in both dev and production (dist)
+// In dev: __dirname is project/server, so ../../client/i18n/locales = project/client/i18n/locales
+// In prod: __dirname is dist/server, so ../client/i18n/locales = dist/client/i18n/locales
+const isProduction = process.env.NODE_ENV === 'production';
+const LOCALES_DIR = isProduction 
+  ? path.resolve(__dirname, '../client/i18n/locales')
+  : path.resolve(__dirname, '../../client/i18n/locales');
 
 export interface TranslationRequest {
   text: string;
@@ -20,9 +30,10 @@ export class TranslationService {
   private static instance: TranslationService;
   private cache: TranslationCache = {};
   private supportedLanguages = ['en', 'ar'];
+  private fileTranslationsLoaded = false;
   
   private constructor() {
-    this.loadCacheFromStorage();
+    this.loadTranslationsFromFiles();
   }
 
   public static getInstance(): TranslationService {
@@ -30,6 +41,51 @@ export class TranslationService {
       TranslationService.instance = new TranslationService();
     }
     return TranslationService.instance;
+  }
+
+  /**
+   * Load translations from JSON locale files
+   */
+  private loadTranslationsFromFiles(): void {
+    if (this.fileTranslationsLoaded) return;
+    
+    try {
+      // Load English translations
+      const enPath = path.join(LOCALES_DIR, 'en.json');
+      if (fs.existsSync(enPath)) {
+        const enData = JSON.parse(fs.readFileSync(enPath, 'utf-8'));
+        Object.entries(enData).forEach(([key, value]) => {
+          this.cache[key] = { en: value as string };
+        });
+        console.log(`[i18n] Loaded ${Object.keys(enData).length} English translations from file`);
+      }
+
+      // Load Arabic translations
+      const arPath = path.join(LOCALES_DIR, 'ar.json');
+      if (fs.existsSync(arPath)) {
+        const arData = JSON.parse(fs.readFileSync(arPath, 'utf-8'));
+        Object.entries(arData).forEach(([key, value]) => {
+          if (!this.cache[key]) {
+            this.cache[key] = {};
+          }
+          this.cache[key].ar = value as string;
+        });
+        console.log(`[i18n] Loaded ${Object.keys(arData).length} Arabic translations from file`);
+      }
+
+      this.fileTranslationsLoaded = true;
+    } catch (error) {
+      console.error('[i18n] Error loading locale files:', error);
+    }
+  }
+
+  /**
+   * Reload translations from files (for admin to trigger refresh)
+   */
+  reloadFromFiles(): void {
+    this.fileTranslationsLoaded = false;
+    this.cache = {};
+    this.loadTranslationsFromFiles();
   }
 
   /**
