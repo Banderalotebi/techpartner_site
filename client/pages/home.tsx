@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Users, Award, Clock, Star } from "lucide-react";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import LoadingSpinner, { ServiceCardSkeleton } from "@/components/LoadingSpinner";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroImage from "@assets/image_1751882806746_2.png";
 import techPartnerDeveloper from "@assets/19362653-[Converted].png";
 import logoDesignImage from "@assets/logo-and-branding-design.png";
@@ -28,45 +29,59 @@ const HeroSVG = () => (
 const services = [
   {
     id: 1,
+    titleKey: "service.logo.title",
     title: "Logo & branding design",
     image: logoDesignImage,
+    descriptionKey: "service.logo.description",
     description: "Create a memorable brand identity that stands out"
   },
   {
     id: 2,
+    titleKey: "service.web.title",
     title: "Website & app design",
     image: webDesignImage,
+    descriptionKey: "service.web.description",
     description: "Modern, responsive designs for digital experiences"
   },
   {
     id: 3,
+    titleKey: "service.business.title",
     title: "Business & advertising",
     image: businessAdvertisingImage,
+    descriptionKey: "service.business.description",
     description: "Professional marketing materials that convert"
   },
   {
     id: 4,
+    titleKey: "service.art.title",
     title: "Art & illustration",
     image: artIllustrationImage,
+    descriptionKey: "service.art.description",
     description: "Custom artwork and illustrations for any project"
   },
   {
     id: 5,
+    titleKey: "service.packaging.title",
     title: "Packaging & label",
     image: packagingLabelImage,
+    descriptionKey: "service.packaging.description",
     description: "Product packaging that attracts and sells"
   },
   {
     id: 6,
+    titleKey: "service.development.title",
     title: "Custom web and apps development",
     image: fullStackImage,
+    descriptionKey: "service.development.description",
     description: "Professional custom development using modern full stack solutions"
   }
 ];
 
 export default function Home() {
+  const { t, language } = useLanguage();
+  
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-50 to-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,29 +104,28 @@ export default function Home() {
             <div className="flex-1 min-w-0 space-y-4 sm:space-y-6 lg:space-y-8">
               <div className="space-y-3 sm:space-y-4 lg:space-y-6">
                 <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-                  Design personalized to fit your needs perfectly.
+                  {t('hero.title', 'Design personalized to fit your needs perfectly.')}
                 </h1>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Get custom designs that perfectly match your vision. From logos to websites, 
-                  our expert designers bring your ideas to life with creativity and precision.
+                  {t('hero.subtitle', 'Get custom designs that perfectly match your vision. From logos to websites, our expert designers bring your ideas to life with creativity and precision.')}
                 </p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                 <Link to="/categories">
                   <Button size="sm" className="bg-[#01A1C1] hover:bg-[#0891B2] text-white px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto">
-                    Start Your Project
+                    {t('hero.cta.primary', 'Start Your Project')}
                     <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
                   </Button>
                 </Link>
                 <Link to="/portfolio">
                   <Button variant="outline" size="sm" className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg border-gray-300 w-full sm:w-auto">
-                    View Portfolio
+                    {t('hero.cta.secondary', 'View Portfolio')}
                   </Button>
                 </Link>
                 <Link to="/blog">
                   <Button variant="outline" size="sm" className="px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg border-[#01A1C1] text-[#01A1C1] hover:bg-[#01A1C1] hover:text-white w-full sm:w-auto">
-                    Read Blog
+                    {t('nav.blog', 'Read Blog')}
                   </Button>
                 </Link>
               </div>
@@ -125,10 +139,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Our Design and Development
+              {t('services.title', 'Our Design and Development')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Professional design and development solutions for every business need
+              {t('services.subtitle', 'Professional design and development solutions for every business need')}
             </p>
           </div>
 
@@ -136,38 +150,37 @@ export default function Home() {
           <div className="mb-16 bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 text-white">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
-                <h3 className="text-3xl font-bold mb-4">Custom Web Development</h3>
+                <h3 className="text-3xl font-bold mb-4">{t('development.title', 'Custom Web Development')}</h3>
                 <p className="text-blue-100 mb-6 text-lg">
-                  Professional full-stack development solutions using modern technologies. 
-                  From simple websites to complex web applications with complete technical requirements gathering.
+                  {t('development.subtitle', 'Professional full-stack development solutions using modern technologies. From simple websites to complex web applications with complete technical requirements gathering.')}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>Custom UI/UX Design</span>
+                    <span>{t('development.feature1', 'Custom UI/UX Design')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>Full-Stack Development</span>
+                    <span>{t('development.feature2', 'Full-Stack Development')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>CMS Integration & Backend</span>
+                    <span>{t('development.feature3', 'CMS Integration & Backend')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 mr-3 text-green-400 flex-shrink-0" />
-                    <span>8-Step Technical Assessment</span>
+                    <span>{t('development.feature4', '8-Step Technical Assessment')}</span>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                   <Link to="/categories/web-development">
                     <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 font-semibold">
-                      Start Development Project
+                      {t('development.cta', 'Start Development Project')}
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
                   <div className="text-sm text-blue-100">
-                    Starting from <span className="font-bold text-white">25,000 SAR</span>
+                    {t('development.pricing', 'Starting from')} <span className="font-bold text-white">{t('development.price', '25,000 SAR')}</span>
                   </div>
                 </div>
               </div>
@@ -216,10 +229,10 @@ export default function Home() {
                       </div>
                       <div className="p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#01A1C1] transition-colors">
-                          {service.title}
+                          {t(service.titleKey, service.title)}
                         </h3>
                         <p className="text-gray-600 text-sm leading-relaxed">
-                          {service.description}
+                          {t(service.descriptionKey, service.description)}
                         </p>
                       </div>
                     </div>
