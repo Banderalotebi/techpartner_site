@@ -70,7 +70,7 @@ export async function loadSecrets(): Promise<void> {
     }
     
   } catch (error) {
-    console.error("❌ [Secrets] CRITICAL ERROR: Failed to load secrets from AWS Secrets Manager");
+    console.error("❌ [Secrets] ERROR: Failed to load secrets from AWS Secrets Manager");
     
     if (error instanceof Error) {
       console.error(`   Error: ${error.message}`);
@@ -87,10 +87,29 @@ export async function loadSecrets(): Promise<void> {
       }
     }
     
-    // Critical failure - exit the process
-    // This prevents the app from starting with missing configuration
-    console.error("❌ [Secrets] Exiting process due to failed secret loading");
-    process.exit(1);
+    // FALLBACK: Load from .env file if AWS fails
+    // This allows graceful migration - app works with .env while IAM permissions are being set up
+    console.warn("⚠️  [Secrets] Falling back to .env file for environment variables");
+    console.warn("   To use AWS Secrets Manager, please complete the AWS setup (see PHASE 4 instructions)");
+    
+    try {
+      dotenv.config();
+      console.log("✅ [Secrets] Fallback successful - loaded from .env file");
+      
+      // Verify we got the critical variables
+      if (!process.env.DATABASE_URL) {
+        console.error("❌ [Secrets] CRITICAL: DATABASE_URL not found in .env file either");
+        console.error("   Please ensure .env file exists with required variables");
+        process.exit(1);
+      }
+      
+      console.log("✅ [Secrets] Critical variables verified from .env fallback");
+      
+    } catch (dotenvError) {
+      console.error("❌ [Secrets] CRITICAL: Both AWS Secrets Manager and .env fallback failed");
+      console.error("   Please configure either AWS Secrets Manager OR ensure .env file exists");
+      process.exit(1);
+    }
   }
 }
 
