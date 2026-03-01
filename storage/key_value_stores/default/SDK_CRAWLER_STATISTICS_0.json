@@ -1,0 +1,67 @@
+{
+  "requestsFinished": 0,
+  "requestsFailed": 2,
+  "requestsRetries": 2,
+  "requestsFailedPerMinute": 300,
+  "requestsFinishedPerMinute": 0,
+  "requestMinDurationMillis": null,
+  "requestMaxDurationMillis": 0,
+  "requestTotalFailedDurationMillis": 7,
+  "requestTotalFinishedDurationMillis": 0,
+  "crawlerStartedAt": "2026-03-01T12:44:04.484Z",
+  "crawlerFinishedAt": "2026-03-01T12:44:04.871Z",
+  "statsPersistedAt": "2026-03-01T12:44:04.872Z",
+  "crawlerRuntimeMillis": 400,
+  "crawlerLastStartTimestamp": 1772369044472,
+  "requestRetryHistogram": [
+    null,
+    null,
+    2
+  ],
+  "statsId": 0,
+  "requestAvgFailedDurationMillis": 4,
+  "requestAvgFinishedDurationMillis": null,
+  "requestTotalDurationMillis": 7,
+  "requestsTotal": 2,
+  "requestsWithStatusCode": {},
+  "errors": {
+    "file:///Users/bander/techpartnersite/node_modules/got/dist/source/core/index.js:198:21": {
+      "ENOTFOUND": {
+        "RequestError": {
+          "getaddrinfo ENOTFOUND _": {
+            "count": 2
+          }
+        }
+      }
+    },
+    "node:internal/errors:563:5": {
+      "ENOTFOUND": {
+        "Error": {
+          "getaddrinfo ENOTFOUND _": {
+            "count": 2
+          }
+        }
+      }
+    }
+  },
+  "retryErrors": {
+    "file:///Users/bander/techpartnersite/node_modules/got/dist/source/core/index.js:198:21": {
+      "ENOTFOUND": {
+        "RequestError": {
+          "getaddrinfo ENOTFOUND _": {
+            "count": 4
+          }
+        }
+      }
+    },
+    "node:internal/errors:563:5": {
+      "ENOTFOUND": {
+        "Error": {
+          "getaddrinfo ENOTFOUND _": {
+            "count": 4
+          }
+        }
+      }
+    }
+  }
+}
