@@ -37,11 +37,12 @@ function getSQLiteDB(): Database.Database {
 }
 
 // Check if we're using Drizzle or SQLite
-const isDrizzleAvailable = db !== null;
+// Note: Even if db is set, we need to verify tables exist
+const isDrizzleAvailable = false; // Force SQLite for now until PostgreSQL schema is migrated
 
 console.log(isDrizzleAvailable 
   ? "✅ [CRM Vault] Drizzle ORM initialized for Neon PostgreSQL" 
-  : "⚠️ [CRM Vault] Using SQLite fallback");
+  : "⚠️ [CRM Vault] Using SQLite fallback (PostgreSQL tables not yet created)");
 
 // Create a new lead
 export async function createLead(name: string, email: string, source: string = "Chatbot") {
