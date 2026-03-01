@@ -22,6 +22,7 @@ import { systemRouter } from "./routes/system";
 import { pseoRouter } from "./routes/pseo";
 import { sitemapRouter } from "./routes/sitemap";
 import { webhookRouter } from "./routes/webhooks";
+import { contentRouter } from "./routes/content";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { db } from "./db";
@@ -648,6 +649,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register Webhook routes (n8n Integration)
   app.use("/api/webhooks", webhookRouter);
+
+  // Register Content Management routes (Article Generation)
+  app.use("/api/content", contentRouter);
 
   // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {
