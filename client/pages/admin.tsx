@@ -229,6 +229,28 @@ export default function AdminPage() {
   const [vitals, setVitals] = useState<any>(null);
   const [crmStats, setCrmStats] = useState<any>(null);
   const [vitalsLoading, setVitalsLoading] = useState(true);
+  
+  // God Mode: Autonomous/Manual Toggle
+  const [autonomousMode, setAutonomousMode] = useState(() => {
+    // Load from localStorage or default to false (Manual mode)
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('techpartner_autonomous_mode') === 'true';
+    }
+    return false;
+  });
+  
+  const toggleAutonomousMode = () => {
+    const newMode = !autonomousMode;
+    setAutonomousMode(newMode);
+    localStorage.setItem('techpartner_autonomous_mode', newMode.toString());
+    toast({
+      title: newMode ? "🤖 AUTONOMOUS MODE ACTIVATED" : "👤 MANUAL MODE ACTIVATED",
+      description: newMode 
+        ? "AI will now auto-send emails for HOT leads and auto-generate content" 
+        : "AI will draft content but wait for your approval before sending",
+      variant: newMode ? "default" : "destructive",
+    });
+  };
 
   // Fetch System Vitals (God Mode Telemetry)
   useEffect(() => {
@@ -503,6 +525,83 @@ The article should be informative, authoritative, and provide real value to read
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* GOD MODE TOGGLE - Master Control */}
+        <div className="mb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${autonomousMode ? 'bg-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.3)]' : 'bg-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.3)]'}`}>
+                {autonomousMode ? (
+                  <Cpu className="w-8 h-8 text-emerald-400 animate-pulse" />
+                ) : (
+                  <Users className="w-8 h-8 text-blue-400" />
+                )}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  {autonomousMode ? "🤖 AUTONOMOUS MODE" : "👤 MANUAL MODE"}
+                  <Badge className={`${autonomousMode ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-blue-500/20 text-blue-400 border-blue-500/50'}`}>
+                    {autonomousMode ? "AI ACTIVE" : "HUMAN APPROVAL"}
+                  </Badge>
+                </h2>
+                <p className="text-slate-400 mt-1">
+                  {autonomousMode 
+                    ? "AI auto-sends HOT lead emails • Auto-generates pSEO content • 24/7 operation"
+                    : "AI drafts emails for review • Content queued for approval • You control all actions"}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              onClick={toggleAutonomousMode}
+              className={`relative inline-flex h-14 w-28 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 ${autonomousMode ? 'bg-emerald-600' : 'bg-slate-600'}`}
+            >
+              <span className="sr-only">Toggle autonomous mode</span>
+              <span
+                className={`inline-block h-12 w-12 transform rounded-full bg-white shadow-lg transition duration-300 ease-in-out ${autonomousMode ? 'translate-x-14' : 'translate-x-1'}`}
+              >
+                <div className="flex items-center justify-center h-full">
+                  {autonomousMode ? (
+                    <Cpu className="w-6 h-6 text-emerald-600" />
+                  ) : (
+                    <Users className="w-6 h-6 text-slate-600" />
+                  )}
+                </div>
+              </span>
+            </button>
+          </div>
+          
+          {/* Mode Features Grid */}
+          <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-700">
+            <div className={`p-4 rounded-xl border transition-all ${autonomousMode ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <Flame className={`w-5 h-5 ${autonomousMode ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <span className="font-semibold text-white">HOT Leads</span>
+              </div>
+              <p className="text-sm text-slate-400">
+                {autonomousMode ? "Auto-emails sent instantly" : "Drafted for your review"}
+              </p>
+            </div>
+            <div className={`p-4 rounded-xl border transition-all ${autonomousMode ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <Wand2 className={`w-5 h-5 ${autonomousMode ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <span className="font-semibold text-white">pSEO Content</span>
+              </div>
+              <p className="text-sm text-slate-400">
+                {autonomousMode ? "Auto-published weekly" : "Generated, queued for approval"}
+              </p>
+            </div>
+            <div className={`p-4 rounded-xl border transition-all ${autonomousMode ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-slate-800/50 border-slate-700'}`}>
+              <div className="flex items-center gap-2 mb-2">
+                <Activity className={`w-5 h-5 ${autonomousMode ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <span className="font-semibold text-white">Social Replies</span>
+              </div>
+              <p className="text-sm text-slate-400">
+                {autonomousMode ? "n8n auto-posts replies" : "Drafted, manual posting"}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* SYSTEM VITALS HUD - God Mode */}
         {!vitalsLoading && vitals && (
           <div className="mb-8">
