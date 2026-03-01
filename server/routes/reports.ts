@@ -1,8 +1,25 @@
 // server/routes/reports.ts - Advanced Reporting & Export (Phase 4)
 import { Router } from "express";
-import { crmOperations } from "../db/crm";
+import {
+  getCRMStats,
+  getAllLeads,
+  getInteractionsByLead,
+  getLeadsByScore,
+  exportLeadsToCSV
+} from "../db/crm";
 import { requireAdmin } from "../middleware/auth";
 import Database from 'better-sqlite3';
+
+// Type definition for Lead
+interface Lead {
+  id: string;
+  name: string;
+  email: string;
+  source: string;
+  lead_score: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export const reportsRouter = Router();
 
@@ -12,9 +29,15 @@ const seoDb = new Database('seo-prospects.db');
 // Get comprehensive CRM report
 reportsRouter.get("/crm", requireAdmin, async (req, res) => {
     try {
-        const stats = crmOperations.getCRMStats();
-        const leads = crmOperations.getAllLeads();
-        const recentInteractions = crmOperations.getAllInteractions().slice(0, 50);
+        const stats = getCRMStats();
+        const leads = getAllLeads();
+        // Get interactions for all leads (limited to recent 50)
+        const recentInteractions: any[] = [];
+        for (const lead of (leads as Lead[]).slice(0, 20)) {
+            const interactions = getInteractionsByLead(lead.email);
+            recentInteractions.push(...interactions);
+        }
+        recentInteractions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
         res.json({
             summary: stats,
@@ -31,7 +54,7 @@ reportsRouter.get("/crm", requireAdmin, async (req, res) => {
 // Export CRM leads to CSV
 reportsRouter.get("/export/crm/csv", requireAdmin, async (req, res) => {
     try {
-        const csvContent = crmOperations.exportLeadsToCSV();
+        const csvContent = exportLeadsToCSV();
         
         if (!csvContent) {
             return res.status(404).json({ error: "No leads to export." });
@@ -87,7 +110,7 @@ reportsRouter.get("/seo", requireAdmin, async (req, res) => {
 // Get combined AI Sales & SEO report
 reportsRouter.get("/unified", requireAdmin, async (req, res) => {
     try {
-        const crmStats = crmOperations.getCRMStats();
+        const crmStats = getCRMStats();
         const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
         
         const report = {
@@ -118,9 +141,14 @@ reportsRouter.get("/unified", requireAdmin, async (req, res) => {
 // Export full system report as JSON
 reportsRouter.get("/export/full", requireAdmin, async (req, res) => {
     try {
-        const crmStats = crmOperations.getCRMStats();
-        const allLeads = crmOperations.getAllLeads();
-        const allInteractions = crmOperations.getAllInteractions();
+        const crmStats = getCRMStats();
+        const allLeads = getAllLeads();
+        // Collect all interactions
+        const allInteractions: any[] = [];
+        for (const lead of allLeads as Lead[]) {
+            const interactions = getInteractionsByLead(lead.email);
+            allInteractions.push(...interactions);
+        }
         const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
 
         const fullReport = {
@@ -153,16 +181,16 @@ reportsRouter.get("/export/full", requireAdmin, async (req, res) => {
 // Get real-time dashboard metrics
 reportsRouter.get("/dashboard", requireAdmin, async (req, res) => {
     try {
-        const crmStats = crmOperations.getCRMStats();
+        const crmStats = getCRMStats();
         
         // Get today's leads
         const today = new Date().toISOString().split('T')[0];
-        const todayLeads = (crmOperations.getAllLeads() as any[]).filter(
+        const todayLeads = (getAllLeads() as any[]).filter(
             (l: any) => l.created_at && l.created_at.startsWith(today)
         ).length;
 
         // Get recent hot leads
-        const hotLeads = (crmOperations.getLeadsByScore('HOT') as any[]).slice(0, 5);
+        const hotLeads = (getLeadsByScore('HOT') as any[]).slice(0, 5);
 
         res.json({
             metrics: {

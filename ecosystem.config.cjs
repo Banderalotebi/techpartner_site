@@ -2,7 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'techpartner',
-      script: './dist/index.cjs',
+      script: 'npx',
+      args: 'tsx dist/server/index.ts',
       env: {
         NODE_ENV: 'production',
         PORT: 8080

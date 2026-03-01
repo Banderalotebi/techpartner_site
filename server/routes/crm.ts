@@ -1,6 +1,15 @@
 // server/routes/crm.ts - The AI Sales Closer (Phase 2)
 import { Router } from "express";
-import { crmDb, crmOperations } from "../db/crm";
+import {
+  createLead,
+  updateLeadScore,
+  createInteraction,
+  getAllLeads,
+  getLeadsByScore,
+  getInteractionsByLead,
+  getCRMStats,
+  exportLeadsToCSV
+} from "../db/crm";
 import { randomUUID } from "crypto";
 import { emailService } from "../email";
 import { requireAdmin } from "../middleware/auth";
@@ -21,7 +30,7 @@ crmRouter.post("/process-chat", async (req, res) => {
     try {
         // 1. Save the raw lead to the CRM database
         console.log(`📝 [CRM] Saving lead: ${userEmail}`);
-        crmOperations.createLead(userName, userEmail, source);
+        createLead(userName, userEmail, source);
 
         // 2. Ask Qwen 2.5 to act as your VP of Sales
         const aiPrompt = `
@@ -79,11 +88,11 @@ Scoring Criteria:
         }
 
         // 3. Update the Lead Score in the CRM
-        crmOperations.updateLeadScore(userEmail, analysis.score);
+        updateLeadScore(userEmail, analysis.score);
         console.log(`📊 [CRM] Lead scored: ${analysis.score}`);
 
         // 4. Save the Interaction and the AI's drafted email
-        crmOperations.createInteraction(
+        createInteraction(
             userEmail,
             'Chat Summary & Draft',
             analysis.draftEmail,
@@ -111,7 +120,7 @@ Scoring Criteria:
                 });
 
                 // Log autonomous action
-                crmOperations.createInteraction(
+                createInteraction(
                     userEmail,
                     'Autonomous Email Sent',
                     analysis.draftEmail,
@@ -150,7 +159,7 @@ Scoring Criteria:
 // Get all leads (Admin only)
 crmRouter.get("/leads", requireAdmin, async (req, res) => {
     try {
-        const leads = crmOperations.getAllLeads();
+        const leads = getAllLeads();
         res.json(leads);
     } catch (error) {
         console.error("Failed to fetch leads:", error);
@@ -168,7 +177,7 @@ crmRouter.get("/leads/score/:score", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Invalid score. Use HOT, WARM, COLD, or PENDING." });
         }
         
-        const leads = crmOperations.getLeadsByScore(score.toUpperCase());
+        const leads = getLeadsByScore(score.toUpperCase());
         res.json(leads);
     } catch (error) {
         console.error("Failed to fetch leads by score:", error);
@@ -180,7 +189,7 @@ crmRouter.get("/leads/score/:score", requireAdmin, async (req, res) => {
 crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
     try {
         const { email } = req.params;
-        const interactions = crmOperations.getInteractionsByLead(email);
+        const interactions = getInteractionsByLead(email);
         res.json(interactions);
     } catch (error) {
         console.error("Failed to fetch interactions:", error);
@@ -191,7 +200,7 @@ crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
 // Get CRM statistics (Admin only)
 crmRouter.get("/stats", requireAdmin, async (req, res) => {
     try {
-        const stats = crmOperations.getCRMStats();
+        const stats = getCRMStats();
         res.json(stats);
     } catch (error) {
         console.error("Failed to fetch CRM stats:", error);
@@ -202,7 +211,7 @@ crmRouter.get("/stats", requireAdmin, async (req, res) => {
 // Export leads to CSV (Admin only)
 crmRouter.get("/export/leads", requireAdmin, async (req, res) => {
     try {
-        const csvContent = crmOperations.exportLeadsToCSV();
+        const csvContent = exportLeadsToCSV();
         
         if (!csvContent) {
             return res.status(404).json({ error: "No leads to export." });
@@ -228,10 +237,10 @@ crmRouter.post("/leads", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Email is required." });
         }
 
-        crmOperations.createLead(name, email, source);
+        createLead(name, email, source);
         
         if (leadScore !== 'PENDING') {
-            crmOperations.updateLeadScore(email, leadScore);
+            updateLeadScore(email, leadScore);
         }
 
         res.json({ success: true, message: "Lead created successfully." });
@@ -252,10 +261,10 @@ crmRouter.patch("/leads/:email/score", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Invalid score." });
         }
 
-        crmOperations.updateLeadScore(email, score.toUpperCase());
+        updateLeadScore(email, score.toUpperCase());
         
         // Log the manual update
-        crmOperations.createInteraction(
+        createInteraction(
             email,
             'Manual Score Update',
             `Lead score manually updated to ${score.toUpperCase()}`,

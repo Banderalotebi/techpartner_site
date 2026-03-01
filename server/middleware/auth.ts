@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { db } from '../db';
 import { users } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
+import { storage } from '../storage';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -47,19 +48,46 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
     const decoded = verifyToken(token);
     console.log('🔍 Token decoded:', { id: decoded.id, email: decoded.email });
+
+    let user;
     
-    // Verify user still exists in database
-    const [user] = await db
-      .select({
-        id: users.id,
-        email: users.email,
-        username: users.username,
-        role: users.role,
-        isActive: users.isActive,
-      })
-      .from(users)
-      .where(eq(users.id, decoded.id))
-      .limit(1);
+    // Try PostgreSQL first if available
+    if (db) {
+      try {
+        const [dbUser] = await db
+          .select({
+            id: users.id,
+            email: users.email,
+            username: users.username,
+            role: users.role,
+            isActive: users.isActive,
+          })
+          .from(users)
+          .where(eq(users.id, decoded.id))
+          .limit(1);
+        user = dbUser;
+      } catch (dbError) {
+        console.log('PostgreSQL lookup failed, falling back to storage:', dbError);
+      }
+    }
+    
+    // Fallback to storage (SQLite/MemStorage) if PostgreSQL not available or failed
+    if (!user) {
+      try {
+        const storageUser = await storage.getUser(decoded.id);
+        if (storageUser) {
+          user = {
+            id: storageUser.id,
+            email: storageUser.email,
+            username: storageUser.username,
+            role: storageUser.role,
+            isActive: storageUser.isActive,
+          };
+        }
+      } catch (storageError) {
+        console.log('Storage lookup failed:', storageError);
+      }
+    }
 
     console.log('🔍 User lookup result:', user || 'No user found');
 
