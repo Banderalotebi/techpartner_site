@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Message = {
   role: "user" | "assistant";
@@ -71,12 +73,20 @@ export default function AiChatWidget() {
           {/* Messages Area */}
           <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
             {messages.map((msg, idx) => (
-              <div key={idx} className={`max-w-[85%] p-3 rounded-lg text-sm whitespace-pre-wrap leading-relaxed ${
+              <div key={idx} className={`max-w-[85%] p-3 rounded-lg text-sm leading-relaxed ${
                 msg.role === "user" 
                   ? "bg-[#01A1C1] text-white self-end rounded-br-none" 
                   : "bg-white border border-gray-200 text-gray-800 self-start rounded-bl-none shadow-sm"
               }`}>
-                {msg.content}
+                {msg.role === "user" ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : (
+                  <div className="prose prose-sm max-w-none prose-headings:text-[#01A1C1] prose-a:text-[#01A1C1] prose-strong:text-gray-900">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
             ))}
             {isLoading && (

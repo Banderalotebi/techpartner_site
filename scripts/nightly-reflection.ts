@@ -156,7 +156,8 @@ function extractPricingContext(text: string): string {
 }
 
 // Run if called directly
-if (require.main === module) {
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   runNightlyReflection();
 }
 

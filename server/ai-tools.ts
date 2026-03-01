@@ -1,6 +1,8 @@
 import { ChatOllama } from "@langchain/ollama";
 import { DuckDuckGoSearch } from "@langchain/community/tools/duckduckgo_search";
 import { Tool } from "@langchain/core/tools";
+import fs from "fs";
+import path from "path";
 
 // Web Search Tool - DuckDuckGo (no API key required)
 export const webSearchTool = new DuckDuckGoSearch({ maxResults: 3 });
@@ -115,8 +117,6 @@ export class MemoryStore {
 
   private save(): void {
     try {
-      const fs = require("fs");
-      const path = require("path");
       const dir = path.dirname(this.storagePath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -129,7 +129,6 @@ export class MemoryStore {
 
   private load(): void {
     try {
-      const fs = require("fs");
       if (fs.existsSync(this.storagePath)) {
         const data = JSON.parse(fs.readFileSync(this.storagePath, "utf-8"));
         this.documents = data.map((d: any) => ({

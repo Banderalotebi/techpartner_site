@@ -4,16 +4,20 @@ import path from "path";
 
 export function serveStaticFixed(app: Express) {
   const distPath = path.resolve(process.cwd(), "dist", "public");
+  const clientPath = path.join(distPath, "client");
+  const indexPath = path.join(clientPath, "index.html");
 
   console.log("Current working directory:", process.cwd());
   console.log("Looking for static files at:", distPath);
+  console.log("Client path:", clientPath);
+  console.log("Index path:", indexPath);
   console.log("Directory exists:", fs.existsSync(distPath));
   
   if (fs.existsSync(distPath)) {
     console.log("Files in dist/public:", fs.readdirSync(distPath));
     const assetsPath = path.join(distPath, "assets");
     if (fs.existsSync(assetsPath)) {
-      console.log("Files in assets:", fs.readdirSync(assetsPath).slice(0, 5)); // First 5 files
+      console.log("Files in assets:", fs.readdirSync(assetsPath).slice(0, 5));
     }
   }
 
@@ -35,7 +39,11 @@ export function serveStaticFixed(app: Express) {
     
     console.log("Serving SPA fallback for:", req.path);
     
-    // Serve index.html for all other routes (SPA fallback)
-    res.sendFile(path.resolve(distPath, "index.html"));
+    // Serve index.html from client folder for all other routes (SPA fallback)
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('Frontend not built. index.html not found.');
+    }
   });
 }
