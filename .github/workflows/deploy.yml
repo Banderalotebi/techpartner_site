@@ -69,12 +69,31 @@ jobs:
           npm ci
           node build.js
 
+      - name: Validate Secrets
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "❌ ERROR: EC2_HOST secret is not set!"
+            echo "Please add your EC2 instance IP address to GitHub Secrets."
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_USER }}" ]; then
+            echo "❌ ERROR: EC2_USER secret is not set!"
+            echo "Please add your EC2 username (e.g., 'ubuntu') to GitHub Secrets."
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "❌ ERROR: EC2_SSH_KEY secret is not set!"
+            echo "Please add your EC2 SSH private key to GitHub Secrets."
+            exit 1
+          fi
+          echo "✅ All required secrets are configured"
+
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Could not add host to known hosts"
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || echo "⚠️ Warning: Could not add host to known hosts, will use StrictHostKeyChecking=no"
 
       - name: Deploy to EC2
         run: |
