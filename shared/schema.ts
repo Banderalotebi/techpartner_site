@@ -113,6 +113,26 @@ export const inquiries = pgTable("inquiries", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+// AI CRM Tables - Phase 1: Unified AI CRM
+export const leads = pgTable("leads", {
+  id: text("id").primaryKey(),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  source: text("source").default("Chatbot"), // 'Chatbot', 'Contact Form', 'Scraper'
+  leadScore: text("lead_score").default("PENDING"), // 'HOT', 'WARM', 'COLD', 'PENDING'
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const interactions = pgTable("interactions", {
+  id: serial("id").primaryKey(),
+  leadEmail: text("lead_email").notNull(),
+  interactionType: text("interaction_type").notNull(), // 'Chat Transcript', 'Email Sent', 'Page Visit', 'Autonomous Email Sent'
+  content: text("content"),
+  aiSummary: text("ai_summary"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -161,6 +181,17 @@ export const insertInquirySchema = createInsertSchema(inquiries).omit({
   updatedAt: true,
 });
 
+export const insertLeadSchema = createInsertSchema(leads).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertInteractionSchema = createInsertSchema(interactions).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type ServiceCategory = typeof serviceCategories.$inferSelect;
@@ -177,3 +208,7 @@ export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
+export type Lead = typeof leads.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+export type Interaction = typeof interactions.$inferSelect;
+export type InsertInteraction = z.infer<typeof insertInteractionSchema>;

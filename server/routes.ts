@@ -17,6 +17,8 @@ import adminRoutes from "./routes/admin";
 import blogRoutes from "./routes/blog";
 import i18nRoutes from "./routes/i18n";
 import { chatRouter } from "./routes/chat";
+import { crmRouter } from "./routes/crm";
+import { reportsRouter } from "./routes/reports";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { seoOrchestrator } from "./seo-agent";
@@ -649,6 +651,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register chat routes
   app.use("/api/chat", chatRouter);
+
+  // Register CRM routes (AI Sales Closer)
+  app.use("/api/crm", crmRouter);
+
+  // Register Reports routes (Phase 4)
+  app.use("/api/reports", reportsRouter);
 
   // Initialize SEO Database
   const db = new Database('seo-prospects.db');
