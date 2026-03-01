@@ -7,37 +7,26 @@ import {
   getLeadsByScore,
   exportLeadsToCSV
 } from "../db/crm";
+import { db } from "../db";
+import { prospects } from "../../shared/schema";
+import { desc } from "drizzle-orm";
 import { requireAdmin, simpleAuth } from "../middleware/auth";
-import Database from 'better-sqlite3';
-
-// Type definition for Lead
-interface Lead {
-  id: string;
-  name: string;
-  email: string;
-  source: string;
-  lead_score: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export const reportsRouter = Router();
-
-// Initialize SEO database connection for reports
-const seoDb = new Database('seo-prospects.db');
 
 // Get comprehensive CRM report
 reportsRouter.get("/crm", simpleAuth, async (req, res) => {
     try {
-        const stats = getCRMStats();
-        const leads = getAllLeads();
+        const stats = await getCRMStats();
+        const leads = await getAllLeads();
+        
         // Get interactions for all leads (limited to recent 50)
         const recentInteractions: any[] = [];
-        for (const lead of (leads as Lead[]).slice(0, 20)) {
-            const interactions = getInteractionsByLead(lead.email);
+        for (const lead of leads.slice(0, 20)) {
+            const interactions = await getInteractionsByLead(lead.email);
             recentInteractions.push(...interactions);
         }
-        recentInteractions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        recentInteractions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
         res.json({
             summary: stats,
@@ -54,7 +43,7 @@ reportsRouter.get("/crm", simpleAuth, async (req, res) => {
 // Export CRM leads to CSV
 reportsRouter.get("/export/crm/csv", simpleAuth, async (req, res) => {
     try {
-        const csvContent = exportLeadsToCSV();
+        const csvContent = await exportLeadsToCSV();
         
         if (!csvContent) {
             return res.status(404).json({ error: "No leads to export." });
@@ -73,17 +62,20 @@ reportsRouter.get("/export/crm/csv", simpleAuth, async (req, res) => {
 // Get SEO performance report
 reportsRouter.get("/seo", simpleAuth, async (req, res) => {
     try {
-        // Get SEO prospects data
-        const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
+        // Get SEO prospects data from Drizzle
+        const allProspects = await db
+            .select()
+            .from(prospects)
+            .orderBy(desc(prospects.createdAt));
         
         // Calculate SEO metrics
-        const totalProspects = prospects.length;
-        const approvedProspects = (prospects as any[]).filter(p => p.approved).length;
+        const totalProspects = allProspects.length;
+        const approvedProspects = allProspects.filter(p => p.approved).length;
         const pendingProspects = totalProspects - approvedProspects;
         
         // Group by date
-        const byDate = (prospects as any[]).reduce((acc: any, p: any) => {
-            const date = new Date(p.created_at).toISOString().split('T')[0];
+        const byDate = allProspects.reduce((acc: any, p: any) => {
+            const date = new Date(p.createdAt).toISOString().split('T')[0];
             if (!acc[date]) acc[date] = { total: 0, approved: 0 };
             acc[date].total++;
             if (p.approved) acc[date].approved++;
@@ -97,7 +89,7 @@ reportsRouter.get("/seo", simpleAuth, async (req, res) => {
                 pendingProspects,
                 approvalRate: totalProspects > 0 ? ((approvedProspects / totalProspects) * 100).toFixed(1) : 0
             },
-            prospects: prospects.slice(0, 100),
+            prospects: allProspects.slice(0, 100),
             timeline: byDate,
             generatedAt: new Date().toISOString()
         });
@@ -110,8 +102,11 @@ reportsRouter.get("/seo", simpleAuth, async (req, res) => {
 // Get combined AI Sales & SEO report
 reportsRouter.get("/unified", simpleAuth, async (req, res) => {
     try {
-        const crmStats = getCRMStats();
-        const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
+        const crmStats = await getCRMStats();
+        const allProspects = await db
+            .select()
+            .from(prospects)
+            .orderBy(desc(prospects.createdAt));
         
         const report = {
             aiSales: {
@@ -121,8 +116,8 @@ reportsRouter.get("/unified", simpleAuth, async (req, res) => {
                     : 0
             },
             seo: {
-                totalProspects: prospects.length,
-                approvedProspects: (prospects as any[]).filter(p => p.approved).length
+                totalProspects: allProspects.length,
+                approvedProspects: allProspects.filter(p => p.approved).length
             },
             systemHealth: {
                 crmDatabase: 'connected',
@@ -141,15 +136,20 @@ reportsRouter.get("/unified", simpleAuth, async (req, res) => {
 // Export full system report as JSON
 reportsRouter.get("/export/full", simpleAuth, async (req, res) => {
     try {
-        const crmStats = getCRMStats();
-        const allLeads = getAllLeads();
+        const crmStats = await getCRMStats();
+        const allLeads = await getAllLeads();
+        
         // Collect all interactions
         const allInteractions: any[] = [];
-        for (const lead of allLeads as Lead[]) {
-            const interactions = getInteractionsByLead(lead.email);
+        for (const lead of allLeads) {
+            const interactions = await getInteractionsByLead(lead.email);
             allInteractions.push(...interactions);
         }
-        const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
+        
+        const allProspects = await db
+            .select()
+            .from(prospects)
+            .orderBy(desc(prospects.createdAt));
 
         const fullReport = {
             generatedAt: new Date().toISOString(),
@@ -159,7 +159,7 @@ reportsRouter.get("/export/full", simpleAuth, async (req, res) => {
                 interactions: allInteractions
             },
             seo: {
-                prospects: prospects
+                prospects: allProspects
             },
             metadata: {
                 version: "1.0.0",
@@ -181,16 +181,17 @@ reportsRouter.get("/export/full", simpleAuth, async (req, res) => {
 // Get real-time dashboard metrics
 reportsRouter.get("/dashboard", simpleAuth, async (req, res) => {
     try {
-        const crmStats = getCRMStats();
+        const crmStats = await getCRMStats();
+        const allLeads = await getAllLeads();
         
         // Get today's leads
         const today = new Date().toISOString().split('T')[0];
-        const todayLeads = (getAllLeads() as any[]).filter(
-            (l: any) => l.created_at && l.created_at.startsWith(today)
+        const todayLeads = allLeads.filter(
+            (l: any) => l.createdAt && l.createdAt.toISOString().startsWith(today)
         ).length;
 
         // Get recent hot leads
-        const hotLeads = (getLeadsByScore('HOT') as any[]).slice(0, 5);
+        const hotLeads = (await getLeadsByScore('HOT')).slice(0, 5);
 
         res.json({
             metrics: {

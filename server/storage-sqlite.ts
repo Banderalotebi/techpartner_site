@@ -267,6 +267,10 @@ export class SQLiteStorage implements IStorage {
     return row ? this.mapUserRow(row) : undefined;
   }
 
+  async getUserById(id: number): Promise<User | undefined> {
+    return this.getUser(id);
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const stmt = this.db.prepare(`
       INSERT INTO users (username, email, password, firstName, lastName, phoneNumber, company, industry, role, isEmailVerified, isActive)

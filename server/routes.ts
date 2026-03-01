@@ -19,7 +19,9 @@ import { crmRouter } from "./routes/crm";
 import { reportsRouter } from "./routes/reports";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
-import Database from 'better-sqlite3';
+import { db } from "./db";
+import { prospects } from "../shared/schema";
+import { desc } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for Google Cloud App Engine
@@ -192,6 +194,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...(phone && { phone }),
         ...(address && { address })
       });
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
       res.json({
         id: updatedUser.id,
@@ -485,13 +491,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Calculate statistics
       const stats = {
         total: orders.length,
-        pending: orders.filter(o => o.status.toLowerCase() === 'pending').length,
-        paid: orders.filter(o => o.status.toLowerCase() === 'paid' || o.status.toLowerCase() === 'completed').length,
-        failed: orders.filter(o => o.status.toLowerCase() === 'failed').length,
-        cancelled: orders.filter(o => o.status.toLowerCase() === 'cancelled').length,
+        pending: orders.filter(o => o.status?.toLowerCase() === 'pending').length,
+        paid: orders.filter(o => o.status?.toLowerCase() === 'paid' || o.status?.toLowerCase() === 'completed').length,
+        failed: orders.filter(o => o.status?.toLowerCase() === 'failed').length,
+        cancelled: orders.filter(o => o.status?.toLowerCase() === 'cancelled').length,
         totalSpent: orders
-          .filter(o => o.status.toLowerCase() === 'paid' || o.status.toLowerCase() === 'completed')
-          .reduce((sum, o) => sum + (o.totalAmount || 0), 0)
+          .filter(o => o.status?.toLowerCase() === 'paid' || o.status?.toLowerCase() === 'completed')
+          .reduce((sum, o) => sum + (Number(o.totalAmount) || 0), 0)
       };
 
       res.json(stats);
@@ -648,25 +654,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register Reports routes (Phase 4)
   app.use("/api/reports", reportsRouter);
 
-  // Initialize SEO Database
-  const db = new Database('seo-prospects.db');
-  db.pragma('journal_mode = WAL');
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS prospects (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      url TEXT UNIQUE,
-      approved BOOLEAN,
-      reason TEXT,
-      draft_email TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-  const insertProspect = db.prepare(`
-    INSERT OR IGNORE INTO prospects (url, approved, reason, draft_email) 
-    VALUES (?, ?, ?, ?)
-  `);
-
-  // SEO Analysis endpoint (simplified without LangGraph)
+  // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {
     try {
       const { url, content } = req.body;
@@ -681,13 +669,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const matches = relevantKeywords.filter(kw => contentLower.includes(kw));
       const isRelevant = matches.length >= 2;
 
-      // Save to database
-      insertProspect.run(
-        url, 
-        isRelevant ? 1 : 0, 
-        isRelevant ? `Matched keywords: ${matches.join(', ')}` : 'Not relevant to TechPartner services',
-        isRelevant ? `Hi,\n\nI noticed your website and think we could help with your digital presence.\n\nBest regards,\nTechPartner Team` : null
-      );
+      // Save to database using Drizzle ORM
+      await db
+        .insert(prospects)
+        .values({
+          url,
+          approved: isRelevant,
+          reason: isRelevant ? `Matched keywords: ${matches.join(', ')}` : 'Not relevant to TechPartner services',
+          draftEmail: isRelevant ? `Hi,\n\nI noticed your website and think we could help with your digital presence.\n\nBest regards,\nTechPartner Team` : null,
+        })
+        .onConflictDoNothing({ target: prospects.url });
 
       res.json({
         url,

@@ -133,6 +133,16 @@ export const interactions = pgTable("interactions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// SEO Prospects Table - Phase 2: SEO Agent
+export const prospects = pgTable("prospects", {
+  id: serial("id").primaryKey(),
+  url: text("url").notNull().unique(),
+  approved: boolean("approved").default(false),
+  reason: text("reason"),
+  draftEmail: text("draft_email"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -192,6 +202,11 @@ export const insertInteractionSchema = createInsertSchema(interactions).omit({
   createdAt: true,
 });
 
+export const insertProspectSchema = createInsertSchema(prospects).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type ServiceCategory = typeof serviceCategories.$inferSelect;
@@ -212,3 +227,5 @@ export type Lead = typeof leads.$inferSelect;
 export type InsertLead = z.infer<typeof insertLeadSchema>;
 export type Interaction = typeof interactions.$inferSelect;
 export type InsertInteraction = z.infer<typeof insertInteractionSchema>;
+export type Prospect = typeof prospects.$inferSelect;
+export type InsertProspect = z.infer<typeof insertProspectSchema>;

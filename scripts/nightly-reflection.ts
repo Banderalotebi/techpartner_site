@@ -1,17 +1,17 @@
-import Database from "better-sqlite3";
+import { db } from "../server/db";
+import { leads, interactions } from "../shared/schema";
 import { memoryStore } from "../server/ai-tools";
-
-const CRM_DB_PATH = "./data/crm-vault.db";
+import { eq, gte, desc, sql } from "drizzle-orm";
 
 interface ChatInteraction {
   id: number;
-  lead_email: string;
-  interaction_type: string;
+  leadEmail: string;
+  interactionType: string;
   content: string;
-  ai_summary: string;
-  created_at: string;
-  name?: string;
-  lead_score?: string;
+  aiSummary: string | null;
+  createdAt: Date;
+  name: string | null;
+  leadScore: string | null;
 }
 
 async function runNightlyReflection() {
@@ -19,46 +19,54 @@ async function runNightlyReflection() {
   console.log(`⏰ ${new Date().toISOString()}`);
 
   try {
-    // 1. Connect to CRM database
-    const db = new Database(CRM_DB_PATH);
-    
-    // 2. Get yesterday's chat interactions
+    // 1. Get yesterday's date
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-    const interactions = db.prepare(`
-      SELECT i.*, l.name, l.lead_score 
-      FROM interactions i
-      JOIN leads l ON i.lead_email = l.email
-      WHERE date(i.created_at) >= ?
-      AND i.interaction_type IN ('Chat Transcript', 'Chat Summary & Draft')
-      ORDER BY i.created_at DESC
-    `).all(yesterdayStr) as ChatInteraction[];
+    // 2. Get yesterday's chat interactions using Drizzle ORM
+    const interactionsData = await db
+      .select({
+        id: interactions.id,
+        leadEmail: interactions.leadEmail,
+        interactionType: interactions.interactionType,
+        content: interactions.content,
+        aiSummary: interactions.aiSummary,
+        createdAt: interactions.createdAt,
+        name: leads.name,
+        leadScore: leads.leadScore,
+      })
+      .from(interactions)
+      .innerJoin(leads, eq(interactions.leadEmail, leads.email))
+      .where(
+        sql`date(${interactions.createdAt}) >= ${yesterdayStr} AND ${interactions.interactionType} IN ('Chat Transcript', 'Chat Summary & Draft')`
+      )
+      .orderBy(desc(interactions.createdAt));
 
-    console.log(`📊 Found ${interactions.length} interactions from yesterday`);
+    const typedInteractions = interactionsData as ChatInteraction[];
 
-    if (interactions.length === 0) {
+    console.log(`📊 Found ${typedInteractions.length} interactions from yesterday`);
+
+    if (typedInteractions.length === 0) {
       console.log("😴 No new data to learn from. Going back to sleep.");
-      db.close();
       return;
     }
 
     // 3. Extract insights from each interaction
     const insights: string[] = [];
     
-    for (const interaction of interactions) {
+    for (const interaction of typedInteractions) {
       // Store the raw conversation as a memory
       await memoryStore.add(interaction.content, {
         type: "chat_transcript",
-        lead: interaction.lead_email,
-        leadScore: interaction.lead_score,
-        date: interaction.created_at,
+        lead: interaction.leadEmail,
+        leadScore: interaction.leadScore,
+        date: interaction.createdAt.toISOString(),
       });
 
       // If there's an AI summary, store it as a market insight
-      if (interaction.ai_summary) {
-        insights.push(interaction.ai_summary);
+      if (interaction.aiSummary) {
+        insights.push(interaction.aiSummary);
       }
     }
 
@@ -69,22 +77,22 @@ Market Analysis - ${yesterdayStr}:
 ${insights.map((i, idx) => `${idx + 1}. ${i}`).join('\n')}
 
 Key Patterns:
-- Total HOT leads: ${interactions.filter(i => i.lead_score === 'HOT').length}
-- Total WARM leads: ${interactions.filter(i => i.lead_score === 'WARM').length}
-- Most common requests: ${extractCommonRequests(interactions)}
+- Total HOT leads: ${typedInteractions.filter(i => i.leadScore === 'HOT').length}
+- Total WARM leads: ${typedInteractions.filter(i => i.leadScore === 'WARM').length}
+- Most common requests: ${extractCommonRequests(typedInteractions)}
       `.trim();
 
       await memoryStore.add(consolidatedInsight, {
         type: "daily_market_insight",
         date: yesterdayStr,
-        totalInteractions: interactions.length,
+        totalInteractions: typedInteractions.length,
       });
 
       console.log(`💡 Stored market insight: ${consolidatedInsight.substring(0, 100)}...`);
     }
 
     // 5. Extract pricing intelligence
-    const pricingMentions = interactions.filter(i => 
+    const pricingMentions = typedInteractions.filter(i => 
       i.content.toLowerCase().includes('price') || 
       i.content.toLowerCase().includes('budget') ||
       i.content.toLowerCase().includes('cost') ||
@@ -95,7 +103,7 @@ Key Patterns:
     if (pricingMentions.length > 0) {
       const pricingInsight = `
 Pricing Intelligence - ${yesterdayStr}:
-${pricingMentions.map(p => `- ${p.lead_email}: ${extractPricingContext(p.content)}`).join('\n')}
+${pricingMentions.map(p => `- ${p.leadEmail}: ${extractPricingContext(p.content)}`).join('\n')}
 
 Note: These are client-mentioned figures, not final quotes.
       `.trim();
@@ -109,10 +117,7 @@ Note: These are client-mentioned figures, not final quotes.
       console.log(`💰 Stored pricing intelligence (${pricingMentions.length} mentions)`);
     }
 
-    // 6. Close database
-    db.close();
-
-    // 7. Report stats
+    // 6. Report stats
     const stats = await memoryStore.getStats();
     console.log("✅ [Nightly Reflection] Complete!");
     console.log(`🧠 Total memories: ${stats.total}`);

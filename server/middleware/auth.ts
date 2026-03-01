@@ -135,10 +135,10 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-// Simple token-based auth (legacy support)
+// Simple token-based auth (legacy support) - Uses ADMIN_SECRET for consistency
 export const simpleAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
-  const adminToken = process.env.ADMIN_TOKEN || 'admin123';
+  const adminToken = process.env.ADMIN_SECRET || 'admin123';
   
   if (!token || token !== `Bearer ${adminToken}`) {
     return res.status(401).json({ error: 'Unauthorized' });
