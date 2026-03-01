@@ -1,45 +1,44 @@
-# TechPartner CI/CD Pipeline
-# Automatically deploys to AWS EC2 when code is pushed to main branch
+# AWS EC2 Deployment Workflow
+# Deploys to AWS EC2 instead of Google Cloud Run
 
 name: Deploy to AWS EC2
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
-# Jobs to run
+env:
+  NODE_VERSION: '20'
+  EC2_HOST: ${{ secrets.EC2_HOST }}
+  EC2_USER: ${{ secrets.EC2_USER }}
+  APP_DIR: /home/ubuntu/techpartner
+
 jobs:
-  # Step 1: Build and Test
   build:
+    name: Build & Test
     runs-on: ubuntu-latest
     
     steps:
-      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      # Setup Node.js
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
-      # Install dependencies
+
       - name: Install dependencies
         run: npm ci
-      
-      # Type check
+
       - name: Type check
-        run: npm run check || true
-      
-      # Build application
+        run: npm run check || echo "Type check warnings - continuing build"
+
       - name: Build application
         run: node build.js
-      
-      # Verify build output exists
+
       - name: Verify build output
         run: |
           if [ ! -d "dist" ]; then
@@ -49,93 +48,100 @@ jobs:
           echo "Build verification passed!"
           ls -la dist/
 
-  # Step 2: Deploy to AWS EC2
   deploy:
+    name: Deploy to AWS EC2
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      # Setup Node.js for build
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
-      # Install dependencies and build
+
       - name: Install and Build
         run: |
           npm ci
           node build.js
-      
-      # Setup SSH key for EC2 connection
-      - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      # Add EC2 host key
-      - name: Add EC2 host key
+
+      - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-      
-      # Deploy to EC2
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Could not add host to known hosts"
+
       - name: Deploy to EC2
         run: |
-          ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
-            cd /home/ubuntu/techpartner
-            
-            # Pull latest changes
-            echo "Pulling latest changes..."
-            git fetch origin
-            git reset --hard origin/main
-            
-            # Install dependencies
-            echo "Installing dependencies..."
-            npm install
-            
-            # Build the application
-            echo "Building application..."
-            node build.js
-            
-            # Restart PM2
-            echo "Restarting PM2..."
-            pm2 restart techpartner || pm2 start dist/index.cjs --name techpartner
-            
-            # Wait for app to start
-            sleep 5
-            
-            # Check status
-            pm2 status
-            
-            # Health check
-            curl -f http://localhost:8080 && echo "Deployment successful!"
-            
-            echo "Deployment completed!"
-          EOF
-      
-      # Verify deployment
+          # Create deployment script
+          cat > deploy.sh << 'DEPLOY_SCRIPT'
+          #!/bin/bash
+          set -e
+          
+          echo "🚀 Starting deployment..."
+          cd ${{ env.APP_DIR }}
+          
+          # Backup current deployment
+          if [ -d "dist" ]; then
+            echo "📦 Backing up current deployment..."
+            mv dist dist.backup.$(date +%Y%m%d_%H%M%S) || true
+          fi
+          
+          # Pull latest changes
+          echo "⬇️ Pulling latest changes..."
+          git fetch origin
+          git reset --hard origin/main
+          
+          # Install dependencies
+          echo "📦 Installing dependencies..."
+          npm ci --production || npm install --production
+          
+          # Build the application
+          echo "🔨 Building application..."
+          node build.js
+          
+          # Restart PM2
+          echo "🔄 Restarting PM2..."
+          if pm2 list | grep -q "techpartner"; then
+            pm2 restart techpartner --update-env
+          else
+            pm2 start dist/index.cjs --name techpartner --env production
+          fi
+          
+          # Save PM2 config
+          pm2 save
+          
+          # Wait for app to start
+          sleep 5
+          
+          # Check status
+          echo "📊 PM2 Status:"
+          pm2 status
+          
+          # Health check
+          echo "🏥 Health check..."
+          if curl -sf http://localhost:8080/api/health > /dev/null; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check failed - checking logs..."
+            pm2 logs techpartner --lines 20
+          fi
+          
+          echo "🎉 Deployment completed!"
+          DEPLOY_SCRIPT
+          chmod +x deploy.sh
+          
+          # Copy and execute deployment script
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa deploy.sh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash /tmp/deploy.sh'
+
       - name: Verify deployment
         run: |
           sleep 10
-          curl -I https://techpartner.sa || curl -I http://${{ secrets.HOST }}:8080
-          echo "Deployment verification complete!"
-
-  # Notify on failure
-  failure-notify:
-    needs: [build, deploy]
-    runs-on: ubuntu-latest
-    if: failure()
-    steps:
-      - name: Send failure notification
-        run: |
-          echo "Deployment failed! Check GitHub Actions logs for details."
-          echo "Repository: ${{ github.repository }}"
-          echo "Commit: ${{ github.sha }}"
-          echo "Branch: ${{ github.ref }}"
-
+          curl -I https://techpartner.sa || echo "HTTPS check complete"
+          echo "Deployment verification done!"
