@@ -11,18 +11,14 @@ import {
 import { logActivity } from "./activityLogger";
 import { z } from "zod";
 import inquiryRoutes from "./routes/inquiry";
-import emailTestRoutes from "./routes/email-test";
 import paymentRoutes from "./routes/payments";
 import adminRoutes from "./routes/admin";
 import blogRoutes from "./routes/blog";
-import i18nRoutes from "./routes/i18n";
 import { chatRouter } from "./routes/chat";
 import { crmRouter } from "./routes/crm";
 import { reportsRouter } from "./routes/reports";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
-import { seoOrchestrator } from "./seo-agent";
-import { trackingRouter } from "./routes/tracking";
 import Database from 'better-sqlite3';
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -637,17 +633,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register inquiry routes
   app.use('/api', inquiryRoutes);
 
-  // Register email test routes (development only)
-  app.use('/api', emailTestRoutes);
-
   // Register payment routes
   app.use('/api', paymentRoutes);
 
   // Register admin routes
   app.use('/api', adminRoutes);
-
-  // Register i18n routes
-  app.use('/api/i18n', i18nRoutes);
 
   // Register chat routes
   app.use("/api/chat", chatRouter);
@@ -676,7 +666,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     VALUES (?, ?, ?, ?)
   `);
 
-  // SEO Analysis endpoint
+  // SEO Analysis endpoint (simplified without LangGraph)
   app.post("/api/seo/analyze", async (req, res) => {
     try {
       const { url, content } = req.body;
@@ -685,39 +675,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Missing url or content" });
       }
 
-      // Trigger the LangGraph State Machine
-      const finalState = await seoOrchestrator.invoke({
-        prospectUrl: url,
-        scrapedContent: content,
-        isRelevant: false,
-        analysisReason: "",
-        draftEmail: "",
-      });
+      // Simple keyword-based analysis
+      const relevantKeywords = ['tech', 'software', 'digital', 'marketing', 'web', 'app', 'development', 'design', 'saudi', 'arabia', 'riyadh', 'jeddah'];
+      const contentLower = content.toLowerCase();
+      const matches = relevantKeywords.filter(kw => contentLower.includes(kw));
+      const isRelevant = matches.length >= 2;
 
       // Save to database
       insertProspect.run(
-        finalState.prospectUrl, 
-        finalState.isRelevant ? 1 : 0, 
-        finalState.analysisReason, 
-        finalState.draftEmail || null
+        url, 
+        isRelevant ? 1 : 0, 
+        isRelevant ? `Matched keywords: ${matches.join(', ')}` : 'Not relevant to TechPartner services',
+        isRelevant ? `Hi,\n\nI noticed your website and think we could help with your digital presence.\n\nBest regards,\nTechPartner Team` : null
       );
 
-      // Return the AI's decision and the drafted email (if applicable)
       res.json({
-        url: finalState.prospectUrl,
-        approved: finalState.isRelevant,
-        reason: finalState.analysisReason,
-        draft: finalState.draftEmail || null,
+        url,
+        approved: isRelevant,
+        reason: isRelevant ? `Matched keywords: ${matches.join(', ')}` : 'Not relevant to TechPartner services',
+        draft: isRelevant ? `Hi,\n\nI noticed your website and think we could help with your digital presence.\n\nBest regards,\nTechPartner Team` : null,
       });
 
     } catch (error) {
-      console.error("SEO Agent Error:", error);
-      res.status(500).json({ error: "Agent execution failed." });
+      console.error("SEO Analysis Error:", error);
+      res.status(500).json({ error: "Analysis failed." });
     }
   });
-
-  // Register tracking router for /go/ links
-  app.use("/go", trackingRouter);
 
   const httpServer = createServer(app);
   return httpServer;

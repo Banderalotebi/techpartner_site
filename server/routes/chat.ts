@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as fs from "fs";
 import * as path from "path";
+import { memoryStore, webSearchTool } from "../ai-tools";
 
 // Use process.cwd() for CommonJS/ESM compatibility
 const __dirname = process.cwd();
@@ -15,32 +16,32 @@ const AI_KNOWLEDGE_PATH = path.join(__dirname, "../data/ai-knowledge.txt");
 
 // Fallback system prompt if knowledge file doesn't exist
 const DEFAULT_SYSTEM_PROMPT = `
-You are the elite AI Sales Assistant and Strategist for "TechPartner", a top-tier SaaS design and development agency in Saudi Arabia. 
+You are the elite AI Sales Assistant for TechPartner, a top-tier SaaS agency in Saudi Arabia.
 
-Your Goals:
-1. Answer customer questions about our services warmly and professionally.
-2. Suggest brilliant project ideas based on their industry.
-3. Convince them why TechPartner is the best choice (we combine futuristic tech with premium design).
-4. If they want a quote or want to start a project, ask them for their Email, Phone Number, and a brief project description.
+You have access to:
+1. Long-term memory of past client conversations
+2. Web search for current market trends and competitor analysis
 
-Our Core Services:
+FORMATTING RULES (CRITICAL):
+1. Always use short paragraphs (1-2 sentences max).
+2. Use markdown bullet points for lists (start lines with "- ").
+3. Always leave a blank line between paragraphs for readability.
+4. Never write walls of text - break content into digestible chunks.
+5. Use emojis occasionally (👋, 💡, 🚀, ✅).
+
+Our Services:
 - Web & App Design and Development
 - Logo and Branding Design
 - Business Advertising & Packaging
 
-FORMATTING RULES (CRITICAL):
-1. Always use short paragraphs (1-2 sentences max).
-2. Use markdown bullet points for lists (start lines with "- " or "* ").
-3. Always leave a blank line between paragraphs for readability.
-4. Never write walls of text - break content into digestible chunks.
-5. Use emojis occasionally to add warmth (👋, 💡, 🚀, ✅).
-
 Rules:
-- Be concise. Do not write massive essays. 
-- Speak in the language the user speaks to you (Arabic or English).
-- Never make up fake pricing. Say "Our team will provide a custom quote based on your exact needs."
-- Always be helpful and guide users toward starting a project with us.
+- Be concise, warm, and professional.
+- Speak Arabic or English based on the user.
+- Never make up pricing.
+- Guide users toward starting a project.
+- When you recall past conversations, mention it naturally: "Based on what I've learned from similar clients..."
 `;
+
 
 // Get the system prompt with AI knowledge
 function getSystemPrompt(): string {
@@ -57,31 +58,52 @@ function getSystemPrompt(): string {
 
 chatRouter.post("/", async (req, res) => {
   try {
-    const { messages } = req.body;
-
+    const { messages, userEmail } = req.body;
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: "Messages array is required" });
     }
 
-    // Get the system prompt with AI knowledge
-    const systemPrompt = getSystemPrompt();
+    // Get the latest user message for memory search
+    const latestUserMessage = messages.filter(m => m.role === "user").pop()?.content || "";
+    
+    // 1. Search memory for relevant past conversations
+    const relevantMemories = await memoryStore.search(latestUserMessage, 3);
+    let memoryContext = "";
+    if (relevantMemories.length > 0) {
+      memoryContext = "\n\nRELEVANT PAST CONVERSATIONS:\n" + 
+        relevantMemories.map(m => `- ${m.content.substring(0, 200)}...`).join("\n");
+      console.log(`🧠 Found ${relevantMemories.length} relevant memories`);
+    }
 
-    // Format the messages for Ollama (injecting the system prompt first)
+    // 2. Check if we should do a web search (for market trends, pricing, etc.)
+    let webContext = "";
+    const shouldSearchWeb = /trend|market|competitor|price|cost|202[4-9]|latest/i.test(latestUserMessage);
+    if (shouldSearchWeb) {
+      try {
+        console.log("🔍 Searching web for:", latestUserMessage.substring(0, 50));
+        const searchResults = await webSearchTool.invoke(latestUserMessage);
+        webContext = "\n\nCURRENT MARKET DATA (from web search):\n" + searchResults.substring(0, 500);
+      } catch (e) {
+        console.log("Web search failed, continuing without it");
+      }
+    }
+
+    // 3. Build enhanced system prompt with memory and web context
+    const systemPrompt = getSystemPrompt() + memoryContext + webContext;
+    
     const formattedMessages = [
       { role: "system", content: systemPrompt },
       ...messages
     ];
 
-    console.log("Sending chat to Qwen2.5 7B...");
-
-    // Call your local CPU-based Ollama model
+    console.log("🤖 Sending to Llama 3.1 with enhanced context...");
     const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: MODEL,
         messages: formattedMessages,
-        stream: false, // Set to false to wait for the full response on CPU
+        stream: false,
       }),
     });
 
@@ -92,9 +114,22 @@ chatRouter.post("/", async (req, res) => {
     }
 
     const data = await response.json();
+    const aiResponse = data.message?.content || "";
     
-    console.log("AI Response received:", data.message?.content?.substring(0, 100) + "...");
+    console.log("✅ AI Response:", aiResponse.substring(0, 100) + "...");
+
+    // 4. Store this conversation in memory for future learning
+    const conversationSummary = `
+User: ${latestUserMessage}
+AI: ${aiResponse.substring(0, 200)}
+    `.trim();
     
+    await memoryStore.add(conversationSummary, {
+      type: "chat_exchange",
+      userEmail: userEmail || "anonymous",
+      timestamp: new Date().toISOString(),
+    });
+
     // Send the AI's reply back to the React frontend
     res.json({ reply: data.message });
 
@@ -107,32 +142,44 @@ chatRouter.post("/", async (req, res) => {
   }
 });
 
+
 // Health check for the chat service
+// Get memory stats
+chatRouter.get("/memory", async (req, res) => {
+  try {
+    const stats = await memoryStore.getStats();
+    const recent = await memoryStore.getRecent(7);
+    res.json({
+      stats,
+      recentMemories: recent.slice(0, 5).map(m => ({
+        content: m.content.substring(0, 100),
+        timestamp: m.timestamp,
+        metadata: m.metadata,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve memory stats" });
+  }
+});
+
 chatRouter.get("/health", async (req, res) => {
   try {
-    // Check if Ollama is running
-    const response = await fetch("http://localhost:11434/api/tags", {
-      method: "GET",
-    });
+    const response = await fetch("http://localhost:11434/api/tags", { method: "GET" });
+    const memoryStats = await memoryStore.getStats();
     
     if (response.ok) {
       const models = await response.json();
       res.json({ 
         status: "healthy", 
         ollamaConnected: true,
+        memoryStats,
         availableModels: models.models?.map((m: any) => m.name) || []
       });
     } else {
-      res.json({ 
-        status: "degraded", 
-        ollamaConnected: false 
-      });
+      res.json({ status: "degraded", ollamaConnected: false, memoryStats });
     }
   } catch (error) {
-    res.json({ 
-      status: "unhealthy", 
-      ollamaConnected: false,
-      error: "Cannot connect to Ollama"
-    });
+    const memoryStats = await memoryStore.getStats().catch(() => ({ total: 0, recent: 0 }));
+    res.json({ status: "unhealthy", ollamaConnected: false, memoryStats, error: "Cannot connect to Ollama" });
   }
 });

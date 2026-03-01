@@ -35,6 +35,20 @@ module.exports = {
       env: {
         NODE_ENV: "production"
       }
+    },
+    {
+      name: "nightly-reflection",
+      script: "npx",
+      args: "tsx scripts/nightly-reflection.ts",
+      cwd: "/home/ubuntu/techpartner",
+      instances: 1,
+      exec_mode: "fork",
+      cron_restart: "0 3 * * *",
+      autorestart: false,
+      watch: false,
+      env: {
+        NODE_ENV: "production"
+      }
     }
   ]
 };

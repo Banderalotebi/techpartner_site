@@ -36,7 +36,7 @@ runLocal(`scp -i ${KEY} -r server package.json ecosystem.config.cjs ${SERVER}:${
 
 // 2. Install dependencies and restart
 console.log('\n🔧 Installing dependencies...');
-runRemote(`cd ${REMOTE_PATH} && npm install --production`);
+runRemote(`cd ${REMOTE_PATH} && npm install --legacy-peer-deps`);
 
 console.log('\n🔄 Restarting server...');
 runRemote(`cd ${REMOTE_PATH} && pm2 restart ecosystem.config.cjs --update-env || pm2 start ecosystem.config.cjs`);
