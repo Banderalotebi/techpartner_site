@@ -1,296 +1,155 @@
-// scripts/content-director.ts - The Autonomous Content Director (Phase 3)
-// This script runs on a weekly PM2 cron schedule to auto-generate SEO content
+// scripts/content-director.ts - Autonomous Content Director (Phase 3)
+// Runs weekly via PM2 cron to generate pSEO content automatically
 
-import { google } from 'googleapis';
-import fetch from 'node-fetch';
-import * as fs from 'fs';
-import * as path from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { db } from "../server/db";
+import { programmaticPages } from "../shared/schema";
+import { eq } from "drizzle-orm";
+import fetch from "node-fetch";
+import * as fs from "fs";
+import * as path from "path";
 
-const execAsync = promisify(exec);
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434/api/generate";
 
-// Configuration
-const OLLAMA_URL = process.env.OLLAMA_HOST || 'http://localhost:11434/api/generate';
-const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
-const ASTRO_BLOG_DIR = path.join(__dirname, '../pseo-engine/src/pages/blog');
-const GSC_SITE_URL = process.env.GSC_SITE_URL || 'sc-domain:techpartner.sa';
+// Saudi cities and industries for pSEO generation
+const CITIES = ["Riyadh", "Jeddah", "Dammam", "Khobar", "Makkah", "Madinah"];
+const INDUSTRIES = [
+  "Real Estate", "Healthcare", "E-commerce", "SaaS", "Finance", 
+  "Retail", "Education", "Hospitality", "Construction", "Technology"
+];
+const SERVICES = [
+  "AI Web Development", "Digital Marketing", "SEO Optimization", 
+  "Cloud Solutions", "Mobile App Development", "UI/UX Design"
+];
 
-// Google Search Console Authentication
-let searchconsole: any;
-try {
-    const gscAuth = new google.auth.GoogleAuth({
-        keyFile: './google-credentials.json',
-        scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
+function generateSlug(keyword: string): string {
+  return keyword.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+}
+
+async function generateWithOllama(prompt: string): Promise<any> {
+  try {
+    const response = await fetch(OLLAMA_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "qwen2.5:7b",
+        prompt: prompt,
+        stream: false,
+        format: "json"
+      })
     });
-    searchconsole = google.searchconsole({ version: 'v1', auth: gscAuth });
-} catch (error) {
-    console.warn('⚠️ [Director] Google credentials not found. GSC integration disabled.');
-}
 
-interface GSCKeyword {
-    keys: string[];
-    clicks: number;
-    impressions: number;
-    ctr: number;
-    position: number;
-}
+    if (!response.ok) {
+      throw new Error(`Ollama API error: ${response.status}`);
+    }
 
-interface ContentAnalysis {
-    keyword: string;
-    position: number;
-    impressions: number;
-    potential: 'HIGH' | 'MEDIUM' | 'LOW';
+    const data = await response.json() as any;
+    return JSON.parse(data.response);
+  } catch (error) {
+    console.error("Ollama generation failed:", error);
+    return null;
+  }
 }
 
 async function runContentDirector() {
-    console.log("🤖 [Content Director] Waking up to analyze search gaps...");
-    console.log(`📅 ${new Date().toISOString()}`);
+  console.log("🎬 Content Director: Starting autonomous content generation...");
+  console.log(`⏰ Started at: ${new Date().toISOString()}`);
 
-    try {
-        // Check if GSC is configured
-        if (!searchconsole) {
-            console.log("⚠️ [Director] Running in demo mode - no GSC credentials");
-            await runDemoMode();
-            return;
-        }
-
-        // --- STEP 1: Find "Striking Distance" Keywords in GSC ---
-        const today = new Date();
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(today.getDate() - 30);
-
-        console.log(`🔍 [Director] Querying GSC for ${GSC_SITE_URL}...`);
-        
-        const response = await searchconsole.searchanalytics.query({
-            siteUrl: GSC_SITE_URL,
-            requestBody: {
-                startDate: thirtyDaysAgo.toISOString().split('T')[0],
-                endDate: today.toISOString().split('T')[0],
-                dimensions: ['query'],
-                rowLimit: 100,
-            }
-        });
-
-        const keywords: GSCKeyword[] = response.data.rows || [];
-        
-        if (keywords.length === 0) {
-            console.log("📈 [Director] No keywords found in GSC. Going back to sleep.");
-            return;
-        }
-
-        console.log(`📊 [Director] Analyzing ${keywords.length} keywords...`);
-
-        // Analyze keywords for striking distance opportunities
-        const opportunities: ContentAnalysis[] = keywords
-            .map(kw => ({
-                keyword: kw.keys?.[0] || "",
-                position: kw.position || 0,
-                impressions: kw.impressions || 0,
-                potential: calculatePotential(kw)
-            }))
-            .filter(kw => kw.potential === 'HIGH' && kw.keyword.length > 3)
-            .sort((a, b) => b.impressions - a.impressions);
-
-        if (opportunities.length === 0) {
-            console.log("📈 [Director] No striking distance keywords found today. Going back to sleep.");
-            return;
-        }
-
-        // Select the best opportunity
-        const target = opportunities[0];
-        console.log(`🎯 [Director] Target acquired: "${target.keyword}"`);
-        console.log(`   Position: #${target.position.toFixed(1)}`);
-        console.log(`   Impressions: ${target.impressions}`);
-        console.log(`   Potential: ${target.potential}`);
-
-        // --- STEP 2: Generate Content with Qwen ---
-        await generateAndPublishContent(target.keyword);
-
-    } catch (error) {
-        console.error("❌ [Director] Error:", error);
-        process.exit(1);
-    }
-}
-
-function calculatePotential(kw: GSCKeyword): 'HIGH' | 'MEDIUM' | 'LOW' {
-    const position = kw.position || 0;
-    const impressions = kw.impressions || 0;
+  try {
+    // Check if we already have enough pages this week
+    const existingPages = await db.select({ count: programmaticPages.id }).from(programmaticPages);
+    const currentCount = existingPages.length;
     
-    // Striking distance: Page 2 or 3 (positions 11-30) with decent impressions
-    if (position > 10 && position <= 20 && impressions > 100) return 'HIGH';
-    if (position > 20 && position <= 30 && impressions > 50) return 'HIGH';
-    if (position > 10 && position <= 30 && impressions > 20) return 'MEDIUM';
-    return 'LOW';
-}
-
-async function generateAndPublishContent(keyword: string) {
-    try {
-        console.log("✍️ [Director] Instructing AI to draft the article...");
-        
-        const prompt = `
-You are an elite SEO Content Director for TechPartner, a premium SaaS design agency in Saudi Arabia.
-
-Write a comprehensive, engaging 1000-word blog post targeting the exact keyword: "${keyword}"
-
-Requirements:
-1. The keyword must appear naturally in the title, first paragraph, and at least 2 H2 headings
-2. Write for a professional audience interested in design, technology, and business growth
-3. Include practical tips and actionable insights
-4. End with a subtle call-to-action mentioning TechPartner's services
-
-Format the output EXACTLY as a Markdown file with YAML frontmatter for an Astro static site:
-
----
-title: "Your SEO-Optimized Title Here"
-description: "Compelling meta description under 160 characters"
-pubDate: "${new Date().toISOString().split('T')[0]}"
-author: "TechPartner Content Team"
-tags: ["${keyword.split(' ')[0]}", "design", "business"]
-keyword: "${keyword}"
----
-
-# Your Article Title
-
-Your content here...
-`;
-
-        const aiResponse = await fetch(OLLAMA_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: MODEL,
-                prompt: prompt,
-                stream: false
-            })
-        });
-
-        if (!aiResponse.ok) {
-            throw new Error(`Ollama API error: ${aiResponse.status}`);
-        }
-
-        const aiData = await aiResponse.json();
-        let markdownContent = aiData.response?.trim() || '';
-
-        // Clean up markdown code blocks if the LLM wrapped the response
-        markdownContent = markdownContent
-            .replace(/^```markdown\n/, '')
-            .replace(/^```\n/, '')
-            .replace(/\n```$/, '');
-
-        // --- STEP 3: Save to Astro File System ---
-        const slug = createSlug(keyword);
-        const filePath = path.join(ASTRO_BLOG_DIR, `${slug}.md`);
-
-        // Ensure the directory exists
-        if (!fs.existsSync(ASTRO_BLOG_DIR)) {
-            fs.mkdirSync(ASTRO_BLOG_DIR, { recursive: true });
-            console.log(`📁 [Director] Created blog directory: ${ASTRO_BLOG_DIR}`);
-        }
-
-        // Check if file already exists (avoid duplicates)
-        if (fs.existsSync(filePath)) {
-            console.log(`⚠️ [Director] Article already exists: ${slug}.md`);
-            console.log(`   Skipping to avoid duplicate content.`);
-            return;
-        }
-
-        fs.writeFileSync(filePath, markdownContent);
-        console.log(`💾 [Director] Article saved: ${slug}.md`);
-
-        // Log the content creation
-        logContentCreation(keyword, slug, filePath);
-
-        // --- STEP 4: Trigger Astro Build ---
-        console.log("🚀 [Director] Triggering Astro pSEO Engine Build...");
-        
-        try {
-            const { stdout, stderr } = await execAsync('npm run build', {
-                cwd: path.join(__dirname, '../pseo-engine'),
-                timeout: 300000 // 5 minute timeout
-            });
-            
-            if (stderr && !stderr.includes('warning')) {
-                console.warn(`⚠️ [Director] Build warnings: ${stderr}`);
-            }
-            
-            console.log(`✅ [Director] Build successful!`);
-            console.log(`🌐 [Director] New page deployed: /blog/${slug}`);
-            console.log(`📈 [Director] Targeting keyword: "${keyword}"`);
-
-        } catch (buildError) {
-            console.error(`❌ [Director] Build failed:`, buildError);
-            // Don't throw - the article is saved and can be built manually
-        }
-
-    } catch (error) {
-        console.error("❌ [Director] Content generation failed:", error);
-        throw error;
+    if (currentCount >= 50) {
+      console.log(`📊 Already have ${currentCount} pages. Skipping generation to avoid bloat.`);
+      return;
     }
+
+    // Generate 1-2 new pages per run (conservative approach)
+    const pagesToGenerate = Math.min(2, 50 - currentCount);
+    let generated = 0;
+
+    for (let i = 0; i < pagesToGenerate; i++) {
+      // Randomly select city, industry, service
+      const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+      const industry = INDUSTRIES[Math.floor(Math.random() * INDUSTRIES.length)];
+      const service = SERVICES[Math.floor(Math.random() * SERVICES.length)];
+      
+      const keyword = `${service} for ${industry} in ${city}`;
+      const slug = generateSlug(keyword);
+
+      // Check if this slug already exists
+      const existing = await db.select().from(programmaticPages).where(eq(programmaticPages.slug, slug));
+      if (existing.length > 0) {
+        console.log(`⏭️ Skipping duplicate: ${slug}`);
+        continue;
+      }
+
+      console.log(`🎯 Generating: ${keyword}`);
+
+      const prompt = `
+You are an elite SEO copywriter for TechPartner, a leading digital agency in Saudi Arabia.
+Write a highly engaging, professional 600-word landing page targeting the exact keyword: "${keyword}".
+
+City: ${city}
+Industry: ${industry}
+Service: ${service}
+
+Format the output as valid JSON with these fields:
+{
+  "h1_title": "Compelling H1 title including the keyword",
+  "meta_description": "SEO meta description under 160 characters",
+  "markdown_content": "Full article in markdown with ## H2 headings and ### H3 subheadings. Include: introduction, 3 main sections with benefits for ${industry} in ${city}, local context about Saudi market, and CTA to contact TechPartner.",
+  "json_ld": {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Same as h1_title",
+    "description": "Same as meta_description",
+    "author": {"@type": "Organization", "name": "TechPartner"},
+    "datePublished": "${new Date().toISOString()}"
+  }
 }
 
-function createSlug(keyword: string): string {
-    return keyword
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '') // Remove special characters
-        .replace(/\s+/g, '-')     // Replace spaces with hyphens
-        .replace(/-+/g, '-')      // Remove consecutive hyphens
-        .substring(0, 50);        // Limit length
-}
+Write in professional English suitable for Saudi business executives. Include local context about ${city} and the ${industry} sector in Saudi Arabia.`;
 
-function logContentCreation(keyword: string, slug: string, filePath: string) {
-    const logEntry = {
-        timestamp: new Date().toISOString(),
-        keyword,
+      const result = await generateWithOllama(prompt);
+      
+      if (!result) {
+        console.error(`❌ Failed to generate content for ${keyword}`);
+        continue;
+      }
+
+      // Insert into database
+      await db.insert(programmaticPages).values({
         slug,
-        filePath,
-        status: 'generated'
-    };
-    
-    const logPath = path.join(__dirname, '../content-director-log.json');
-    let logs: any[] = [];
-    
-    if (fs.existsSync(logPath)) {
-        try {
-            logs = JSON.parse(fs.readFileSync(logPath, 'utf-8'));
-        } catch (e) {
-            logs = [];
-        }
+        targetKeyword: keyword,
+        city,
+        industry,
+        h1Title: result.h1_title || keyword,
+        aiGeneratedContent: result.markdown_content || "Content generation failed.",
+        jsonLdSchema: result.json_ld || {},
+        isPublished: true
+      });
+
+      console.log(`✅ Published: /p/${slug}`);
+      generated++;
     }
-    
-    logs.push(logEntry);
-    fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
+
+    console.log(`🎉 Content Director completed. Generated ${generated} new pages.`);
+    console.log(`📊 Total pSEO pages: ${currentCount + generated}`);
+
+  } catch (error) {
+    console.error("❌ Content Director Error:", error);
+    process.exit(1);
+  }
+
+  process.exit(0);
 }
 
-async function runDemoMode() {
-    console.log("🎮 [Director] Running in DEMO mode...");
-    console.log("   This simulates the content generation without GSC data.");
-    
-    // Demo keywords for testing
-    const demoKeywords = [
-        "web design saudi arabia",
-        "branding agency jeddah",
-        "mobile app development riyadh"
-    ];
-    
-    const randomKeyword = demoKeywords[Math.floor(Math.random() * demoKeywords.length)];
-    console.log(`🎯 [Demo] Selected keyword: "${randomKeyword}"`);
-    
-    // In demo mode, we just show what would happen
-    console.log("📋 [Demo] Would generate content for:", randomKeyword);
-    console.log("📋 [Demo] Would save to:", path.join(ASTRO_BLOG_DIR, `${createSlug(randomKeyword)}.md`));
-    console.log("✅ [Demo] Demo complete. Set up GSC credentials for live mode.");
-}
-
-// Run the director
+// Run if called directly
 if (require.main === module) {
-    runContentDirector().then(() => {
-        console.log("🏁 [Director] Mission complete.");
-        process.exit(0);
-    }).catch(error => {
-        console.error("💥 [Director] Fatal error:", error);
-        process.exit(1);
-    });
+  runContentDirector();
 }
 
-export { runContentDirector, generateAndPublishContent };
+export { runContentDirector };

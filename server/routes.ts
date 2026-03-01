@@ -17,6 +17,7 @@ import blogRoutes from "./routes/blog";
 import { chatRouter } from "./routes/chat";
 import { crmRouter } from "./routes/crm";
 import { reportsRouter } from "./routes/reports";
+import { pdfReportsRouter } from "./routes/reports-pdf";
 import { systemRouter } from "./routes/system";
 import { pseoRouter } from "./routes/pseo";
 import { sitemapRouter } from "./routes/sitemap";
