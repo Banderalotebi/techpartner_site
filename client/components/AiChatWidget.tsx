@@ -71,7 +71,7 @@ export default function AiChatWidget() {
           {/* Messages Area */}
           <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
             {messages.map((msg, idx) => (
-              <div key={idx} className={`max-w-[85%] p-3 rounded-lg text-sm ${
+              <div key={idx} className={`max-w-[85%] p-3 rounded-lg text-sm whitespace-pre-wrap leading-relaxed ${
                 msg.role === "user" 
                   ? "bg-[#01A1C1] text-white self-end rounded-br-none" 
                   : "bg-white border border-gray-200 text-gray-800 self-start rounded-bl-none shadow-sm"
