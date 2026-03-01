@@ -303,6 +303,11 @@ export class SQLiteStorage implements IStorage {
     return this.getUser(id);
   }
 
+  async updateUserLastLogin(id: number): Promise<void> {
+    const stmt = this.db.prepare("UPDATE users SET lastLoginAt = CURRENT_TIMESTAMP WHERE id = ?");
+    stmt.run(id);
+  }
+
   async authenticateUser(email: string, password: string): Promise<User | undefined> {
     const stmt = this.db.prepare("SELECT * FROM users WHERE email = ? AND password = ?");
     const row = stmt.get(email, password) as any;

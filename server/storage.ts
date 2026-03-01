@@ -679,6 +679,13 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
+  async updateUserLastLogin(id: number): Promise<void> {
+    await db
+      .update(users)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(users.id, id));
+  }
+
   async authenticateUser(email: string, password: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     if (user && user.password === password) {
@@ -825,5 +832,5 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use MemStorage for now until SQLite binding issues are resolved
-export const storage = new MemStorage();
+// Use SQLiteStorage for persistent data across restarts
+export const storage = new SQLiteStorage();
