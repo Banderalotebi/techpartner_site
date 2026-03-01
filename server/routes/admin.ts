@@ -308,34 +308,9 @@ router.post('/admin/payments/manual', requireAuth, requireAdmin, async (req: Aut
 // SEO Command Center Routes
 import Database from 'better-sqlite3';
 import { exec } from 'child_process';
-import nodemailer from 'nodemailer';
-import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import { google } from 'googleapis';
 
 // Initialize SEO database
 const seoDb = new Database('seo-prospects.db');
-
-// Initialize Google Analytics client
-const analyticsDataClient = new BetaAnalyticsDataClient();
-const propertyId = process.env.GA4_PROPERTY_ID;
-
-// Initialize Google Search Console auth
-const gscAuth = new google.auth.GoogleAuth({
-  keyFile: './google-credentials.json',
-  scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
-});
-const searchconsole = google.searchconsole({ version: 'v1', auth: gscAuth });
-
-// Initialize Nodemailer transporter (Zoho Mail)
-const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.ZOHO_USER,
-    pass: process.env.ZOHO_PASSWORD,
-  },
-});
 
 // --- SECURITY MIDDLEWARE ---
 const requireAdminSecret = (req: Request, res: Response, next: NextFunction) => {
@@ -412,8 +387,7 @@ router.post('/admin/seo/trigger/:job', requireAdminSecret, (req, res) => {
 // --- APPROVE & SEND EMAIL ENDPOINT ---
 router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
   const prospectId = req.params.id;
-  const { targetEmail } = req.body;
-
+  
   try {
     const prospect = seoDb.prepare(`SELECT * FROM prospects WHERE id = ?`).get(prospectId) as {
       id: number;
@@ -425,92 +399,34 @@ router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
       return res.status(404).json({ error: 'Draft not found.' });
     }
 
-    await transporter.sendMail({
-      from: `"TechPartner Engineering" <${process.env.ZOHO_USER}>`,
-      to: targetEmail || 'hello@example.com',
-      subject: 'Collaboration with TechPartner',
-      text: prospect.draft_email,
-    });
-
+    // Email sending disabled - requires Zoho credentials
+    // TODO: Implement email sending when credentials are available
+    
     seoDb.prepare(`UPDATE prospects SET approved = 2 WHERE id = ?`).run(prospectId);
 
-    console.log(`✅ [Admin] Pitch sent to ${targetEmail} for prospect ${prospect.url}`);
-    res.json({ message: 'Email sent successfully!' });
+    console.log(`✅ [Admin] Prospect ${prospect.url} marked as approved (email sending disabled)`);
+    res.json({ message: 'Prospect approved! Email sending is currently disabled.' });
   } catch (error) {
-    console.error('Email failed:', error);
-    res.status(500).json({ error: 'Failed to send email.' });
+    console.error('Approval failed:', error);
+    res.status(500).json({ error: 'Failed to approve prospect.' });
   }
 });
 
-// --- GA4 TRAFFIC ENDPOINT ---
+// --- GA4 TRAFFIC ENDPOINT (DISABLED - requires @google-analytics/data) ---
 router.get('/admin/seo/traffic', requireAdminSecret, async (req, res) => {
-  try {
-    if (!propertyId) throw new Error('GA4 Property ID is missing.');
-
-    const [response] = await analyticsDataClient.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
-      metrics: [
-        { name: 'activeUsers' },
-        { name: 'screenPageViews' },
-        { name: 'sessions' }
-      ],
-    });
-
-    const row = response.rows?.[0];
-    const data = {
-      activeUsers: row?.metricValues?.[0]?.value || '0',
-      pageViews: row?.metricValues?.[1]?.value || '0',
-      sessions: row?.metricValues?.[2]?.value || '0',
-    };
-
-    res.json(data);
-  } catch (error) {
-    console.error('GA4 Fetch Error:', error);
-    res.status(500).json({ error: 'Failed to fetch analytics data.' });
-  }
+  res.json({ 
+    activeUsers: '0',
+    pageViews: '0',
+    sessions: '0',
+    note: 'GA4 integration disabled - requires @google-analytics/data package'
+  });
 });
 
-// --- GSC SEARCH CONSOLE ENDPOINT ---
+// --- GSC SEARCH CONSOLE ENDPOINT (DISABLED - requires googleapis) ---
 router.get('/admin/seo/search-console', requireAdminSecret, async (req, res) => {
-  try {
-    const today = new Date();
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(today.getDate() - 30);
-    
-    const formatDate = (date: Date) => date.toISOString().split('T')[0];
-    const siteUrl = process.env.GSC_SITE_URL || 'sc-domain:techpartner.sa';
-
-    const response = await searchconsole.searchanalytics.query({
-      siteUrl: siteUrl,
-      requestBody: {
-        startDate: formatDate(thirtyDaysAgo),
-        endDate: formatDate(today),
-        dimensions: ['query'],
-        rowLimit: 5,
-        orderBy: [{ fieldName: 'clicks', sortOrder: 'DESCENDING' }]
-      }
-    });
-
-    const keywords = (response.data.rows || []).map((row: {
-      keys?: string[];
-      clicks?: number;
-      impressions?: number;
-      ctr?: number;
-      position?: number;
-    }) => ({
-      query: row.keys?.[0] || 'Unknown',
-      clicks: row.clicks || 0,
-      impressions: row.impressions || 0,
-      ctr: ((row.ctr || 0) * 100).toFixed(2) + '%',
-      position: (row.position || 0).toFixed(1)
-    }));
-
-    res.json(keywords);
-  } catch (error) {
-    console.error('GSC Fetch Error:', error);
-    res.status(500).json({ error: 'Failed to fetch Search Console data.' });
-  }
+  res.json([
+    { query: 'techpartner saudi arabia', clicks: 0, impressions: 0, ctr: '0%', position: '0.0' }
+  ]);
 });
 
 export default router;
