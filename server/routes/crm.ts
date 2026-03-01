@@ -200,8 +200,8 @@ crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
     }
 });
 
-// Get CRM statistics (Admin token auth for easier access)
-crmRouter.get("/stats", simpleAuth, async (req, res) => {
+// Get CRM statistics (Admin only)
+crmRouter.get("/stats", requireAdmin, async (req, res) => {
     try {
         const stats = await getCRMStats();
         res.json(stats);
