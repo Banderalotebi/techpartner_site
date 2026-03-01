@@ -96,14 +96,16 @@ export async function loadSecrets(): Promise<void> {
       dotenv.config();
       console.log("✅ [Secrets] Fallback successful - loaded from .env file");
       
-      // Verify we got the critical variables
-      if (!process.env.DATABASE_URL) {
-        console.error("❌ [Secrets] CRITICAL: DATABASE_URL not found in .env file either");
-        console.error("   Please ensure .env file exists with required variables");
-        process.exit(1);
+      // Verify we got at least the admin secret (DATABASE_URL is optional due to SQLite fallback)
+      if (!process.env.ADMIN_SECRET) {
+        console.warn("⚠️  [Secrets] ADMIN_SECRET not found in .env - admin routes may fail");
       }
       
-      console.log("✅ [Secrets] Critical variables verified from .env fallback");
+      if (!process.env.DATABASE_URL) {
+        console.log("ℹ️  [Secrets] DATABASE_URL not in .env - using SQLite fallback for CRM");
+      }
+      
+      console.log("✅ [Secrets] Environment loaded from .env fallback (AWS Secrets Manager optional)");
       
     } catch (dotenvError) {
       console.error("❌ [Secrets] CRITICAL: Both AWS Secrets Manager and .env fallback failed");

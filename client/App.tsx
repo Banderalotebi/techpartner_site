@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
+import { AdminRoute } from "@/components/AdminRoute";
 import Home from "@/pages/home";
 import CategoryPage from "@/pages/category";
 import LogoIdentityPage from "@/pages/logo-identity";
@@ -20,6 +21,7 @@ import AdminPage from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import NotFound from "@/pages/not-found";
 import LoginPage from "@/pages/login";
+import ProgrammaticPage from "@/pages/ProgrammaticPage";
 import { useEffect } from "react";
 
 function Router() {
@@ -58,10 +60,15 @@ function Router() {
       <Route path="/ar/contact" component={ContactPage} />
       <Route path="/ar/portfolio" component={PortfolioPage} />
       <Route path="/ar/blog" component={BlogPage} />
-      <Route path="/ar/admin" component={AdminPage} />
+      <Route path="/ar/admin">
+        <AdminRoute>
+          <AdminPage />
+        </AdminRoute>
+      </Route>
       <Route path="/ar/admin/login" component={LoginPage} />
       <Route path="/ar/payment/success" component={PaymentSuccess} />
       <Route path="/ar/category/:slug" component={CategoryPage} />
+      <Route path="/ar/p/:slug" component={ProgrammaticPage} />
       
       {/* ENGLISH ROUTES */}
       <Route path="/" component={Home} />
@@ -83,10 +90,15 @@ function Router() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/blog" component={BlogPage} />
-      <Route path="/admin" component={AdminPage} />
+      <Route path="/admin">
+        <AdminRoute>
+          <AdminPage />
+        </AdminRoute>
+      </Route>
       <Route path="/admin/login" component={LoginPage} />
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/category/:slug" component={CategoryPage} />
+      <Route path="/p/:slug" component={ProgrammaticPage} />
       
       {/* 404 FALLBACK */}
       <Route component={NotFound} />

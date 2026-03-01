@@ -10,14 +10,21 @@ async function bootstrap() {
   await loadSecrets();
   
   // Verify critical environment variables are present
+  // DATABASE_URL is optional - SQLite fallback available in CRM
   const hasRequiredVars = verifyRequiredEnvVars([
-    "DATABASE_URL",
     "ADMIN_SECRET"
   ]);
   
   if (!hasRequiredVars) {
     console.error("❌ [Bootstrap] Missing required environment variables. Exiting.");
     process.exit(1);
+  }
+  
+  // Log database mode
+  if (process.env.DATABASE_URL) {
+    console.log("✅ [Bootstrap] PostgreSQL mode (DATABASE_URL set)");
+  } else {
+    console.log("ℹ️  [Bootstrap] SQLite fallback mode (DATABASE_URL not set)");
   }
   
   // PHASE 2: Now that secrets are loaded, import modules that depend on process.env

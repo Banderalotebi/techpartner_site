@@ -17,6 +17,10 @@ import blogRoutes from "./routes/blog";
 import { chatRouter } from "./routes/chat";
 import { crmRouter } from "./routes/crm";
 import { reportsRouter } from "./routes/reports";
+import { systemRouter } from "./routes/system";
+import { pseoRouter } from "./routes/pseo";
+import { sitemapRouter } from "./routes/sitemap";
+import { webhookRouter } from "./routes/webhooks";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { db } from "./db";
@@ -593,28 +597,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/orders/:id", requireAdmin, async (req: AuthRequest, res) => {
-    try {
-      console.log('🔍 Admin patching order (duplicate route):', { email: req.user?.email, role: req.user?.role, orderId: req.params.id });
-      const orderId = parseInt(req.params.id);
-      const { status } = req.body;
-      
-      if (!status) {
-        return res.status(400).json({ message: "Status is required" });
-      }
-
-      const updatedOrder = await storage.updateOrder(orderId, { status });
-      if (!updatedOrder) {
-        return res.status(404).json({ message: "Order not found" });
-      }
-
-      res.json(updatedOrder);
-    } catch (error) {
-      console.error("Error updating order:", error);
-      res.status(500).json({ message: "Failed to update order" });
-    }
-  });
-
   // Services endpoint — returns categories with their packages
   app.get("/api/services", async (req, res) => {
     try {
@@ -653,6 +635,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register Reports routes (Phase 4)
   app.use("/api/reports", reportsRouter);
+
+  // Register System routes (God Mode Telemetry)
+  app.use("/api/system", systemRouter);
+
+  // Register pSEO routes (Programmatic SEO Engine)
+  app.use("/api/p", pseoRouter);
+
+  // Register Sitemap route
+  app.use("/sitemap.xml", sitemapRouter);
+
+  // Register Webhook routes (n8n Integration)
+  app.use("/api/webhooks", webhookRouter);
 
   // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {

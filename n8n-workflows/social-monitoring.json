@@ -1,0 +1,153 @@
+{
+  "name": "TechPartner Social Media Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hours": 2
+            }
+          ]
+        }
+      },
+      "id": "trigger-node",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/saudiarabia/search.json?q=web+development+OR+app+development+OR+digital+marketing&sort=new&limit=10",
+        "options": {}
+      },
+      "id": "reddit-node",
+      "name": "Reddit Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract posts from Reddit response\nconst posts = $input.first().json.data.children.map(child => ({\n  title: child.data.title,\n  content: child.data.selftext || '',\n  url: `https://reddit.com${child.data.permalink}`,\n  platform: 'Reddit',\n  keywordFound: extractKeyword(child.data.title + ' ' + (child.data.selftext || ''))\n}));\n\nfunction extractKeyword(text) {\n  const keywords = ['web development', 'app development', 'digital marketing', 'software', 'website', 'mobile app'];\n  for (const kw of keywords) {\n    if (text.toLowerCase().includes(kw)) return kw;\n  }\n  return 'tech services';\n}\n\nreturn posts.map(post => ({ json: post }));"
+      },
+      "id": "transform-node",
+      "name": "Transform Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/webhooks/n8n-social-reply",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "postTitle",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "name": "postContent",
+              "value": "={{ $json.content }}"
+            },
+            {
+              "name": "keywordFound",
+              "value": "={{ $json.keywordFound }}"
+            },
+            {
+              "name": "platform",
+              "value": "={{ $json.platform }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Call TechPartner Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log the AI-generated reply\nconsole.log('AI Reply:', $input.first().json.replyToPost);\nreturn $input.all();"
+      },
+      "id": "log-node",
+      "name": "Log Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Reddit Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit Search": {
+      "main": [
+        [
+          {
+            "node": "Transform Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Posts": {
+      "main": [
+        [
+          {
+            "node": "Call TechPartner Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call TechPartner Webhook": {
+      "main": [
+        [
+          {
+            "node": "Log Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

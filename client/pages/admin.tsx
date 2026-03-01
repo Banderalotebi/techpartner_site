@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,7 +40,13 @@ import {
   Wand2,
   Upload,
   Save,
-  Copy
+  Copy,
+  Database,
+  Cpu,
+  HardDrive,
+  Flame,
+  Thermometer,
+  Snowflake
 } from "lucide-react";
 import type { Order, Payment, ProjectBrief, User, Inquiry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -218,6 +224,44 @@ export default function AdminPage() {
   const [articleAuthor, setArticleAuthor] = useState("");
   const [targetWordCount, setTargetWordCount] = useState(800);
   const [targetKeyword, setTargetKeyword] = useState("");
+
+  // God Mode: System Vitals State
+  const [vitals, setVitals] = useState<any>(null);
+  const [crmStats, setCrmStats] = useState<any>(null);
+  const [vitalsLoading, setVitalsLoading] = useState(true);
+
+  // Fetch System Vitals (God Mode Telemetry)
+  useEffect(() => {
+    const fetchVitals = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const headers = { "Authorization": `Bearer ${token}` };
+        
+        // Fetch system health
+        const healthRes = await fetch("/api/system/health", { headers });
+        if (healthRes.ok) {
+          const healthData = await healthRes.json();
+          setVitals(healthData);
+        }
+
+        // Fetch CRM stats
+        const crmRes = await fetch("/api/system/crm-stats", { headers });
+        if (crmRes.ok) {
+          const crmData = await crmRes.json();
+          setCrmStats(crmData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch vitals:", error);
+      } finally {
+        setVitalsLoading(false);
+      }
+    };
+
+    fetchVitals();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchVitals, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Fetch all data
   const { data: orders = [], isLoading: ordersLoading } = useQuery<Order[]>({
@@ -459,6 +503,135 @@ The article should be informative, authoritative, and provide real value to read
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* SYSTEM VITALS HUD - God Mode */}
+        {!vitalsLoading && vitals && (
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <Activity className="mr-2 text-[#01A1C1]" size={20} />
+              System Vitals
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* System Status */}
+              <div className="bg-slate-900 border border-slate-700 rounded-xl p-4 text-white shadow-lg relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 opacity-20">
+                  <Activity size={40} />
+                </div>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">System Status</p>
+                <div className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full animate-pulse ${vitals.status === 'OPERATIONAL' ? 'bg-emerald-400' : vitals.status === 'DEGRADED' ? 'bg-yellow-400' : 'bg-red-500'}`}></div>
+                  <p className="text-xl font-bold">{vitals.status}</p>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Uptime: {Math.floor(vitals.uptime_seconds / 3600)}h {Math.floor((vitals.uptime_seconds % 3600) / 60)}m</p>
+              </div>
+
+              {/* Database Latency */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 text-emerald-100">
+                  <Database size={40} />
+                </div>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">DB Latency</p>
+                <p className="text-2xl font-black text-slate-800">
+                  {vitals.database_latency_ms >= 0 ? vitals.database_latency_ms : 'N/A'}
+                  <span className="text-sm font-medium text-gray-400 ml-1">ms</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-1">{vitals.database_latency_ms >= 0 ? 'Neon PostgreSQL' : 'SQLite Fallback'}</p>
+              </div>
+
+              {/* Server RAM */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 text-blue-100">
+                  <Cpu size={40} />
+                </div>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">RAM Usage</p>
+                <p className="text-2xl font-black text-slate-800">
+                  {vitals.server_ram_usage_percent}
+                  <span className="text-sm font-medium text-gray-400 ml-1">%</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-1">Load: {vitals.cpu_load_avg[0]?.toFixed(2) || 'N/A'}</p>
+              </div>
+
+              {/* AI Memory Bank */}
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 text-purple-100">
+                  <HardDrive size={40} />
+                </div>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">AI Memory</p>
+                <p className="text-2xl font-black text-slate-800">
+                  {vitals.ai_memory_size_mb}
+                  <span className="text-sm font-medium text-gray-400 ml-1">MB</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-1">Vector Store</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CRM STATS - AI Sales Closer */}
+        {crmStats && (
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <Users className="mr-2 text-[#01A1C1]" size={20} />
+              AI CRM - Lead Intelligence
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Total Leads</p>
+                <p className="text-2xl font-black text-slate-800">{crmStats.stats?.total || 0}</p>
+              </div>
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-1">
+                  <Flame className="w-4 h-4 text-red-500" />
+                  <p className="text-red-600 text-xs font-bold uppercase tracking-wider">HOT</p>
+                </div>
+                <p className="text-2xl font-black text-red-700">{crmStats.stats?.hot || 0}</p>
+              </div>
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-1">
+                  <Thermometer className="w-4 h-4 text-yellow-600" />
+                  <p className="text-yellow-700 text-xs font-bold uppercase tracking-wider">WARM</p>
+                </div>
+                <p className="text-2xl font-black text-yellow-800">{crmStats.stats?.warm || 0}</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 mb-1">
+                  <Snowflake className="w-4 h-4 text-blue-500" />
+                  <p className="text-blue-600 text-xs font-bold uppercase tracking-wider">COLD</p>
+                </div>
+                <p className="text-2xl font-black text-blue-700">{crmStats.stats?.cold || 0}</p>
+              </div>
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm">
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Pending</p>
+                <p className="text-2xl font-black text-gray-700">{crmStats.stats?.pending || 0}</p>
+              </div>
+            </div>
+
+            {/* Recent AI Activity */}
+            {crmStats.recentActivity && crmStats.recentActivity.length > 0 && (
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                <h3 className="font-semibold text-gray-900 mb-3">Recent AI Activity</h3>
+                <div className="space-y-3">
+                  {crmStats.recentActivity.map((activity: any, idx: number) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                      <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                        activity.score === 'HOT' ? 'bg-red-500' : 
+                        activity.score === 'WARM' ? 'bg-yellow-500' : 
+                        activity.score === 'COLD' ? 'bg-blue-500' : 'bg-gray-400'
+                      }`} />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-gray-900 truncate">{activity.name || activity.email}</p>
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{activity.summary}</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {new Date(activity.createdAt).toLocaleDateString()} • {activity.score}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>

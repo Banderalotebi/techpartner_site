@@ -143,6 +143,20 @@ export const prospects = pgTable("prospects", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Programmatic SEO Pages - Phase 3: GEO + pSEO Engine
+export const programmaticPages = pgTable("programmatic_pages", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  targetKeyword: text("target_keyword").notNull(),
+  city: text("city").notNull(),
+  industry: text("industry").notNull(),
+  h1Title: text("h1_title").notNull(),
+  aiGeneratedContent: text("ai_generated_content").notNull(),
+  jsonLdSchema: jsonb("json_ld_schema").notNull(),
+  isPublished: boolean("is_published").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -207,6 +221,11 @@ export const insertProspectSchema = createInsertSchema(prospects).omit({
   createdAt: true,
 });
 
+export const insertProgrammaticPageSchema = createInsertSchema(programmaticPages).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type ServiceCategory = typeof serviceCategories.$inferSelect;
@@ -229,3 +248,5 @@ export type Interaction = typeof interactions.$inferSelect;
 export type InsertInteraction = z.infer<typeof insertInteractionSchema>;
 export type Prospect = typeof prospects.$inferSelect;
 export type InsertProspect = z.infer<typeof insertProspectSchema>;
+export type ProgrammaticPage = typeof programmaticPages.$inferSelect;
+export type InsertProgrammaticPage = z.infer<typeof insertProgrammaticPageSchema>;

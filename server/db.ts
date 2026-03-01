@@ -7,16 +7,17 @@ neonConfig.webSocketConstructor = ws;
 
 // Note: DATABASE_URL is now loaded by aws-secrets.ts BEFORE this module is imported
 // The bootstrap process in server/index.ts ensures secrets are loaded first
-if (!process.env.DATABASE_URL) {
-  console.error('❌ [Database] DATABASE_URL environment variable is not set.');
-  console.error('   This should have been loaded by AWS Secrets Manager or .env file.');
-  console.error('   Ensure server/index.ts is calling loadSecrets() before importing this module.');
-  throw new Error('DATABASE_URL not configured. Check AWS Secrets Manager configuration.');
+// DATABASE_URL is optional - SQLite fallback is available in CRM (server/db/crm.ts)
+
+let pool: Pool | null = null;
+let db: any = null;
+
+if (process.env.DATABASE_URL) {
+  pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  db = drizzle({ client: pool, schema });
+  console.log('✅ [Database] Neon PostgreSQL connection initialized');
+} else {
+  console.log('ℹ️  [Database] DATABASE_URL not set - PostgreSQL disabled, SQLite fallback active');
 }
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle({ client: pool, schema });
-
-console.log('✅ [Database] Neon PostgreSQL connection initialized');
 
 export { pool, db };

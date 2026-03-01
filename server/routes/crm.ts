@@ -30,7 +30,7 @@ crmRouter.post("/process-chat", async (req, res) => {
     try {
         // 1. Save the raw lead to the CRM database
         console.log(`📝 [CRM] Saving lead: ${userEmail}`);
-        createLead(userName, userEmail, source);
+        await createLead(userName, userEmail, source);
 
         // 2. Ask Qwen 2.5 to act as your VP of Sales
         const aiPrompt = `
@@ -88,11 +88,11 @@ Scoring Criteria:
         }
 
         // 3. Update the Lead Score in the CRM
-        updateLeadScore(userEmail, analysis.score);
+        await updateLeadScore(userEmail, analysis.score);
         console.log(`📊 [CRM] Lead scored: ${analysis.score}`);
 
         // 4. Save the Interaction and the AI's drafted email
-        createInteraction(
+        await createInteraction(
             userEmail,
             'Chat Summary & Draft',
             analysis.draftEmail,
@@ -120,7 +120,7 @@ Scoring Criteria:
                 });
 
                 // Log autonomous action
-                createInteraction(
+                await createInteraction(
                     userEmail,
                     'Autonomous Email Sent',
                     analysis.draftEmail,
@@ -159,7 +159,7 @@ Scoring Criteria:
 // Get all leads (Admin only)
 crmRouter.get("/leads", requireAdmin, async (req, res) => {
     try {
-        const leads = getAllLeads();
+        const leads = await getAllLeads();
         res.json(leads);
     } catch (error) {
         console.error("Failed to fetch leads:", error);
@@ -177,7 +177,7 @@ crmRouter.get("/leads/score/:score", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Invalid score. Use HOT, WARM, COLD, or PENDING." });
         }
         
-        const leads = getLeadsByScore(score.toUpperCase());
+        const leads = await getLeadsByScore(score.toUpperCase());
         res.json(leads);
     } catch (error) {
         console.error("Failed to fetch leads by score:", error);
@@ -189,7 +189,7 @@ crmRouter.get("/leads/score/:score", requireAdmin, async (req, res) => {
 crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
     try {
         const { email } = req.params;
-        const interactions = getInteractionsByLead(email);
+        const interactions = await getInteractionsByLead(email);
         res.json(interactions);
     } catch (error) {
         console.error("Failed to fetch interactions:", error);
@@ -200,7 +200,7 @@ crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
 // Get CRM statistics (Admin token auth for easier access)
 crmRouter.get("/stats", simpleAuth, async (req, res) => {
     try {
-        const stats = getCRMStats();
+        const stats = await getCRMStats();
         res.json(stats);
     } catch (error) {
         console.error("Failed to fetch CRM stats:", error);
@@ -211,7 +211,7 @@ crmRouter.get("/stats", simpleAuth, async (req, res) => {
 // Export leads to CSV (Admin only)
 crmRouter.get("/export/leads", requireAdmin, async (req, res) => {
     try {
-        const csvContent = exportLeadsToCSV();
+        const csvContent = await exportLeadsToCSV();
         
         if (!csvContent) {
             return res.status(404).json({ error: "No leads to export." });
@@ -237,10 +237,10 @@ crmRouter.post("/leads", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Email is required." });
         }
 
-        createLead(name, email, source);
+        await createLead(name, email, source);
         
         if (leadScore !== 'PENDING') {
-            updateLeadScore(email, leadScore);
+            await updateLeadScore(email, leadScore);
         }
 
         res.json({ success: true, message: "Lead created successfully." });
@@ -261,10 +261,10 @@ crmRouter.patch("/leads/:email/score", requireAdmin, async (req, res) => {
             return res.status(400).json({ error: "Invalid score." });
         }
 
-        updateLeadScore(email, score.toUpperCase());
+        await updateLeadScore(email, score.toUpperCase());
         
         // Log the manual update
-        createInteraction(
+        await createInteraction(
             email,
             'Manual Score Update',
             `Lead score manually updated to ${score.toUpperCase()}`,
