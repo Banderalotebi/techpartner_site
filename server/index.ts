@@ -59,8 +59,8 @@ app.use((req, res, next) => {
     serveStaticFixed(app);
   }
 
-  // Use environment PORT or default to 3000 for development
-  const port = Number(process.env.PORT) || 3000;
+  // Use environment PORT or default to 8080 for production (matches nginx)
+  const port = Number(process.env.PORT) || 8080;
   const host = "0.0.0.0";
   
   server.listen({
