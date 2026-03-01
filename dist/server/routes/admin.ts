@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { db } from '../db';
 import { orders, payments, activities, users, servicePackages } from '../../shared/schema';
 import { eq, desc, count, sum, and } from 'drizzle-orm';
@@ -302,6 +302,214 @@ router.post('/admin/payments/manual', requireAuth, requireAdmin, async (req: Aut
   } catch (error) {
     console.error('Create manual payment error:', error);
     res.status(500).json({ error: 'Failed to create manual payment' });
+  }
+});
+
+// SEO Command Center Routes
+import Database from 'better-sqlite3';
+import { exec } from 'child_process';
+import nodemailer from 'nodemailer';
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { google } from 'googleapis';
+
+// Initialize SEO database
+const seoDb = new Database('seo-prospects.db');
+
+// Initialize Google Analytics client
+const analyticsDataClient = new BetaAnalyticsDataClient();
+const propertyId = process.env.GA4_PROPERTY_ID;
+
+// Initialize Google Search Console auth
+const gscAuth = new google.auth.GoogleAuth({
+  keyFile: './google-credentials.json',
+  scopes: ['https://www.googleapis.com/auth/webmasters.readonly'],
+});
+const searchconsole = google.searchconsole({ version: 'v1', auth: gscAuth });
+
+// Initialize Nodemailer transporter (Zoho Mail)
+const transporter = nodemailer.createTransport({
+  host: 'smtp.zoho.com',
+  port: 465,
+  secure: true, // SSL
+  auth: {
+    user: process.env.ZOHO_USER,
+    pass: process.env.ZOHO_PASSWORD,
+  },
+});
+
+// --- SECURITY MIDDLEWARE ---
+const requireAdminSecret = (req: Request, res: Response, next: NextFunction) => {
+  const providedToken = req.headers['x-admin-token'];
+  
+  if (!providedToken || providedToken !== process.env.ADMIN_SECRET) {
+    console.warn('[Security] Unauthorized access attempt to Admin SEO API.');
+    return res.status(401).json({ error: 'Access Denied.' });
+  }
+  next();
+};
+
+// --- SEO STATS ENDPOINT ---
+router.get('/admin/seo/stats', requireAdminSecret, (req, res) => {
+  try {
+    const prospects = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1`).get() as {count: number};
+    const queue = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1 AND draft_email IS NOT NULL`).get() as {count: number};
+    
+    res.json({
+      totalProspects: prospects.count,
+      pendingDrafts: queue.count,
+      systemStatus: 'Online',
+      lastRun: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('SEO Stats Error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// --- SEO QUEUE ENDPOINT ---
+router.get('/admin/seo/queue', requireAdminSecret, (req, res) => {
+  try {
+    const queue = seoDb.prepare(`
+      SELECT id, url, reason, draft_email, created_at 
+      FROM prospects 
+      WHERE approved = 1 AND draft_email IS NOT NULL
+      ORDER BY created_at DESC LIMIT 50
+    `).all();
+    
+    res.json(queue);
+  } catch (error) {
+    console.error('SEO Queue Error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// --- SCRIPT TRIGGER ENDPOINT ---
+router.post('/admin/seo/trigger/:job', requireAdminSecret, (req, res) => {
+  const job = req.params.job;
+  
+  const allowedJobs: Record<string, string> = {
+    'scout': 'npx tsx scripts/seo-scout.ts',
+    'build-pseo': 'cd pseo-engine && npm run build',
+    'syndicate': 'npx tsx scripts/syndicate.ts',
+    'generate-images': 'npx tsx scripts/generate-image.ts batch'
+  };
+
+  if (!allowedJobs[job]) {
+    return res.status(400).json({ error: 'Invalid job command.' });
+  }
+
+  console.log(`[Admin] Manually triggering job: ${job}`);
+  
+  exec(allowedJobs[job], (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Exec error: ${error}`);
+      return res.status(500).json({ error: 'Script failed to run.', details: stderr });
+    }
+    res.json({ message: `Job ${job} executed successfully.`, output: stdout });
+  });
+});
+
+// --- APPROVE & SEND EMAIL ENDPOINT ---
+router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
+  const prospectId = req.params.id;
+  const { targetEmail } = req.body;
+
+  try {
+    const prospect = seoDb.prepare(`SELECT * FROM prospects WHERE id = ?`).get(prospectId) as {
+      id: number;
+      url: string;
+      draft_email: string;
+    };
+    
+    if (!prospect || !prospect.draft_email) {
+      return res.status(404).json({ error: 'Draft not found.' });
+    }
+
+    await transporter.sendMail({
+      from: `"TechPartner Engineering" <${process.env.ZOHO_USER}>`,
+      to: targetEmail || 'hello@example.com',
+      subject: 'Collaboration with TechPartner',
+      text: prospect.draft_email,
+    });
+
+    seoDb.prepare(`UPDATE prospects SET approved = 2 WHERE id = ?`).run(prospectId);
+
+    console.log(`✅ [Admin] Pitch sent to ${targetEmail} for prospect ${prospect.url}`);
+    res.json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.error('Email failed:', error);
+    res.status(500).json({ error: 'Failed to send email.' });
+  }
+});
+
+// --- GA4 TRAFFIC ENDPOINT ---
+router.get('/admin/seo/traffic', requireAdminSecret, async (req, res) => {
+  try {
+    if (!propertyId) throw new Error('GA4 Property ID is missing.');
+
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' },
+        { name: 'sessions' }
+      ],
+    });
+
+    const row = response.rows?.[0];
+    const data = {
+      activeUsers: row?.metricValues?.[0]?.value || '0',
+      pageViews: row?.metricValues?.[1]?.value || '0',
+      sessions: row?.metricValues?.[2]?.value || '0',
+    };
+
+    res.json(data);
+  } catch (error) {
+    console.error('GA4 Fetch Error:', error);
+    res.status(500).json({ error: 'Failed to fetch analytics data.' });
+  }
+});
+
+// --- GSC SEARCH CONSOLE ENDPOINT ---
+router.get('/admin/seo/search-console', requireAdminSecret, async (req, res) => {
+  try {
+    const today = new Date();
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+    const siteUrl = process.env.GSC_SITE_URL || 'sc-domain:techpartner.sa';
+
+    const response = await searchconsole.searchanalytics.query({
+      siteUrl: siteUrl,
+      requestBody: {
+        startDate: formatDate(thirtyDaysAgo),
+        endDate: formatDate(today),
+        dimensions: ['query'],
+        rowLimit: 5,
+        orderBy: [{ fieldName: 'clicks', sortOrder: 'DESCENDING' }]
+      }
+    });
+
+    const keywords = (response.data.rows || []).map((row: {
+      keys?: string[];
+      clicks?: number;
+      impressions?: number;
+      ctr?: number;
+      position?: number;
+    }) => ({
+      query: row.keys?.[0] || 'Unknown',
+      clicks: row.clicks || 0,
+      impressions: row.impressions || 0,
+      ctr: ((row.ctr || 0) * 100).toFixed(2) + '%',
+      position: (row.position || 0).toFixed(1)
+    }));
+
+    res.json(keywords);
+  } catch (error) {
+    console.error('GSC Fetch Error:', error);
+    res.status(500).json({ error: 'Failed to fetch Search Console data.' });
   }
 });
 
