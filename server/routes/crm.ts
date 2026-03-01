@@ -162,8 +162,11 @@ crmRouter.get("/leads", requireAdmin, async (req, res) => {
         const leads = await getAllLeads();
         res.json(leads);
     } catch (error) {
-        console.error("Failed to fetch leads:", error);
-        res.status(500).json({ error: "Database error fetching leads." });
+        console.error("❌ [CRM] Failed to fetch leads:", error);
+        res.status(500).json({ 
+            error: "Database error fetching leads.",
+            details: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
 });
 
