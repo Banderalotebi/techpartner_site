@@ -114,6 +114,19 @@ export async function getLeadByEmail(email: string): Promise<Lead | undefined> {
   }
 }
 
+// Helper to map SQLite snake_case to TypeScript camelCase
+function mapSQLiteLead(row: any): Lead {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    source: row.source,
+    leadScore: row.lead_score,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 // Get all leads with latest summary
 export async function getAllLeads(): Promise<(Lead & { latestSummary: string | null })[]> {
   if (isDrizzleAvailable) {
@@ -143,9 +156,10 @@ export async function getAllLeads(): Promise<(Lead & { latestSummary: string | n
     return leadsWithSummaries;
   } else {
     const sqlite = getSQLiteDB();
-    const allLeads = sqlite.prepare('SELECT * FROM leads ORDER BY created_at DESC').all() as Lead[];
+    const rows = sqlite.prepare('SELECT * FROM leads ORDER BY created_at DESC').all();
+    const allLeads = rows.map(mapSQLiteLead);
     
-    return allLeads.map((lead) => {
+    return allLeads.map((lead: Lead) => {
       const latestInteraction = sqlite.prepare(
         'SELECT ai_summary FROM interactions WHERE lead_email = ? ORDER BY created_at DESC LIMIT 1'
       ).get(lead.email) as { ai_summary: string | null } | undefined;
@@ -168,7 +182,8 @@ export async function getLeadsByScore(score: string): Promise<Lead[]> {
       .orderBy(desc(leads.createdAt));
   } else {
     const sqlite = getSQLiteDB();
-    return sqlite.prepare("SELECT * FROM leads WHERE lead_score = ? ORDER BY created_at DESC").all(score) as Lead[];
+    const rows = sqlite.prepare("SELECT * FROM leads WHERE lead_score = ? ORDER BY created_at DESC").all(score);
+    return rows.map(mapSQLiteLead);
   }
 }
 

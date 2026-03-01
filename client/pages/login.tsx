@@ -37,7 +37,18 @@ export default function LoginPage() {
           { email, password },
           {
             onSuccess: () => {
-              navigate("/dashboard");
+              // Check if admin and redirect accordingly
+              const storedUser = localStorage.getItem('user');
+              if (storedUser) {
+                const user = JSON.parse(storedUser);
+                if (user.role === 'admin') {
+                  navigate("/admin");
+                } else {
+                  navigate("/dashboard");
+                }
+              } else {
+                navigate("/dashboard");
+              }
             },
           }
         );
