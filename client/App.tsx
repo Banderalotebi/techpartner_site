@@ -19,6 +19,7 @@ import BlogPage from "@/pages/blog";
 import AdminPage from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import NotFound from "@/pages/not-found";
+import LoginPage from "@/pages/login";
 import { useEffect } from "react";
 
 function Router() {
@@ -58,6 +59,7 @@ function Router() {
       <Route path="/ar/portfolio" component={PortfolioPage} />
       <Route path="/ar/blog" component={BlogPage} />
       <Route path="/ar/admin" component={AdminPage} />
+      <Route path="/ar/admin/login" component={LoginPage} />
       <Route path="/ar/payment/success" component={PaymentSuccess} />
       <Route path="/ar/category/:slug" component={CategoryPage} />
       
@@ -82,6 +84,7 @@ function Router() {
       <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/blog" component={BlogPage} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/admin/login" component={LoginPage} />
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/category/:slug" component={CategoryPage} />
       
