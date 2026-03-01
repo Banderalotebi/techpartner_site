@@ -10,7 +10,7 @@ on:
     branches: [ main ]
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   EC2_HOST: ${{ secrets.EC2_HOST }}
   EC2_USER: ${{ secrets.EC2_USER }}
   APP_DIR: /home/ubuntu/techpartner
@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Type check
-        run: npm run check || true
+        run: npm run check || echo "Type check warnings - continuing build"
 
       - name: Build application
         run: node build.js
@@ -72,47 +72,76 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Could not add host to known hosts"
 
       - name: Deploy to EC2
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd ${{ env.APP_DIR }}
-            
-            # Pull latest changes
-            echo "Pulling latest changes..."
-            git fetch origin
-            git reset --hard origin/main
-            
-            # Install dependencies
-            echo "Installing dependencies..."
-            npm install
-            
-            # Build the application
-            echo "Building application..."
-            node build.js
-            
-            # Restart PM2
-            echo "Restarting PM2..."
-            pm2 restart techpartner || pm2 start dist/index.cjs --name techpartner
-            
-            # Wait for app to start
-            sleep 5
-            
-            # Check status
-            pm2 status
-            
-            # Health check
-            curl -f http://localhost:8080 && echo "Deployment successful!"
-            
-            echo "Deployment completed!"
-          EOF
+          # Create deployment script
+          cat > deploy.sh << 'DEPLOY_SCRIPT'
+          #!/bin/bash
+          set -e
+          
+          echo "🚀 Starting deployment..."
+          cd ${{ env.APP_DIR }}
+          
+          # Backup current deployment
+          if [ -d "dist" ]; then
+            echo "📦 Backing up current deployment..."
+            mv dist dist.backup.$(date +%Y%m%d_%H%M%S) || true
+          fi
+          
+          # Pull latest changes
+          echo "⬇️ Pulling latest changes..."
+          git fetch origin
+          git reset --hard origin/main
+          
+          # Install dependencies
+          echo "📦 Installing dependencies..."
+          npm ci --production || npm install --production
+          
+          # Build the application
+          echo "🔨 Building application..."
+          node build.js
+          
+          # Restart PM2
+          echo "🔄 Restarting PM2..."
+          if pm2 list | grep -q "techpartner"; then
+            pm2 restart techpartner --update-env
+          else
+            pm2 start dist/index.cjs --name techpartner --env production
+          fi
+          
+          # Save PM2 config
+          pm2 save
+          
+          # Wait for app to start
+          sleep 5
+          
+          # Check status
+          echo "📊 PM2 Status:"
+          pm2 status
+          
+          # Health check
+          echo "🏥 Health check..."
+          if curl -sf http://localhost:8080/api/health > /dev/null; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check failed - checking logs..."
+            pm2 logs techpartner --lines 20
+          fi
+          
+          echo "🎉 Deployment completed!"
+          DEPLOY_SCRIPT
+          chmod +x deploy.sh
+          
+          # Copy and execute deployment script
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa deploy.sh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'bash /tmp/deploy.sh'
 
       - name: Verify deployment
         run: |
           sleep 10
           curl -I https://techpartner.sa || echo "HTTPS check complete"
           echo "Deployment verification done!"
-
