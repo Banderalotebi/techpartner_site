@@ -7,7 +7,7 @@ import {
   getLeadsByScore,
   exportLeadsToCSV
 } from "../db/crm";
-import { requireAdmin } from "../middleware/auth";
+import { requireAdmin, simpleAuth } from "../middleware/auth";
 import Database from 'better-sqlite3';
 
 // Type definition for Lead
@@ -27,7 +27,7 @@ export const reportsRouter = Router();
 const seoDb = new Database('seo-prospects.db');
 
 // Get comprehensive CRM report
-reportsRouter.get("/crm", requireAdmin, async (req, res) => {
+reportsRouter.get("/crm", simpleAuth, async (req, res) => {
     try {
         const stats = getCRMStats();
         const leads = getAllLeads();
@@ -52,7 +52,7 @@ reportsRouter.get("/crm", requireAdmin, async (req, res) => {
 });
 
 // Export CRM leads to CSV
-reportsRouter.get("/export/crm/csv", requireAdmin, async (req, res) => {
+reportsRouter.get("/export/crm/csv", simpleAuth, async (req, res) => {
     try {
         const csvContent = exportLeadsToCSV();
         
@@ -71,7 +71,7 @@ reportsRouter.get("/export/crm/csv", requireAdmin, async (req, res) => {
 });
 
 // Get SEO performance report
-reportsRouter.get("/seo", requireAdmin, async (req, res) => {
+reportsRouter.get("/seo", simpleAuth, async (req, res) => {
     try {
         // Get SEO prospects data
         const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
@@ -108,7 +108,7 @@ reportsRouter.get("/seo", requireAdmin, async (req, res) => {
 });
 
 // Get combined AI Sales & SEO report
-reportsRouter.get("/unified", requireAdmin, async (req, res) => {
+reportsRouter.get("/unified", simpleAuth, async (req, res) => {
     try {
         const crmStats = getCRMStats();
         const prospects = seoDb.prepare('SELECT * FROM prospects ORDER BY created_at DESC').all();
@@ -139,7 +139,7 @@ reportsRouter.get("/unified", requireAdmin, async (req, res) => {
 });
 
 // Export full system report as JSON
-reportsRouter.get("/export/full", requireAdmin, async (req, res) => {
+reportsRouter.get("/export/full", simpleAuth, async (req, res) => {
     try {
         const crmStats = getCRMStats();
         const allLeads = getAllLeads();
@@ -179,7 +179,7 @@ reportsRouter.get("/export/full", requireAdmin, async (req, res) => {
 });
 
 // Get real-time dashboard metrics
-reportsRouter.get("/dashboard", requireAdmin, async (req, res) => {
+reportsRouter.get("/dashboard", simpleAuth, async (req, res) => {
     try {
         const crmStats = getCRMStats();
         

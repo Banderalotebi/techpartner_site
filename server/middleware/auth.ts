@@ -49,12 +49,12 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
     const decoded = verifyToken(token);
     console.log('🔍 Token decoded:', { id: decoded.id, email: decoded.email });
 
-    let user;
+    let user = null;
     
-    // Try PostgreSQL first if available
-    if (db) {
+    // Try PostgreSQL first if available and properly initialized
+    if (db && typeof db.select === 'function') {
       try {
-        const [dbUser] = await db
+        const result = await db
           .select({
             id: users.id,
             email: users.email,
@@ -65,9 +65,10 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
           .from(users)
           .where(eq(users.id, decoded.id))
           .limit(1);
-        user = dbUser;
+        user = result && result.length > 0 ? result[0] : null;
       } catch (dbError) {
         console.log('PostgreSQL lookup failed, falling back to storage:', dbError);
+        user = null;
       }
     }
     
@@ -86,6 +87,7 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
         }
       } catch (storageError) {
         console.log('Storage lookup failed:', storageError);
+        user = null;
       }
     }
 
@@ -110,29 +112,22 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-// Admin authentication middleware
-export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFunction) => {
+// Admin authentication middleware - Simple token-based (no DB lookup)
+export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
   try {
-    // First run the regular auth middleware
-    await new Promise<void>((resolve, reject) => {
-      requireAuth(req, res, (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
-    });
+    // Check for token in Authorization header (Bearer admin123) OR x-admin-token
+    const authHeader = req.headers.authorization;
+    const adminToken = req.headers["x-admin-token"];
+    
+    const providedToken = (authHeader && authHeader.split(" ")[1]) || adminToken;
+    const SECRET = process.env.ADMIN_SECRET || "admin123";
 
-    // Check if user is admin
-    if (!req.user || req.user.role !== 'admin') {
-      console.log('❌ Admin access denied:', { 
-        userExists: !!req.user, 
-        userRole: req.user?.role,
-        userEmail: req.user?.email 
-      });
-      return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+    if (!providedToken || providedToken !== SECRET) {
+      console.log('❌ Admin access denied: Invalid or missing token');
+      return res.status(401).json({ error: "Access denied. Invalid or missing token." });
     }
-
-    req.user.isAdmin = true;
-    console.log('✅ Admin access granted:', { email: req.user.email, role: req.user.role });
+    
+    console.log('✅ Admin access granted via token');
     next();
   } catch (error) {
     console.error('Admin auth middleware error:', error);

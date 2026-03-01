@@ -1,4 +1,4 @@
-// server/routes/crm.ts - The AI Sales Closer (Phase 2)
+D// server/routes/crm.ts - The AI Sales Closer (Phase 2)
 import { Router } from "express";
 import {
   createLead,
@@ -12,7 +12,7 @@ import {
 } from "../db/crm";
 import { randomUUID } from "crypto";
 import { emailService } from "../email";
-import { requireAdmin } from "../middleware/auth";
+import { requireAdmin, simpleAuth } from "../middleware/auth";
 
 export const crmRouter = Router();
 
@@ -197,8 +197,8 @@ crmRouter.get("/interactions/:email", requireAdmin, async (req, res) => {
     }
 });
 
-// Get CRM statistics (Admin only)
-crmRouter.get("/stats", requireAdmin, async (req, res) => {
+// Get CRM statistics (Admin token auth for easier access)
+crmRouter.get("/stats", simpleAuth, async (req, res) => {
     try {
         const stats = getCRMStats();
         res.json(stats);
