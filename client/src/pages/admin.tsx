@@ -40,7 +40,11 @@ import {
   Wand2,
   Upload,
   Save,
-  Copy
+  Copy,
+  Globe,
+  Mail,
+  MessageSquare,
+  Target
 } from "lucide-react";
 import type { Order, Payment, ProjectBrief, User, Inquiry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -241,6 +245,24 @@ export default function AdminPage() {
     select: (data: any) => data?.data?.inquiries || []
   });
 
+  // CRM Leads data
+  const { data: crmData = { leads: [], stats: {} }, isLoading: crmLoading } = useQuery({
+    queryKey: ["/api/crm/leads"],
+    select: (data: any) => data || { leads: [], stats: {} }
+  });
+
+  // Domain Hunter data
+  const { data: domainLeads = [], isLoading: domainLoading } = useQuery({
+    queryKey: ["/api/admin/domain-leads"],
+    select: (data: any) => data?.domains || []
+  });
+
+  // Email/SMS sent data
+  const { data: outboundData = { emails: [], sms: [] }, isLoading: outboundLoading } = useQuery({
+    queryKey: ["/api/outbound/sent"],
+    select: (data: any) => data || { emails: [], sms: [] }
+  });
+
   // Order status update functionality
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState<string>("");
@@ -248,10 +270,7 @@ export default function AdminPage() {
   // Update order status mutation
   const updateOrderMutation = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
-      return await apiRequest(`/api/orders/${id}`, {
-        method: "PATCH",
-        body: { status },
-      });
+      return await apiRequest("PATCH", `/api/orders/${id}`, { status });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
@@ -508,14 +527,16 @@ The article should be informative, authoritative, and provide real value to read
 
         {/* Main Content */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-9">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="payments">Payments ({payments.length})</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
-            <TabsTrigger value="briefs">Project Briefs ({projectBriefs.length})</TabsTrigger>
+            <TabsTrigger value="briefs">Briefs ({projectBriefs.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
-            <TabsTrigger value="blog">Blog Management</TabsTrigger>
+            <TabsTrigger value="crm">CRM</TabsTrigger>
+            <TabsTrigger value="domains">Domains</TabsTrigger>
+            <TabsTrigger value="outbound">Outbound</TabsTrigger>
           </TabsList>
 
           {/* Analytics Tab */}
@@ -1092,6 +1113,294 @@ The article should be informative, authoritative, and provide real value to read
                     </Card>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* CRM Tab */}
+          <TabsContent value="crm" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MessageSquare className="mr-2" size={20} />
+                  CRM Leads & Interactions
+                </CardTitle>
+                <CardDescription>Track leads from chatbot, contact forms, and scraper</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* CRM Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Total Leads</CardDescription>
+                      <CardTitle className="text-2xl">{crmData?.stats?.totalLeads || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Hot Leads</CardDescription>
+                      <CardTitle className="text-2xl text-red-600">{crmData?.stats?.hotLeads || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Warm Leads</CardDescription>
+                      <CardTitle className="text-2xl text-yellow-600">{crmData?.stats?.warmLeads || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>From Chatbot</CardDescription>
+                      <CardTitle className="text-2xl">{crmData?.stats?.chatbotLeads || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                </div>
+
+                {/* Leads Table */}
+                <div className="border rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Lead</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Source</TableHead>
+                        <TableHead>Score</TableHead>
+                        <TableHead>Interactions</TableHead>
+                        <TableHead>Created</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {crmLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8">
+                            <RefreshCw className="mx-auto h-6 w-6 animate-spin" />
+                          </TableCell>
+                        </TableRow>
+                      ) : crmData?.leads?.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                            No leads yet. They will appear here when collected.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        crmData?.leads?.map((lead: any) => (
+                          <TableRow key={lead.id}>
+                            <TableCell className="font-medium">{lead.name || 'Anonymous'}</TableCell>
+                            <TableCell>{lead.email}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{lead.source}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={
+                                lead.leadScore === 'HOT' ? 'bg-red-100 text-red-800' :
+                                lead.leadScore === 'WARM' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-blue-100 text-blue-800'
+                              }>
+                                {lead.leadScore}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{lead.interactionCount || 0}</TableCell>
+                            <TableCell>{new Date(lead.createdAt).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Domain Hunter Tab */}
+          <TabsContent value="domains" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Globe className="mr-2" size={20} />
+                  Domain Hunter - Discovered Leads
+                </CardTitle>
+                <CardDescription>Newly registered domains matching your target keywords</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Domain Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Total Discovered</CardDescription>
+                      <CardTitle className="text-2xl">{domainLeads?.length || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>New Status</CardDescription>
+                      <CardTitle className="text-2xl">
+                        {domainLeads?.filter((d: any) => d.status === 'NEW').length || 0}
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Enriched</CardDescription>
+                      <CardTitle className="text-2xl">
+                        {domainLeads?.filter((d: any) => d.status === 'ENRICHED').length || 0}
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Contacted</CardDescription>
+                      <CardTitle className="text-2xl">
+                        {domainLeads?.filter((d: any) => d.status === 'CONTACTED').length || 0}
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </div>
+
+                {/* Domains Table */}
+                <div className="border rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Domain</TableHead>
+                        <TableHead>Keywords Matched</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Discovered</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {domainLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-8">
+                            <RefreshCw className="mx-auto h-6 w-6 animate-spin" />
+                          </TableCell>
+                        </TableRow>
+                      ) : domainLeads?.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                            No domains discovered yet. Run the domain hunter script.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        domainLeads?.map((domain: any) => (
+                          <TableRow key={domain.id}>
+                            <TableCell className="font-medium">
+                              <a href={`https://${domain.domainName}`} target="_blank" rel="noopener" className="text-blue-600 hover:underline">
+                                {domain.domainName}
+                              </a>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {domain.keywordsMatched?.split(',').map((kw: string, i: number) => (
+                                  <Badge key={i} variant="outline" className="text-xs">{kw.trim()}</Badge>
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={
+                                domain.status === 'NEW' ? 'bg-blue-100 text-blue-800' :
+                                domain.status === 'ENRICHED' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                              }>
+                                {domain.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{new Date(domain.discoveredAt).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                              <Button size="sm" variant="outline">View</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Outbound Tab */}
+          <TabsContent value="outbound" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Target className="mr-2" size={20} />
+                  Outbound Communications
+                </CardTitle>
+                <CardDescription>Emails and SMS sent to leads</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Email Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Emails Sent</CardDescription>
+                      <CardTitle className="text-2xl">{outboundData?.emails?.length || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>SMS Sent</CardDescription>
+                      <CardTitle className="text-2xl">{outboundData?.sms?.length || 0}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardDescription>Success Rate</CardDescription>
+                      <CardTitle className="text-2xl">
+                        {outboundData?.emails?.length > 0 
+                          ? Math.round((outboundData.emails.filter((e: any) => e.status === 'sent').length / outboundData.emails.length) * 100)
+                          : 0}%
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </div>
+
+                {/* Emails Table */}
+                <div className="border rounded-lg mb-6">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead><Mail className="inline mr-1" size={14} /> Email History</TableHead>
+                        <TableHead>Recipient</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Sent At</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {outboundLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8">
+                            <RefreshCw className="mx-auto h-6 w-6 animate-spin" />
+                          </TableCell>
+                        </TableRow>
+                      ) : outboundData?.emails?.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                            No emails sent yet. They will appear here when the outbound engine runs.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        outboundData?.emails?.map((email: any, idx: number) => (
+                          <TableRow key={idx}>
+                            <TableCell className="font-medium">{email.subject || 'No subject'}</TableCell>
+                            <TableCell>{email.to}</TableCell>
+                            <TableCell>
+                              <Badge className={
+                                email.status === 'sent' ? 'bg-green-100 text-green-800' :
+                                email.status === 'failed' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }>
+                                {email.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{email.sentAt ? new Date(email.sentAt).toLocaleString() : '-'}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
