@@ -135,13 +135,43 @@ Tone: Expert, consultative, authoritative but not condescending. Keep it under 4
     
     // Save to database
     if (db) {
-      await db.insert(clientAudits).values({
-        uuid: reportUuid,
-        businessName: businessName || "Unknown Business",
-        websiteUrl,
-        pageSpeedScore: speedScore,
-        aiReportContent: reportContent
-      });
+      try {
+        await db.insert(clientAudits).values({
+          uuid: reportUuid,
+          businessName: businessName || "Unknown Business",
+          websiteUrl,
+          pageSpeedScore: speedScore,
+          aiReportContent: reportContent
+        });
+      } catch (dbError: any) {
+        // If PostgreSQL table doesn't exist, fallback to SQLite
+        if (dbError.code === '42P01') {
+          console.log("⚠️ PostgreSQL table missing, using SQLite fallback for insert");
+          const Database = (await import("better-sqlite3")).default;
+          const sqliteDb = new Database('data/techpartner.db');
+          
+          sqliteDb.exec(`
+            CREATE TABLE IF NOT EXISTS client_audits (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              uuid TEXT UNIQUE NOT NULL,
+              business_name TEXT NOT NULL,
+              website_url TEXT NOT NULL,
+              page_speed_score INTEGER,
+              ai_report_content TEXT NOT NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+          `);
+          
+          sqliteDb.prepare(`
+            INSERT INTO client_audits (uuid, business_name, website_url, page_speed_score, ai_report_content)
+            VALUES (?, ?, ?, ?, ?)
+          `).run(reportUuid, businessName || "Unknown Business", websiteUrl, speedScore, reportContent);
+          
+          sqliteDb.close();
+        } else {
+          throw dbError;
+        }
+      }
     } else {
       // SQLite fallback
       const Database = (await import("better-sqlite3")).default;
@@ -194,12 +224,50 @@ auditEngineRouter.get("/:uuid", async (req, res) => {
     let audit: any;
     
     if (db) {
-      const [result] = await db.select().from(clientAudits).where(eq(clientAudits.uuid, uuid));
-      audit = result;
+      try {
+        const [result] = await db.select().from(clientAudits).where(eq(clientAudits.uuid, uuid));
+        audit = result;
+      } catch (dbError: any) {
+        // If PostgreSQL table doesn't exist, fallback to SQLite
+        if (dbError.code === '42P01') {
+          console.log("⚠️ PostgreSQL table missing, using SQLite fallback for fetch");
+          const Database = (await import("better-sqlite3")).default;
+          const sqliteDb = new Database('data/techpartner.db');
+          
+          sqliteDb.exec(`
+            CREATE TABLE IF NOT EXISTS client_audits (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              uuid TEXT UNIQUE NOT NULL,
+              business_name TEXT NOT NULL,
+              website_url TEXT NOT NULL,
+              page_speed_score INTEGER,
+              ai_report_content TEXT NOT NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+          `);
+          
+          audit = sqliteDb.prepare('SELECT * FROM client_audits WHERE uuid = ?').get(uuid);
+          sqliteDb.close();
+        } else {
+          throw dbError;
+        }
+      }
     } else {
       // SQLite fallback
       const Database = (await import("better-sqlite3")).default;
       const sqliteDb = new Database('data/techpartner.db');
+      
+      sqliteDb.exec(`
+        CREATE TABLE IF NOT EXISTS client_audits (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          uuid TEXT UNIQUE NOT NULL,
+          business_name TEXT NOT NULL,
+          website_url TEXT NOT NULL,
+          page_speed_score INTEGER,
+          ai_report_content TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
       
       audit = sqliteDb.prepare('SELECT * FROM client_audits WHERE uuid = ?').get(uuid);
       sqliteDb.close();
@@ -233,12 +301,50 @@ auditEngineRouter.get("/", async (req, res) => {
     let audits: any[] = [];
     
     if (db) {
-      const { desc } = await import("drizzle-orm");
-      audits = await db.select().from(clientAudits).orderBy(desc(clientAudits.createdAt)).limit(50);
+      try {
+        const { desc } = await import("drizzle-orm");
+        audits = await db.select().from(clientAudits).orderBy(desc(clientAudits.createdAt)).limit(50);
+      } catch (dbError: any) {
+        // If PostgreSQL table doesn't exist, fallback to SQLite
+        if (dbError.code === '42P01') {
+          console.log("⚠️ PostgreSQL table missing, using SQLite fallback");
+          const Database = (await import("better-sqlite3")).default;
+          const sqliteDb = new Database('data/techpartner.db');
+          
+          sqliteDb.exec(`
+            CREATE TABLE IF NOT EXISTS client_audits (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              uuid TEXT UNIQUE NOT NULL,
+              business_name TEXT NOT NULL,
+              website_url TEXT NOT NULL,
+              page_speed_score INTEGER,
+              ai_report_content TEXT NOT NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+          `);
+          
+          audits = sqliteDb.prepare('SELECT * FROM client_audits ORDER BY created_at DESC LIMIT 50').all() as any[];
+          sqliteDb.close();
+        } else {
+          throw dbError;
+        }
+      }
     } else {
       // SQLite fallback
       const Database = (await import("better-sqlite3")).default;
       const sqliteDb = new Database('data/techpartner.db');
+      
+      sqliteDb.exec(`
+        CREATE TABLE IF NOT EXISTS client_audits (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          uuid TEXT UNIQUE NOT NULL,
+          business_name TEXT NOT NULL,
+          website_url TEXT NOT NULL,
+          page_speed_score INTEGER,
+          ai_report_content TEXT NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
       
       audits = sqliteDb.prepare('SELECT * FROM client_audits ORDER BY created_at DESC LIMIT 50').all() as any[];
       sqliteDb.close();
