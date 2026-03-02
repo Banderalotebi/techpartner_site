@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { compression } from "vite-plugin-compression2";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import { partytownVite } from "@builder.io/partytown/utils";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,9 +19,6 @@ export default defineConfig({
     }),
     compression({ algorithms: ['brotliCompress'], exclude: [/\.(br)$/, /\.(gz)$/] }),
     compression({ algorithms: ['gzip'], exclude: [/\.(br)$/, /\.(gz)$/] }),
-    partytownVite({
-      dest: path.join(__dirname, 'dist/public/~partytown'),
-    })
   ],
   resolve: {
     alias: {

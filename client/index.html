@@ -53,23 +53,9 @@
     <meta name="twitter:description" content="Professional logo design, brand identity, web design & custom development in Saudi Arabia. Starting from 1,500 SAR." />
     <meta name="twitter:image" content="https://techpartner.sa/og-image.png" />
 
-    <!-- ── Partytown Configuration ────────────────────────────────────────── -->
+    <!-- ── Google Analytics 4 ───────────────────────────────────────────────── -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
     <script>
-      partytown = {
-        forward: ['dataLayer.push'],
-        resolveUrl: (url) => {
-          // Keep Google scripts on main thread for compatibility
-          if (url.hostname === 'www.googletagmanager.com') {
-            return url;
-          }
-          return url;
-        }
-      };
-    </script>
-
-    <!-- ── Google Analytics 4 (Offloaded to Web Worker via Partytown) ─────── -->
-    <script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
-    <script type="text/partytown">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
