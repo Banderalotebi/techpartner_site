@@ -1,6 +1,0 @@
-# TechPartner Ads.txt file
-# This file is used to verify authorized digital sellers
-# For more information, visit: https://iabtechlab.com/ads-txt/
-
-# No third-party ad sellers authorized at this time
-# Contact info@techpartner.sa for advertising inquiries
