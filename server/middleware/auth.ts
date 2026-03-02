@@ -133,7 +133,7 @@ export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFu
       const token = authHeader.substring(7);
       const decoded = verifyToken(token);
       
-      // Check if user has admin role
+      // Check if user has admin role in token
       if (decoded.role === 'admin') {
         console.log('✅ Admin access granted via JWT (role: admin)');
         req.user = {
@@ -141,6 +141,61 @@ export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFu
           email: decoded.email,
           username: decoded.username,
           role: decoded.role,
+        };
+        return next();
+      }
+      
+      // If role not in token or not admin, check database
+      console.log('🔍 JWT role not admin or missing, checking database...');
+      
+      let user = null;
+      
+      // Try PostgreSQL first
+      if (db && typeof db.select === 'function') {
+        try {
+          const result = await db
+            .select({
+              id: users.id,
+              email: users.email,
+              username: users.username,
+              role: users.role,
+              isActive: users.isActive,
+            })
+            .from(users)
+            .where(eq(users.id, decoded.id))
+            .limit(1);
+          user = result && result.length > 0 ? result[0] : null;
+        } catch (dbError) {
+          console.log('PostgreSQL lookup failed:', dbError);
+        }
+      }
+      
+      // Fallback to storage
+      if (!user) {
+        try {
+          const storageUser = await storage.getUser(decoded.id);
+          if (storageUser) {
+            user = {
+              id: storageUser.id,
+              email: storageUser.email,
+              username: storageUser.username,
+              role: storageUser.role,
+              isActive: storageUser.isActive,
+            };
+          }
+        } catch (storageError) {
+          console.log('Storage lookup failed:', storageError);
+        }
+      }
+      
+      // Check if user has admin role in database
+      if (user && user.role === 'admin' && user.isActive) {
+        console.log('✅ Admin access granted via database lookup (role: admin)');
+        req.user = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
         };
         return next();
       }
