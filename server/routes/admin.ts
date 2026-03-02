@@ -3,6 +3,7 @@ import { db } from '../db';
 import { orders, payments, activities, users, servicePackages } from '../../shared/schema';
 import { eq, desc, count, sum, and } from 'drizzle-orm';
 import { requireAuth, requireAdmin, type AuthRequest } from '../middleware/auth';
+import { exec } from 'child_process';
 
 const router = Router();
 
@@ -306,8 +307,6 @@ router.post('/admin/payments/manual', requireAuth, requireAdmin, async (req: Aut
 });
 
 // SEO Command Center Routes
-import { exec } from 'child_process';
-
 // Lazy initialization of SEO database (SQLite only used for SEO features)
 let seoDb: any = null;
 const getSeoDb = () => {
