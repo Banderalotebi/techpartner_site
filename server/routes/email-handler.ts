@@ -1,0 +1,271 @@
+import { randomUUID } from "crypto";
+import { Router } from "express";
+import { ChatOllama } from "@langchain/ollama";
+import { db } from "../db";
+import { leads, interactions } from "../../shared/schema";
+import { eq } from "drizzle-orm";
+
+export const emailHandlerRouter = Router();
+
+// Initialize Llama 3.1 for email analysis
+const llm = new ChatOllama({ 
+  baseUrl: "http://localhost:11434", 
+  model: "llama3.1:8b", 
+  temperature: 0.2 
+});
+
+/**
+ * POST /api/email/inbound
+ * AI Email Reply Handler - The Autonomous Sales Closer
+ * Receives inbound emails, classifies intent, updates CRM, drafts replies
+ */
+emailHandlerRouter.post("/inbound", async (req, res) => {
+  try {
+    // Support multiple webhook formats (Mailgun, Sendgrid, Zapier/Make)
+    const { 
+      senderEmail, 
+      from, 
+      subject, 
+      textBody, 
+      text, 
+      body,
+      html 
+    } = req.body;
+
+    // Normalize email fields from different providers
+    const email = senderEmail || from || req.body.sender;
+    const emailSubject = subject || req.body.Subject || "No Subject";
+    const emailBody = textBody || text || body || html || req.body["body-plain"] || "";
+
+    if (!email || !emailBody) {
+      return res.status(400).json({ 
+        error: "Missing required fields: senderEmail and textBody are required" 
+      });
+    }
+
+    console.log(`📩 [Email Handler] Received email from: ${email}`);
+    console.log(`📩 [Email Handler] Subject: ${emailSubject}`);
+
+    // 1. Analyze Email Intent with Llama 3.1
+    const prompt = `
+You are an elite AI Sales Closer for TechPartner, a premium web design and development agency in Saudi Arabia.
+
+Analyze this incoming email from a prospect:
+
+FROM: ${email}
+SUBJECT: ${emailSubject}
+BODY: ${emailBody.substring(0, 2000)}
+
+TASK 1: Classify the intent as EXACTLY one of these:
+- HOT: Prospect wants a meeting, pricing, or is ready to buy
+- QUESTION: Prospect is asking for details, clarifications, or more info
+- COLD: Prospect is not interested, wants to unsubscribe, or is negative
+- FOLLOW_UP: Prospect is continuing a conversation or asking for next steps
+
+TASK 2: Draft a professional, highly persuasive reply:
+- If HOT: Be enthusiastic, answer their question, and include the calendar link
+- If QUESTION: Provide helpful details and suggest a meeting
+- If COLD: Be polite, acknowledge their decision, ask for feedback
+- If FOLLOW_UP: Continue the conversation naturally
+
+IMPORTANT RULES:
+- Always include this calendar link for HOT/QUESTION leads: https://calendly.com/techpartner/discovery
+- Mention TechPartner's expertise in Saudi market
+- Keep replies under 150 words
+- Be professional but warm
+- Never sound robotic
+
+Output STRICTLY in this JSON format:
+{
+  "classification": "HOT" | "QUESTION" | "COLD" | "FOLLOW_UP",
+  "confidence": 0.0-1.0,
+  "suggested_reply": "...",
+  "key_points": ["..."],
+  "next_action": "..."
+}
+`;
+
+    const aiResponse = await llm.invoke([{ role: "user", content: prompt }]);
+    
+    let analysis;
+    try {
+      // Try to parse JSON from the response
+      const content = aiResponse.content as string;
+      // Extract JSON if it's wrapped in markdown code blocks
+      const jsonMatch = content.match(/```json\n?([\s\S]*?)\n?```/) || 
+                        content.match(/```([\s\S]*?)```/) ||
+                        [null, content];
+      const jsonStr = jsonMatch[1] || content;
+      analysis = JSON.parse(jsonStr);
+    } catch (parseError) {
+      console.error("[Email Handler] Failed to parse AI response as JSON:", parseError);
+      // Fallback analysis
+      analysis = {
+        classification: "QUESTION",
+        confidence: 0.5,
+        suggested_reply: `Thank you for reaching out to TechPartner. I'd be happy to discuss how we can help with your project. Would you like to schedule a quick call? https://calendly.com/techpartner/discovery`,
+        key_points: ["Could not parse AI response"],
+        next_action: "Manual review required"
+      };
+    }
+
+    console.log(`🎯 [Email Handler] Classification: ${analysis.classification} (${analysis.confidence})`);
+
+    // 2. Update CRM - Find or create lead
+    const existingLeads = await db
+      .select()
+      .from(leads)
+      .where(eq(leads.email, email))
+      .limit(1);
+
+    let targetLead;
+    if (existingLeads.length > 0) {
+      // Update existing lead
+      await db
+        .update(leads)
+        .set({ 
+          leadScore: analysis.classification,
+          status: analysis.classification === "HOT" ? "hot_lead" : existingLeads[0].status,
+          updatedAt: new Date()
+        })
+        .where(eq(leads.id, existingLeads[0].id));
+      
+      targetLead = existingLeads[0];
+      console.log(`✅ [Email Handler] Updated lead: ${email} -> ${analysis.classification}`);
+    } else {
+      // Create new lead
+      const [newLead] = await db
+        .insert(leads)
+        .values({
+          id: randomUUID(),
+          email: email,
+          name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          source: "Inbound Email Reply",
+          leadScore: analysis.classification,
+          status: "new",
+          company: "Unknown"
+        })
+        .returning();
+      
+      targetLead = newLead;
+      console.log(`✅ [Email Handler] Created new lead: ${email} (${analysis.classification})`);
+    }
+
+    // 3. Log the interaction
+    await db.insert(interactions).values({
+      leadEmail: email,
+      interactionType: "Email Reply",
+      content: emailBody.substring(0, 1000),
+      aiSummary: `${analysis.classification}: ${analysis.suggested_reply.substring(0, 200)}`
+    });
+
+    console.log(`📝 [Email Handler] Interaction logged for lead: ${targetLead.id}`);
+
+    // 4. Return the drafted reply
+    res.status(200).json({
+      success: true,
+      leadId: targetLead.id,
+      email: email,
+      classification: analysis.classification,
+      confidence: analysis.confidence,
+      draftedReply: analysis.suggested_reply,
+      keyPoints: analysis.key_points,
+      nextAction: analysis.next_action,
+      message: `Email processed. Lead classified as ${analysis.classification}`
+    });
+
+  } catch (error) {
+    console.error("❌ [Email Handler] Error processing inbound email:", error);
+    res.status(500).json({ 
+      error: "Failed to process inbound email",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+});
+
+/**
+ * GET /api/email/stats
+ * Get email handling statistics
+ */
+emailHandlerRouter.get("/stats", async (req, res) => {
+  try {
+    // Get all email interactions
+    const allInteractions = await db.select().from(interactions);
+    const emailInteractions = allInteractions.filter((i: any) => 
+      i.interactionType === "Email Reply" || i.interactionType === "manual_reply"
+    );
+
+    // Calculate stats
+    const stats = {
+      totalProcessed: emailInteractions.length,
+      hot: emailInteractions.filter((i: any) => i.aiSummary?.includes("HOT")).length,
+      question: emailInteractions.filter((i: any) => i.aiSummary?.includes("QUESTION")).length,
+      cold: emailInteractions.filter((i: any) => i.aiSummary?.includes("COLD")).length,
+      followUp: emailInteractions.filter((i: any) => i.aiSummary?.includes("FOLLOW_UP")).length,
+      recent: emailInteractions.slice(-10).map((i: any) => ({
+        leadEmail: i.leadEmail,
+        classification: i.aiSummary?.split(":")[0] || "UNKNOWN",
+        timestamp: i.createdAt
+      }))
+    };
+
+    res.json({
+      success: true,
+      stats
+    });
+  } catch (error) {
+    console.error("❌ [Email Handler] Error fetching stats:", error);
+    res.status(500).json({ error: "Failed to fetch email stats" });
+  }
+});
+
+/**
+ * POST /api/email/send-reply
+ * Manually trigger sending a reply (for testing or manual override)
+ */
+emailHandlerRouter.post("/send-reply", async (req, res) => {
+  try {
+    const { leadId, reply } = req.body;
+    
+    if (!leadId || !reply) {
+      return res.status(400).json({ error: "leadId and reply are required" });
+    }
+
+    // Get lead details
+    const leadResult = await db
+      .select()
+      .from(leads)
+      .where(eq(leads.id, leadId))
+      .limit(1);
+
+    if (leadResult.length === 0) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    const lead = leadResult[0];
+
+    // Log the manual reply
+    await db.insert(interactions).values({
+      leadEmail: lead.email,
+      interactionType: "manual_reply",
+      content: reply,
+      aiSummary: "MANUAL: Reply sent manually"
+    });
+
+    // TODO: Integrate with email provider (Sendgrid, Mailgun, etc.) to actually send
+    console.log(`📤 [Email Handler] Manual reply queued for: ${lead.email}`);
+
+    res.json({
+      success: true,
+      message: `Reply queued for ${lead.email}`,
+      lead: {
+        id: lead.id,
+        email: lead.email,
+        name: lead.name
+      }
+    });
+  } catch (error) {
+    console.error("❌ [Email Handler] Error sending reply:", error);
+    res.status(500).json({ error: "Failed to send reply" });
+  }
+});

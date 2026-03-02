@@ -30,10 +30,22 @@ export function serveStaticFixed(app: Express) {
   // Serve static files from the build directory
   app.use(express.static(distPath));
 
+  // Serve email-images folder explicitly
+  const emailImagesPath = path.join(distPath, "email-images");
+  if (fs.existsSync(emailImagesPath)) {
+    app.use("/email-images", express.static(emailImagesPath));
+    console.log("Serving email-images from:", emailImagesPath);
+  }
+
   // Only serve index.html for non-API routes (SPA fallback)
   app.use((req, res, next) => {
     // Don't interfere with API routes
     if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
+    // Don't interfere with email-images
+    if (req.path.startsWith('/email-images/')) {
       return next();
     }
     

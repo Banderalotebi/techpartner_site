@@ -661,8 +661,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register AI Audit Engine routes
   app.use("/api/audits", auditEngineRouter);
-  // Register Email Handler routes (AI Sales Closer)
-  app.use("/api/email", emailHandlerRouter);
+  // Register Email Handler routes (AI Sales Closer)n  app.use("/api/email", emailHandlerRouter);
 
   // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {

@@ -1,5 +1,6 @@
 // server/routes/clay.ts - Clay.com B2B Outbound Engine Integration
 // The "Sniper Audit" Workflow - AI-powered website analysis and lead injection
+// PHASE 1: Tavily Real-Time Intelligence Integration
 
 import { Router } from "express";
 import { 
@@ -10,12 +11,47 @@ import {
 } from "../db/crm";
 import * as cheerio from "cheerio";
 import fetch from "node-fetch";
+import { tavily } from "@tavily/core";
+
+// Tavily client initialization
+const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY || "" });
 
 export const clayRouter = Router();
 
 // Ollama configuration
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
+
+// Tavily search function for real-time intelligence
+async function searchCompanyIntelligence(companyName: string, websiteUrl: string) {
+    try {
+        console.log(`🔍 [Tavily] Searching intelligence for: ${companyName}`);
+        
+        const searchQuery = `${companyName} recent news 2026 tech stack competitors Saudi Arabia`;
+        
+        const response = await tvly.search(searchQuery, {
+            searchDepth: "advanced",
+            maxResults: 5,
+            includeAnswer: true,
+            includeDomains: ["saudigazette.com.sa", "arabnews.com", "zawya.com", " Bloomberg.com", "linkedin.com"]
+        });
+        
+        console.log(`✅ [Tavily] Found ${response.results.length} intelligence sources`);
+        
+        return {
+            searchResults: response.results,
+            answer: response.answer,
+            query: searchQuery
+        };
+    } catch (error) {
+        console.error("❌ [Tavily] Search error:", error);
+        return {
+            searchResults: [],
+            answer: null,
+            query: companyName
+        };
+    }
+}
 
 // Secure Middleware: Only Clay can call these endpoints
 const requireClayAuth = (req: any, res: any, next: any) => {
@@ -70,19 +106,43 @@ clayRouter.post("/analyze", requireClayAuth, async (req, res) => {
             siteText = "Website content unavailable for analysis.";
         }
 
-        // 2. Feed to Llama 3.1 to generate an outbound email icebreaker
+        // 2. Tavily Real-Time Intelligence (PHASE 1)
+        console.log(`🌐 [Clay] Gathering real-time intelligence via Tavily...`);
+        const tavilyIntel = await searchCompanyIntelligence(companyName || "Unknown Company", targetUrl);
+        
+        // Format Tavily results for the prompt
+        const tavilyContext = tavilyIntel.answer 
+            ? `Recent News & Intelligence: ${tavilyIntel.answer}\n\nTop Findings:\n${tavilyIntel.searchResults.slice(0, 3).map((r: any, i: number) => `${i + 1}. ${r.title}: ${r.content.substring(0, 150)}...`).join('\n')}`
+            : "No recent news found.";
+
+        // 3. Feed to Llama 3.1 to generate the "Chaos to Success" narrative (PHASE 2)
         const prompt = `
 You are the Lead Tech Architect at TechPartner, a premium design & web development agency in Saudi Arabia.
-Analyze this text extracted from the website of ${companyName || 'this company'} (${targetUrl}):
+You are writing a personalized email audit for ${companyName || 'this company'} (${targetUrl}).
+
+WEBSITE CONTENT:
 "${siteText}"
 
-Write a highly personalized, 2-sentence cold email icebreaker. 
-Sentence 1: Compliment something specific about their business based on the text.
-Sentence 2: Gently point out a technical, SEO, or design flaw (e.g., outdated design, missing structured data, slow load speed) and position TechPartner as the premium solution to fix it.
-DO NOT sound like a bot. Be professional, direct, and authoritative.
-Keep it under 150 words total.`;
+REAL-TIME INTELLIGENCE (Tavily Search):
+${tavilyContext}
 
-        console.log(`🧠 [Clay] Sending to Llama 3.1 for analysis...`);
+TASK: Write a personalized "Chaos to Success" narrative. The recipient just registered a domain and needs to see both their current technical bottleneck AND the vision of massive traffic success.
+
+OUTPUT FORMAT - Return ONLY a valid JSON object:
+{
+  "personalized_audit_en": "3 sentences in English. Sentence 1: Acknowledge their business from the website text. Sentence 2: Identify ONE specific technical bottleneck (slow load, missing schema, mobile issues) using the Tavily intel as a hook. Sentence 3: Position TechPartner as the solution that transforms this chaos into 500K+ daily visitors.",
+  "personalized_audit_ar": "The exact same 3-sentence message translated into high-level, professional Arabic (Saudi dialect preferred).",
+  "subject_line": "A Digital Audit for ${companyName || 'Your Company'} | TechPartner"
+}
+
+RULES:
+- Be specific about their industry based on website content
+- Use the Tavily news as a hook (e.g., 'Given the recent expansion in your sector...')
+- English version: Professional, authoritative, under 100 words
+- Arabic version: Same meaning, professional tone, compelling
+- Output MUST be valid JSON only, no markdown, no extra text`;
+
+        console.log(`🧠 [Clay] Sending to Llama 3.1 for "Chaos to Success" narrative...`);
         
         const aiResponse = await fetch(`${OLLAMA_HOST}/api/generate`, {
             method: 'POST',
@@ -92,8 +152,8 @@ Keep it under 150 words total.`;
                 prompt: prompt,
                 stream: false,
                 options: {
-                    temperature: 0.4,
-                    num_predict: 200
+                    temperature: 0.5,
+                    num_predict: 800
                 }
             })
         });
@@ -103,13 +163,37 @@ Keep it under 150 words total.`;
         }
 
         const aiData = await aiResponse.json() as { response?: string };
-        const icebreaker = aiData.response?.trim() || "I noticed your website and think we could help enhance your digital presence. Our team at TechPartner specializes in building high-performance web solutions for businesses like yours.";
+        let parsedResponse;
+        
+        try {
+            // Try to parse the JSON response
+            const rawResponse = aiData.response?.trim() || "{}";
+            // Extract JSON if it's wrapped in markdown code blocks
+            const jsonMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/) || 
+                              rawResponse.match(/```\s*([\s\S]*?)\s*```/) ||
+                              [null, rawResponse];
+            const cleanJson = jsonMatch[1] || rawResponse;
+            parsedResponse = JSON.parse(cleanJson);
+        } catch (parseError) {
+            console.warn("⚠️ [Clay] Could not parse AI response as JSON, using fallback");
+            parsedResponse = {
+                personalized_audit_en: "I noticed your website and think we could help enhance your digital presence. Our team at TechPartner specializes in building high-performance web solutions for businesses like yours. Let us transform your digital chaos into success.",
+                personalized_audit_ar: "لاحظت موقعك الإلكتروني وأعتقد أننا يمكن أن نساعد في تحسين حضورك الرقمي. فريقنا في TechPartner متخصص في بناء حلول ويب عالية الأداء للشركات مثل شركتك. دعنا نحول فوضاك الرقمية إلى نجاح.",
+                subject_line: `A Digital Audit for ${companyName || 'Your Company'} | TechPartner`
+            };
+        }
 
-        console.log(`✅ [Clay] Generated icebreaker for ${companyName || 'company'}`);
+        console.log(`✅ [Clay] Generated "Chaos to Success" narrative for ${companyName || 'company'}`);
 
         res.status(200).json({ 
             success: true, 
-            personalized_icebreaker: icebreaker,
+            personalized_audit_en: parsedResponse.personalized_audit_en,
+            personalized_audit_ar: parsedResponse.personalized_audit_ar,
+            subject_line: parsedResponse.subject_line,
+            tavily_intelligence: tavilyIntel.searchResults.length > 0 ? {
+                sources_found: tavilyIntel.searchResults.length,
+                summary: tavilyIntel.answer?.substring(0, 200) + "..."
+            } : null,
             analyzed_url: targetUrl,
             company_name: companyName || null,
             timestamp: new Date().toISOString()
