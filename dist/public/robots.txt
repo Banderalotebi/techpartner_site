@@ -1,0 +1,55 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://techpartner.sa/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Block admin area
+Disallow: /admin/
+Disallow: /admin
+
+# Block user account pages (private)
+Disallow: /dashboard/
+Disallow: /dashboard
+Disallow: /profile/
+Disallow: /profile
+Disallow: /orders/
+Disallow: /orders
+
+# Block payment flow pages (private/sensitive)
+Disallow: /payment/
+Disallow: /payment
+Disallow: /payment-success/
+Disallow: /payment-success
+Disallow: /payment-cancelled/
+Disallow: /payment-cancelled
+
+# Block API endpoints (except public ones)
+Disallow: /api/
+Disallow: /api
+
+# Allow specific public API endpoints
+Allow: /api/services
+Allow: /api/services/
+Allow: /api/contact
+Allow: /api/contact/
+Allow: /api/health
+Allow: /api/health/
+
+# Block sensitive query parameters
+Disallow: /*?token=
+Disallow: /*?reset=
+Disallow: /*?auth=
+
+# Block auth pages
+Disallow: /reset-password/
+Disallow: /reset-password
+Disallow: /verify-email/
+Disallow: /verify-email
+Disallow: /login/
+Disallow: /login
+Disallow: /register/
+Disallow: /register
