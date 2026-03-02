@@ -306,11 +306,18 @@ router.post('/admin/payments/manual', requireAuth, requireAdmin, async (req: Aut
 });
 
 // SEO Command Center Routes
-import Database from 'better-sqlite3';
 import { exec } from 'child_process';
 
-// Initialize SEO database
-const seoDb = new Database('seo-prospects.db');
+// Lazy initialization of SEO database (SQLite only used for SEO features)
+let seoDb: any = null;
+const getSeoDb = () => {
+  if (!seoDb) {
+    // Dynamically import better-sqlite3 only when needed
+    const Database = require('better-sqlite3');
+    seoDb = new Database('seo-prospects.db');
+  }
+  return seoDb;
+};
 
 // --- SECURITY MIDDLEWARE ---
 const requireAdminSecret = (req: Request, res: Response, next: NextFunction) => {
@@ -326,8 +333,9 @@ const requireAdminSecret = (req: Request, res: Response, next: NextFunction) => 
 // --- SEO STATS ENDPOINT ---
 router.get('/admin/seo/stats', requireAdminSecret, (req, res) => {
   try {
-    const prospects = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1`).get() as {count: number};
-    const queue = seoDb.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1 AND draft_email IS NOT NULL`).get() as {count: number};
+    const db = getSeoDb();
+    const prospects = db.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1`).get() as {count: number};
+    const queue = db.prepare(`SELECT COUNT(*) as count FROM prospects WHERE approved = 1 AND draft_email IS NOT NULL`).get() as {count: number};
     
     res.json({
       totalProspects: prospects.count,
@@ -344,7 +352,8 @@ router.get('/admin/seo/stats', requireAdminSecret, (req, res) => {
 // --- SEO QUEUE ENDPOINT ---
 router.get('/admin/seo/queue', requireAdminSecret, (req, res) => {
   try {
-    const queue = seoDb.prepare(`
+    const db = getSeoDb();
+    const queue = db.prepare(`
       SELECT id, url, reason, draft_email, created_at 
       FROM prospects 
       WHERE approved = 1 AND draft_email IS NOT NULL
@@ -375,7 +384,7 @@ router.post('/admin/seo/trigger/:job', requireAdminSecret, (req, res) => {
 
   console.log(`[Admin] Manually triggering job: ${job}`);
   
-  exec(allowedJobs[job], (error, stdout, stderr) => {
+  exec(allowedJobs[job], (error: Error | null, stdout: string, stderr: string) => {
     if (error) {
       console.error(`Exec error: ${error}`);
       return res.status(500).json({ error: 'Script failed to run.', details: stderr });
@@ -389,7 +398,8 @@ router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
   const prospectId = req.params.id;
   
   try {
-    const prospect = seoDb.prepare(`SELECT * FROM prospects WHERE id = ?`).get(prospectId) as {
+    const db = getSeoDb();
+    const prospect = db.prepare(`SELECT * FROM prospects WHERE id = ?`).get(prospectId) as {
       id: number;
       url: string;
       draft_email: string;
@@ -402,7 +412,7 @@ router.post('/admin/seo/approve/:id', requireAdminSecret, async (req, res) => {
     // Email sending disabled - requires Zoho credentials
     // TODO: Implement email sending when credentials are available
     
-    seoDb.prepare(`UPDATE prospects SET approved = 2 WHERE id = ?`).run(prospectId);
+    db.prepare(`UPDATE prospects SET approved = 2 WHERE id = ?`).run(prospectId);
 
     console.log(`✅ [Admin] Prospect ${prospect.url} marked as approved (email sending disabled)`);
     res.json({ message: 'Prospect approved! Email sending is currently disabled.' });
