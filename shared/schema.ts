@@ -157,6 +157,25 @@ export const programmaticPages = pgTable("programmatic_pages", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// God Mode B2B Outbound Engine - Phase 5: Domain Hunter & AI Audit Engine
+export const domainLeads = pgTable("domain_leads", {
+  id: serial("id").primaryKey(),
+  domainName: text("domain_name").notNull().unique(),
+  keywordsMatched: text("keywords_matched").notNull(),
+  status: text("status").default("NEW"), // NEW, ENRICHED, CONTACTED
+  discoveredAt: timestamp("discovered_at").defaultNow(),
+});
+
+export const clientAudits = pgTable("client_audits", {
+  id: serial("id").primaryKey(),
+  uuid: text("uuid").notNull().unique(),
+  businessName: text("business_name").notNull(),
+  websiteUrl: text("website_url").notNull(),
+  pageSpeedScore: integer("page_speed_score"),
+  aiReportContent: text("ai_report_content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   isActive: true,
@@ -226,6 +245,16 @@ export const insertProgrammaticPageSchema = createInsertSchema(programmaticPages
   createdAt: true,
 });
 
+export const insertDomainLeadSchema = createInsertSchema(domainLeads).omit({
+  id: true,
+  discoveredAt: true,
+});
+
+export const insertClientAuditSchema = createInsertSchema(clientAudits).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type ServiceCategory = typeof serviceCategories.$inferSelect;
@@ -250,3 +279,9 @@ export type Prospect = typeof prospects.$inferSelect;
 export type InsertProspect = z.infer<typeof insertProspectSchema>;
 export type ProgrammaticPage = typeof programmaticPages.$inferSelect;
 export type InsertProgrammaticPage = z.infer<typeof insertProgrammaticPageSchema>;
+
+export type DomainLead = typeof domainLeads.$inferSelect;
+export type InsertDomainLead = z.infer<typeof insertDomainLeadSchema>;
+
+export type ClientAudit = typeof clientAudits.$inferSelect;
+export type InsertClientAudit = z.infer<typeof insertClientAuditSchema>;

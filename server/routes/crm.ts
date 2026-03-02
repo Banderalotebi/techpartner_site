@@ -10,6 +10,10 @@ import {
   getCRMStats,
   exportLeadsToCSV
 } from "../db/crm";
+import { db } from "../db";
+import { domainLeads } from "../../shared/schema";
+import { desc } from "drizzle-orm";
+import { runDomainHunt } from "../../scripts/domain-hunter";
 import { randomUUID } from "crypto";
 import { emailService } from "../email";
 import { requireAdmin, simpleAuth } from "../middleware/auth";
@@ -278,5 +282,44 @@ crmRouter.patch("/leads/:email/score", requireAdmin, async (req, res) => {
     } catch (error) {
         console.error("Failed to update lead score:", error);
         res.status(500).json({ error: "Database error." });
+    }
+});
+
+// Fetch Domain Leads (Admin only)
+crmRouter.get("/domain-leads", requireAdmin, async (req, res) => {
+    try {
+        let leads: any[] = [];
+        
+        if (db) {
+            leads = await db.select().from(domainLeads).orderBy(desc(domainLeads.discoveredAt)).limit(100);
+        } else {
+            // SQLite fallback
+            const Database = (await import("better-sqlite3")).default;
+            const sqliteDb = new Database('data/techpartner.db');
+            leads = sqliteDb.prepare('SELECT * FROM domain_leads ORDER BY discovered_at DESC LIMIT 100').all() as any[];
+            sqliteDb.close();
+        }
+        
+        res.json(leads.map(lead => ({
+            id: lead.id,
+            domainName: lead.domainName || lead.domain_name,
+            keywordsMatched: lead.keywordsMatched || lead.keywords_matched,
+            status: lead.status,
+            discoveredAt: lead.discoveredAt || lead.discovered_at
+        })));
+    } catch (error) {
+        console.error("Failed to fetch domain leads:", error);
+        res.status(500).json({ error: "Failed to fetch domains" });
+    }
+});
+
+// Trigger Manual Domain Hunt (Admin only)
+crmRouter.post("/trigger-domain-hunt", requireAdmin, async (req, res) => {
+    try {
+        const count = await runDomainHunt();
+        res.json({ success: true, count, message: `Domain hunt complete. Found ${count} new leads.` });
+    } catch (error) {
+        console.error("Domain hunt failed:", error);
+        res.status(500).json({ error: "Hunt failed", details: error instanceof Error ? error.message : 'Unknown error' });
     }
 });

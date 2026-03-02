@@ -46,7 +46,9 @@ import {
   HardDrive,
   Flame,
   Thermometer,
-  Snowflake
+  Snowflake,
+  ExternalLink,
+  Globe
 } from "lucide-react";
 import type { Order, Payment, ProjectBrief, User, Inquiry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -230,6 +232,10 @@ export default function AdminPage() {
   const [crmStats, setCrmStats] = useState<any>(null);
   const [vitalsLoading, setVitalsLoading] = useState(true);
   
+  // Domain Radar State
+  const [domainLeads, setDomainLeads] = useState<any[]>([]);
+  const [domainLeadsLoading, setDomainLeadsLoading] = useState(false);
+  
   // God Mode: Autonomous/Manual Toggle
   const [autonomousMode, setAutonomousMode] = useState(() => {
     // Load from localStorage or default to false (Manual mode)
@@ -283,6 +289,54 @@ export default function AdminPage() {
     // Refresh every 30 seconds
     const interval = setInterval(fetchVitals, 30000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Fetch Domain Leads
+  const fetchDomainLeads = async () => {
+    setDomainLeadsLoading(true);
+    try {
+      const token = localStorage.getItem('authToken');
+      const res = await fetch('/api/crm/domain-leads', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDomainLeads(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch domain leads:', error);
+    } finally {
+      setDomainLeadsLoading(false);
+    }
+  };
+
+  // Trigger Domain Hunt
+  const triggerDomainHunt = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const res = await fetch('/api/crm/trigger-domain-hunt', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        toast({
+          title: "Domain Hunt Complete",
+          description: `Found ${data.count} new leads`,
+        });
+        fetchDomainLeads();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to run domain hunt",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchDomainLeads();
   }, []);
 
   // Fetch all data
@@ -780,14 +834,15 @@ The article should be informative, authoritative, and provide real value to read
 
         {/* Main Content */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-8">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="payments">Payments ({payments.length})</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
             <TabsTrigger value="briefs">Project Briefs ({projectBriefs.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
-            <TabsTrigger value="blog">Blog Management</TabsTrigger>
+            <TabsTrigger value="domains">Domain Radar</TabsTrigger>
+            <TabsTrigger value="blog">Blog</TabsTrigger>
           </TabsList>
 
           {/* Analytics Tab */}
@@ -1368,237 +1423,98 @@ The article should be informative, authoritative, and provide real value to read
             </Card>
           </TabsContent>
 
-          {/* Blog Management Tab */}
-          <TabsContent value="blog" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Article Generation Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <PenTool className="mr-2" size={20} />
-                    AI Article Generator
-                  </CardTitle>
-                  <CardDescription>Generate high-quality blog articles using Gemini AI</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Manual Article Generation */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900">Custom Article Generation</h4>
-                    <div className="grid grid-cols-1 gap-4">
-                      <Input
-                        placeholder="Article Title"
-                        value={articleTitle}
-                        onChange={(e) => setArticleTitle(e.target.value)}
-                      />
-                      <Input
-                        placeholder="Topic Focus"
-                        value={articleCategory}
-                        onChange={(e) => setArticleCategory(e.target.value)}
-                      />
-                      <Input
-                        placeholder="Target Keyword"
-                        value={targetKeyword}
-                        onChange={(e) => setTargetKeyword(e.target.value)}
-                      />
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input
-                          placeholder="Word Count"
-                          type="number"
-                          value={targetWordCount}
-                          onChange={(e) => setTargetWordCount(Number(e.target.value))}
-                        />
-                        <Input
-                          placeholder="Author"
-                          value={articleAuthor}
-                          onChange={(e) => setArticleAuthor(e.target.value)}
-                        />
-                      </div>
-                      <Textarea
-                        placeholder="Article Tags (comma separated)"
-                        value={articleTags}
-                        onChange={(e) => setArticleTags(e.target.value)}
-                        rows={2}
-                      />
-                      <Button
-                        onClick={() => generateArticleWithGemini({
-                          title: articleTitle,
-                          topicFocus: articleCategory,
-                          targetKeyword: targetKeyword,
-                          wordCount: `${targetWordCount}`,
-                        })}
-                        disabled={isGenerating || !articleTitle || !articleCategory}
-                        className="w-full"
-                      >
-                        {isGenerating ? (
-                          <>
-                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                            Generating...
-                          </>
-                        ) : (
-                          <>
-                            <Wand2 className="mr-2" size={16} />
-                            Generate Article with AI
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Generated Content Preview */}
-                  {generatedContent && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-semibold text-gray-900">Generated Article</h4>
-                        <Badge variant="outline" className="text-green-600">
-                          {generatedContent.split(' ').length} words
-                        </Badge>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-lg border max-h-64 overflow-y-auto">
-                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                          {generatedContent}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button onClick={saveArticle} size="sm">
-                          <Save className="mr-2" size={14} />
-                          Save Article
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => copyToClipboard(generatedContent)}
-                          size="sm"
-                        >
-                          <Copy className="mr-2" size={14} />
-                          Copy Content
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => setGeneratedContent("")}
-                          size="sm"
-                        >
-                          <Trash2 className="mr-2" size={14} />
-                          Clear
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Blog Calendar Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Calendar className="mr-2" size={20} />
-                    Content Calendar
-                  </CardTitle>
-                  <CardDescription>Planned articles from your content strategy</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {blogCalendarData.map((article, index) => (
-                      <div key={index} className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <h5 className="font-medium text-gray-900 text-sm leading-tight mb-1">
-                              {article.title}
-                            </h5>
-                            <div className="text-xs text-gray-600 mb-2">
-                              <span className="font-medium">Topic:</span> {article.topicFocus}
-                            </div>
-                            <div className="flex flex-wrap gap-1 text-xs">
-                              <Badge variant="outline" className="text-blue-600">
-                                {article.targetKeyword}
-                              </Badge>
-                              <Badge variant="outline" className="text-green-600">
-                                {article.wordCount} words
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="text-xs text-gray-500 ml-2">
-                            {article.time}
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => generateArticleWithGemini(article)}
-                          disabled={isGenerating}
-                          className="w-full mt-2"
-                        >
-                          <Wand2 className="mr-2" size={14} />
-                          Generate This Article
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Blog Analytics */}
+          {/* Domain Radar Tab */}
+          <TabsContent value="domains" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BookOpen className="mr-2" size={20} />
-                  Blog Analytics & Management
-                </CardTitle>
-                <CardDescription>Track performance and manage your content</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center">
+                      <Globe className="mr-2" size={20} />
+                      Domain Radar
+                    </CardTitle>
+                    <CardDescription>Discover newly registered domains matching your target keywords</CardDescription>
+                  </div>
+                  <Button onClick={triggerDomainHunt} disabled={domainLeadsLoading}>
+                    <RefreshCw className={`mr-2 h-4 w-4 ${domainLeadsLoading ? 'animate-spin' : ''}`} />
+                    Scan Now
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <div className="text-sm font-medium text-blue-600">Total Articles</div>
-                    <div className="text-2xl font-bold text-blue-900">{blogCalendarData.length}</div>
-                    <div className="text-xs text-blue-600">In content calendar</div>
-                  </div>
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <div className="text-sm font-medium text-green-600">Generated</div>
-                    <div className="text-2xl font-bold text-green-900">
-                      {generatedContent ? 1 : 0}
-                    </div>
-                    <div className="text-xs text-green-600">Ready to publish</div>
-                  </div>
-                  <div className="bg-purple-50 p-4 rounded-lg">
-                    <div className="text-sm font-medium text-purple-600">Avg. Word Count</div>
-                    <div className="text-2xl font-bold text-purple-900">
-                      {Math.round(blogCalendarData.reduce((sum, article) => 
-                        sum + parseInt(article.wordCount.replace(/[^\d]/g, '')), 0) / blogCalendarData.length)}
-                    </div>
-                    <div className="text-xs text-purple-600">Words per article</div>
-                  </div>
-                  <div className="bg-orange-50 p-4 rounded-lg">
-                    <div className="text-sm font-medium text-orange-600">Categories</div>
-                    <div className="text-2xl font-bold text-orange-900">
-                      {new Set(blogCalendarData.map(article => article.topicFocus)).size}
-                    </div>
-                    <div className="text-xs text-orange-600">Unique topics</div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900">Quick Actions</h4>
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" size="sm">
-                      <Download className="mr-2" size={14} />
-                      Export Calendar
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Upload className="mr-2" size={14} />
-                      Import Articles
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <BarChart3 className="mr-2" size={14} />
-                      View Analytics
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Calendar className="mr-2" size={14} />
-                      Schedule Posts
-                    </Button>
-                  </div>
+                <div className="border rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Domain Name</TableHead>
+                        <TableHead>Keywords Matched</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Discovered</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {domainLeadsLoading ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-8">
+                            <RefreshCw className="mx-auto h-6 w-6 animate-spin" />
+                            <p className="mt-2 text-sm text-gray-500">Scanning radar...</p>
+                          </TableCell>
+                        </TableRow>
+                      ) : domainLeads.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-8">
+                            <Globe className="mx-auto h-12 w-12 text-gray-400" />
+                            <p className="mt-2 text-gray-500">No domains discovered yet</p>
+                            <p className="text-sm text-gray-400">Click "Scan Now" to find new leads</p>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        domainLeads.map((lead: any) => (
+                          <TableRow key={lead.id}>
+                            <TableCell className="font-medium">{lead.domainName}</TableCell>
+                            <TableCell>
+                              <div className="flex gap-1 flex-wrap">
+                                {lead.keywordsMatched?.split(',').map((kw: string) => (
+                                  <Badge key={kw} variant="secondary" className="text-xs">{kw.trim()}</Badge>
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={
+                                lead.status === 'NEW' ? 'bg-blue-100 text-blue-800' :
+                                lead.status === 'ENRICHED' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-green-100 text-green-800'
+                              }>
+                                {lead.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-muted-foreground text-sm">
+                              {new Date(lead.discoveredAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => window.open(`http://${lead.domainName}`, '_blank')}
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Blog Management Tab */}
+          <TabsContent value="blog" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            </div>
           </TabsContent>
         </Tabs>
       </div>

@@ -23,6 +23,8 @@ import { pseoRouter } from "./routes/pseo";
 import { sitemapRouter } from "./routes/sitemap";
 import { webhookRouter } from "./routes/webhooks";
 import { contentRouter } from "./routes/content";
+import { clayRouter } from "./routes/clay";
+import { auditEngineRouter } from "./routes/audit-engine";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { db } from "./db";
@@ -652,6 +654,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register Content Management routes (Article Generation)
   app.use("/api/content", contentRouter);
+
+  // Register Clay.com B2B Outbound Engine routes
+  app.use("/api/clay", clayRouter);
+
+  // Register AI Audit Engine routes
+  app.use("/api/audits", auditEngineRouter);
 
   // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {
