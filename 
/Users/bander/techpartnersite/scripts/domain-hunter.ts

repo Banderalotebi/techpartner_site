@@ -1,0 +1,335 @@
+
+// scripts/domain-hunter.ts - The CRM Domain Extractor (Arabic + English)
+// Batch processes domains and extracts company data (email, phone, name, location)
+// Now with Arabic keywords and daily domain generation
+
+import { db } from "../server/db";
+import { domainLeads } from "../shared/schema";
+import { eq, and, gt } from "drizzle-orm";
+import * as cheerio from "cheerio";
+import { z } from "zod";
+
+// Zod schema for extracted data validation
+const ExtractedDataSchema = z.object({
+  companyName: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+  location: z.string().optional(),
+});
+
+type ExtractedData = z.infer<typeof ExtractedDataSchema>;
+
+// Configuration
+const BATCH_SIZE = 15;
+const DELAY_BETWEEN_BATCHES = 3000; // 3 seconds
+const DELAY_BETWEEN_REQUESTS = 800; // 800ms between requests
+const MAX_NEW_DOMAINS_PER_DAY = 20; // New domains to generate daily
+
+// Arabic + English keywords for Saudi market
+const TARGET_KEYWORDS = {
+  // English keywords
+  english: [
+    "riyadh", "jeddah", "dammam", "saudi", "ksa",
+    "clinic", "dental", "dentalcare", "dentist",
+    "realestate", "properties", "property",
+    "tech", "saas", "app", "web", "design",
+    "marketing", "digital", "agency",
+    "hospital", "medical", "health", "clinic",
+    "restaurant", "cafe", "coffee", "food",
+    "shop", "store", "mall", "retail",
+    "salon", "spa", "beauty", "fitness", "gym",
+    "construction", "architecture", "interior",
+    "education", "school", "university", "training",
+    "logistics", "transport", "shipping",
+    "hotel", "tourism", "travel",
+    "finance", "accounting", "legal",
+    "software", "development", "it", "solutions"
+  ],
+  // Arabic keywords (transliterated)
+  arabic: [
+    "riyadh", "jeddah", "dammam", "khobar", "mekka", "madinah",
+    "clinic", "عيادة", "مستشفى", "hospital",
+    "dental", "اسنان", "dentist",
+    "عقارات", "realestate", "property",
+    "tech", "تقنية", "تكنولوجيا", "technology",
+    "marketing", "تسويق", "digital", "رقمي",
+    "design", "تصميم", "تصميم مواقع",
+    "web", "مواقع", "موقع", "website",
+    "restaurant", "مطعم", "cafe", "قهوة", "coffee",
+    "shop", "متجر", "store", "تسوق",
+    "salon", "صالة", "beauty", "جمال",
+    "medical", "طبي", "health", "صحة",
+    "education", "تعليم", "training", "تدريب",
+    "construction", "بناء", "architecture", "هندسة",
+    "hotel", "فندق", "tourism", "سياحة",
+    "saudi", "السعودية", "ksa", "gulf", "الخليج"
+  ]
+};
+
+// Domain TLDs for Saudi market
+const SAUDI_TLDS = [".sa", ".com", ".net", ".org"];
+
+// Industry combinations with cities
+const INDUSTRIES = [
+  "dental", "clinic", "hospital", "medical", "health",
+  "realestate", "property", "properties",
+  "restaurant", "cafe", "food", "coffee",
+  "tech", "software", "web", "design", "digital",
+  "marketing", "agency", "advertising",
+  "shop", "store", "retail", "mall",
+  "salon", "spa", "beauty", "fitness", "gym",
+  "construction", "architecture", "interior",
+  "education", "school", "training",
+  "hotel", "tourism", "travel",
+  "finance", "accounting", "legal"
+];
+
+const CITIES = [
+  "riyadh", "jeddah", "dammam", "khobar", "alKhobar",
+  "mecca", "makkah", "medina", "madinah",
+  "qatif", "jubail", "alkhobar", "rastanura"
+];
+
+// Generate new domain names dynamically
+function generateNewDomains(count: number): string[] {
+  const domains: string[] = [];
+  const usedDomains = new Set<string>();
+  
+  for (let i = 0; i < count * 3; i++) {
+    if (domains.length >= count) break;
+    
+    const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+    const industry = INDUSTRIES[Math.floor(Math.random() * INDUSTRIES.length)];
+    const tld = SAUDI_TLDS[Math.floor(Math.random() * SAUDI_TLDS.length)];
+    
+    // Generate variations
+    const variations = [
+      `${city}-${industry}${tld}`,
+      `${industry}-${city}${tld}`,
+      `${city}${industry}${tld}`,
+      `${industry}${city}${tld}`,
+      `best-${industry}-in-${city}${tld}`,
+      `${industry}-company-${city}${tld}`,
+      `${city}-${industry}-center${tld}`,
+    ];
+    
+    for (const domain of variations) {
+      if (domains.length >= count) break;
+      if (!usedDomains.has(domain)) {
+        usedDomains.add(domain);
+        domains.push(domain);
+      }
+    }
+  }
+  
+  return domains;
+}
+
+// Helper: Delay function
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Helper: Extract company data from a website
+async function extractCompanyData(domain: string): Promise<ExtractedData> {
+  const url = domain.startsWith('http') ? domain : `https://${domain}`;
+  
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5,ar;q=0.3',
+      },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!response.ok) {
+      return {};
+    }
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    // Extract email
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    const emails = $('body').text().match(emailRegex) || [];
+    const email = emails[0];
+
+    // Extract Saudi phone (multiple patterns)
+    const phoneRegex = /(\+?966|0)[5-9][0-9]{8}/g;
+    const phones = $('body').text().match(phoneRegex) || [];
+    const phone = phones[0];
+
+    // Extract company name
+    const companyName = 
+      $('meta[property="og:site_name"]').attr('content') ||
+      $('meta[name="application-name"]').attr('content') ||
+      $('title').text().split('|')[0].split('-')[0].trim() ||
+      $('h1').first().text().trim();
+
+    // Extract Saudi location
+    const locationRegex = /(Riyadh|Jeddah|Dammam|Khobar|Al Khobar|Mecca|Makkah|Medina|Madinah|Al-Ahsa|Qatif|Jubail)[,\s]?(Saudi Arabia|KSA)?/gi;
+    const locations = $('body').text().match(locationRegex) || [];
+    const location = locations[0];
+
+    const extracted: ExtractedData = {
+      companyName: companyName || undefined,
+      email: email || undefined,
+      phone: phone || undefined,
+      location: location || undefined,
+    };
+
+    return ExtractedDataSchema.safeParse(extracted).data || extracted;
+  } catch (error) {
+    return {};
+  }
+}
+
+// Helper: Get matched keywords
+function getMatchedKeywords(domain: string): string[] {
+  const domainLower = domain.toLowerCase();
+  const allKeywords = [...TARGET_KEYWORDS.english, ...TARGET_KEYWORDS.arabic];
+  return allKeywords.filter(kw => domainLower.includes(kw.toLowerCase()));
+}
+
+// Helper: Save extracted data to database
+async function saveExtractedData(
+  domain: string, 
+  data: ExtractedData, 
+  keywords: string[]
+): Promise<void> {
+  try {
+    const existing = await db
+      .select()
+      .from(domainLeads)
+      .where(eq(domainLeads.domainName, domain))
+      .limit(1);
+
+    const extractedAt = new Date();
+    
+    if (existing.length > 0) {
+      await db
+        .update(domainLeads)
+        .set({
+          email: data.email || existing[0].email,
+          phone: data.phone || existing[0].phone,
+          companyName: data.companyName || existing[0].companyName,
+          location: data.location || existing[0].location,
+          extractedAt,
+          status: (data.email || data.phone) ? 'EXTRACTED' : 'PENDING',
+        })
+        .where(eq(domainLeads.domainName, domain));
+    } else {
+      await db
+        .insert(domainLeads)
+        .values({
+          domainName: domain,
+          keywordsMatched: keywords.join(', '),
+          email: data.email || null,
+          phone: data.phone || null,
+          companyName: data.companyName || null,
+          location: data.location || null,
+          extractedAt,
+          status: (data.email || data.phone) ? 'EXTRACTED' : 'NEW',
+        });
+    }
+  } catch (error) {
+    console.log(`  ❌ Database error for ${domain}:`, error instanceof Error ? error.message : 'Unknown error');
+  }
+}
+
+// Helper: Get domains processed today
+async function getDomainsProcessedToday(): Promise<number> {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const result = await db
+      .select({ count: domainLeads.id })
+      .from(domainLeads)
+      .where(gt(domainLeads.extractedAt, today));
+    
+    return result.length;
+  } catch {
+    return 0;
+  }
+}
+
+// Main batch processing function
+export async function runDomainHunt() {
+  console.log("🚀 Starting CRM Domain Extractor (Arabic + English)...");
+  
+  // Get or generate domains
+  const newDomains = generateNewDomains(MAX_NEW_DOMAINS_PER_DAY);
+  const todayCount = await getDomainsProcessedToday();
+  
+  console.log(`📊 Today processed: ${todayCount} domains`);
+  console.log(`📊 New domains to process: ${newDomains.length}`);
+  console.log(`🔍 Keywords: ${TARGET_KEYWORDS.english.length} English + ${TARGET_KEYWORDS.arabic.length} Arabic`);
+  console.log("=" .repeat(60));
+
+  let processedCount = 0;
+  let successCount = 0;
+
+  // Process domains in batches
+  for (let i = 0; i < newDomains.length; i += BATCH_SIZE) {
+    const batch = newDomains.slice(i, i + BATCH_SIZE);
+    const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+    const totalBatches = Math.ceil(newDomains.length / BATCH_SIZE);
+
+    console.log(`\n📦 Batch ${batchNumber}/${totalBatches} - Processing ${batch.length} domains...`);
+
+    for (const domain of batch) {
+      processedCount++;
+      
+      const matchedKeywords = getMatchedKeywords(domain);
+
+      if (matchedKeywords.length === 0) {
+        console.log(`  ⏭️  [${processedCount}/${newDomains.length}] ${domain} - No keywords matched, skipping`);
+        continue;
+      }
+
+      console.log(`  🔍 [${processedCount}/${newDomains.length}] Extracting: ${domain}`);
+
+      try {
+        const extractedData = await extractCompanyData(domain);
+        await delay(DELAY_BETWEEN_REQUESTS);
+        await saveExtractedData(domain, extractedData, matchedKeywords);
+
+        const status = extractedData.email || extractedData.phone ? '✅' : '⚠️';
+        console.log(`  ${status} [${processedCount}/${newDomains.length}] ${domain}`);
+        
+        if (extractedData.email || extractedData.phone) {
+          successCount++;
+          console.log(`     📧 ${extractedData.email || 'N/A'} | 📞 ${extractedData.phone || 'N/A'}`);
+        }
+      } catch (error) {
+        console.log(`  ❌ Error: ${domain} - ${error instanceof Error ? error.message : 'Unknown'}`);
+      }
+    }
+
+    if (i + BATCH_SIZE < newDomains.length) {
+      console.log(`  😴 Waiting ${DELAY_BETWEEN_BATCHES}ms...`);
+      await delay(DELAY_BETWEEN_BATCHES);
+    }
+  }
+
+  console.log("\n" + "=" .repeat(60));
+  console.log("🎉 Domain Extraction Complete!");
+  console.log(`📊 Total Processed: ${processedCount}`);
+  console.log(`✅ Successfully Extracted: ${successCount}`);
+  console.log("=".repeat(60));
+  
+  return successCount;
+}
+
+// Run if called directly
+runDomainHunt()
+  .then(count => {
+    console.log(`\n🏁 Final: ${count} leads extracted today`);
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error("❌ Fatal error:", err);
+    process.exit(1);
+  });
+

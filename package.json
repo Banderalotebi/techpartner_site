@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
     "build": "vite build",
-    "start": "NODE_ENV=production tsx server/index.ts",
-    "deploy": "tsx scripts/deploy.ts"
+    "validate": "bash scripts/validate-build.sh",
+    "deploy:local": "npm run build && npm run validate && tsx scripts/deploy.ts",
+    "deploy:atomic": "bash scripts/deploy-atomic.sh",
+    "start": "NODE_ENV=production tsx server/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.1000.0",

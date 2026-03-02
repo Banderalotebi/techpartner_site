@@ -159,9 +159,12 @@ export default function Login({ onLogin }: LoginProps) {
 
         {/* Admin Test Credentials */}
         <div className="mt-6 p-4 bg-gray-100 rounded-md">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Test Credentials:</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Admin Credentials:</h3>
           <p className="text-xs text-gray-600">
-            For admin access, you can create an admin user by registering and then manually updating the database to set isAdmin = true
+            Email: <strong>info@techpartner.sa</strong>
+          </p>
+          <p className="text-xs text-gray-600">
+            Password: <strong>Admin@123</strong>
           </p>
         </div>
       </div>
