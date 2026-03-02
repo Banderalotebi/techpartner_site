@@ -52,6 +52,9 @@ function Router() {
   );
 }
 
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <AuthProvider>
           <TooltipProvider>

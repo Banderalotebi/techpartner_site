@@ -32,7 +32,7 @@ if (!existsSync(KEY.replace('~', process.env.HOME || ''))) {
 
 // 1. Deploy server files
 console.log('📦 Copying files...');
-runLocal(`scp -i ${KEY} -r server package.json ecosystem.config.cjs ${SERVER}:${REMOTE_PATH}/`);
+runLocal(`scp -i ${KEY} -r server scripts shared package.json ecosystem.config.cjs ${SERVER}:${REMOTE_PATH}/`);
 
 // 2. Install dependencies and restart
 console.log('\n🔧 Installing dependencies...');
