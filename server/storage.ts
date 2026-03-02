@@ -12,16 +12,8 @@ import { eq } from "drizzle-orm";
 // Import SQLiteStorage for local development
 import { SQLiteStorage } from "./storage-sqlite";
 
-// Conditional import for PostgreSQL (only in production)
-let db: any;
-try {
-  if (process.env.NODE_ENV !== 'development' && process.env.DATABASE_URL) {
-    const { db: database } = require("./db");
-    db = database;
-  }
-} catch (error) {
-  // Database not available in development mode
-}
+// PostgreSQL db module - will be loaded dynamically if DATABASE_URL is set
+let db: any = null;
 
 export interface IStorage {
   // Users
@@ -832,5 +824,55 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use SQLiteStorage for persistent data across restarts
-export const storage = new SQLiteStorage();
+// Storage initialization - async to support dynamic imports
+let storageInstance: IStorage | null = null;
+let storageInitialized = false;
+
+export async function initializeStorage(): Promise<IStorage> {
+  if (storageInitialized && storageInstance) {
+    return storageInstance;
+  }
+
+  console.log(`[Storage] DATABASE_URL check: ${process.env.DATABASE_URL ? 'SET' : 'NOT SET'}`);
+
+  if (process.env.DATABASE_URL) {
+    try {
+      // Dynamic import for ES modules compatibility
+      const dbModule = await import("./db");
+      db = dbModule.db;
+      console.log('✅ [Storage] PostgreSQL db module loaded successfully');
+      
+      if (db) {
+        console.log('✅ [Storage] Using PostgreSQL DatabaseStorage');
+        storageInstance = new DatabaseStorage();
+        storageInitialized = true;
+        return storageInstance;
+      }
+    } catch (error) {
+      console.error('❌ [Storage] Failed to load PostgreSQL db module:', error);
+      db = null;
+    }
+  }
+
+  console.log('ℹ️  [Storage] Using SQLiteStorage fallback');
+  storageInstance = new SQLiteStorage();
+  storageInitialized = true;
+  return storageInstance;
+}
+
+// For backward compatibility - initialize immediately but async
+// This maintains the existing export pattern while fixing the ES module issue
+initializeStorage().catch(err => {
+  console.error('❌ [Storage] Failed to initialize storage:', err);
+  process.exit(1);
+});
+
+// Export a proxy that ensures storage is initialized before use
+export const storage = new Proxy({} as IStorage, {
+  get(target, prop) {
+    if (!storageInstance) {
+      throw new Error('Storage not initialized yet. Use initializeStorage() to ensure storage is ready.');
+    }
+    return (storageInstance as any)[prop];
+  }
+});

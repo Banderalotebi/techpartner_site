@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
-    <!-- ── Google Tag Manager ─────────────────────────────────────────────── -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <!-- ── Preconnect Hints ──────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+    
+    <!-- ── Google Tag Manager (async) ────────────────────────────────────── -->
+    <script defer>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -53,9 +59,9 @@
     <meta name="twitter:description" content="Professional logo design, brand identity, web design & custom development in Saudi Arabia. Starting from 1,500 SAR." />
     <meta name="twitter:image" content="https://techpartner.sa/og-image.png" />
 
-    <!-- ── Google Analytics 4 ───────────────────────────────────────────────── -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
-    <script>
+    <!-- ── Google Analytics 4 (deferred) ──────────────────────────────────── -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
+    <script defer>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -206,7 +212,5 @@
     
     <div id="root"></div>
     <script type="module" src="./main.tsx"></script>
-    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
-    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>
 </html>
