@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AdminRoute } from "@/components/AdminRoute";
 import Home from "@/pages/home";
 import CategoryPage from "@/pages/category";
 import LogoIdentityPage from "@/pages/logo-identity";
@@ -44,7 +45,13 @@ function Router() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/blog" component={BlogPage} />
-      <Route path="/admin" component={AdminPage} />
+      <Route path="/admin">
+        {() => (
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
+        )}
+      </Route>
       <Route path="/payment/success" component={PaymentSuccess} />
       <Route path="/category/:slug" component={CategoryPage} />
       <Route component={NotFound} />
