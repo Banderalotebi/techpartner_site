@@ -112,23 +112,42 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
-// Admin authentication middleware - Simple token-based (no DB lookup)
-export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+// Admin authentication middleware - Supports both ADMIN_SECRET and JWT with admin role
+export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    // Check for token in Authorization header (Bearer admin123) OR x-admin-token
+    // Check for token in Authorization header (Bearer token) OR x-admin-token
     const authHeader = req.headers.authorization;
     const adminToken = req.headers["x-admin-token"];
     
     const providedToken = (authHeader && authHeader.split(" ")[1]) || adminToken;
     const SECRET = process.env.ADMIN_SECRET || "admin123";
 
-    if (!providedToken || providedToken !== SECRET) {
-      console.log('❌ Admin access denied: Invalid or missing token');
-      return res.status(401).json({ error: "Access denied. Invalid or missing token." });
+    // First check if it's the ADMIN_SECRET token
+    if (providedToken === SECRET) {
+      console.log('✅ Admin access granted via ADMIN_SECRET token');
+      return next();
     }
-    
-    console.log('✅ Admin access granted via token');
-    next();
+
+    // Otherwise, check if it's a valid JWT with admin role
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const decoded = verifyToken(token);
+      
+      // Check if user has admin role
+      if (decoded.role === 'admin') {
+        console.log('✅ Admin access granted via JWT (role: admin)');
+        req.user = {
+          id: decoded.id,
+          email: decoded.email,
+          username: decoded.username,
+          role: decoded.role,
+        };
+        return next();
+      }
+    }
+
+    console.log('❌ Admin access denied: Invalid or missing token');
+    return res.status(401).json({ error: "Access denied. Invalid or missing token." });
   } catch (error) {
     console.error('Admin auth middleware error:', error);
     res.status(403).json({ error: 'Access denied. Admin privileges required.' });
