@@ -4,7 +4,7 @@ import path from "path";
 
 export function serveStaticFixed(app: Express) {
   const distPath = path.resolve(process.cwd(), "dist", "public");
-  const clientPath = path.join(distPath, "client");
+  const clientPath = distPath;
   const indexPath = path.join(clientPath, "index.html");
 
   console.log("Current working directory:", process.cwd());
