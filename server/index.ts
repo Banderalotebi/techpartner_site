@@ -36,6 +36,11 @@ async function bootstrap() {
   ]);
   
   const app = express();
+  
+  // Enable gzip/brotli compression for all responses
+  const { default: compression } = await import("compression");
+  app.use(compression());
+  
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 

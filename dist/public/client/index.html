@@ -53,9 +53,23 @@
     <meta name="twitter:description" content="Professional logo design, brand identity, web design & custom development in Saudi Arabia. Starting from 1,500 SAR." />
     <meta name="twitter:image" content="https://techpartner.sa/og-image.png" />
 
-    <!-- ── Google Analytics 4 ─────────────────────────────────────────────── -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
+    <!-- ── Partytown Configuration ────────────────────────────────────────── -->
     <script>
+      partytown = {
+        forward: ['dataLayer.push'],
+        resolveUrl: (url) => {
+          // Keep Google scripts on main thread for compatibility
+          if (url.hostname === 'www.googletagmanager.com') {
+            return url;
+          }
+          return url;
+        }
+      };
+    </script>
+
+    <!-- ── Google Analytics 4 (Offloaded to Web Worker via Partytown) ─────── -->
+    <script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-6X1LQ695SK"></script>
+    <script type="text/partytown">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -197,8 +211,12 @@
       ]
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DNG36iAe.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DsNKIH5Q.css">
+    <script type="module" crossorigin src="/assets/index-rVg0kfmV.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-core-qq2Ad1Wc.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-markdown-Cok0-5mT.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-fwfPfzfU.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ui-CSqCgoPn.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-B7S3fv4y.css">
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
