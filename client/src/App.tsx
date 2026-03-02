@@ -19,6 +19,8 @@ import BlogPage from "@/pages/blog";
 import AdminPage from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import NotFound from "@/pages/not-found";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 function Router() {
   return (
@@ -50,12 +52,6 @@ function Router() {
   );
 }
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <AuthProvider>
           <TooltipProvider>

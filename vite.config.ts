@@ -26,6 +26,10 @@ export default defineConfig({
       "@shared": path.resolve(__dirname, "shared"),
       "@assets": path.resolve(__dirname, "assets_temp"),
     },
+    dedupe: ['react', 'react-dom'],
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
   },
   build: {
     target: 'esnext',
@@ -36,20 +40,9 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // Keep React and all React-related libraries together to avoid runtime errors
-            if (id.includes('react') || id.includes('react-dom') || id.includes('framer-motion') || id.includes('lucide-react')) {
-              return 'vendor-react';
-            }
-            if (id.includes('tailwind') || id.includes('radix-ui') || id.includes('class-variance') || id.includes('clsx') || id.includes('tailwind-merge')) {
-              return 'vendor-ui';
-            }
-            if (id.includes('react-markdown') || id.includes('remark') || id.includes('rehype')) {
-              return 'vendor-markdown';
-            }
-            if (id.includes('@tanstack') || id.includes('axios') || id.includes('zod') || id.includes('wouter')) {
-              return 'vendor-data';
-            }
-            return 'vendor-core'; 
+            // Simple chunking strategy to avoid circular dependencies
+            // Put all vendor code into a single chunk to prevent runtime errors
+            return 'vendor';
           }
         }
       }
