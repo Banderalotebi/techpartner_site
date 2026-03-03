@@ -51,7 +51,7 @@ api.post('/projects', async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-api.post('/domains', async (req: Request, res: Response, next: NextFunction) => {
+api.post('/domains', async (req: Request, res: Response, NextFunction) => {
   try {
     const domain = await Domain.create(req.body);
     res.json(domain);
