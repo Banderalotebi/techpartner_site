@@ -27,8 +27,12 @@ async function resetAdminPG() {
     console.log(`Found ${existingAdmins.length} existing admin(s)`);
 
     for (const admin of existingAdmins) {
-      console.log(`🗑️  Removing admin: ${admin.email} (ID: ${admin.id})`);
-      await db.delete(users).where(eq(users.id, admin.id));
+      console.log(`🚫 Disabling admin: ${admin.email} (ID: ${admin.id})`);
+      // Deactivate instead of delete to avoid foreign key constraint
+      await db
+        .update(users)
+        .set({ isActive: false, role: 'client', updatedAt: new Date() })
+        .where(eq(users.id, admin.id));
     }
 
     // Hash new password
