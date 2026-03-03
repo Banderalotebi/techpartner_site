@@ -1,0 +1,95 @@
+// server/routes.ts
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { 
+  insertProjectBriefSchema, 
+  insertQuizResponseSchema,
+  insertOrderSchema,
+  insertPaymentSchema,
+  insertUserSchema
+} from "../shared/schema";
+import { logActivity } from "./activityLogger";
+import { z } from "zod";
+import inquiryRoutes from "./routes/inquiry";
+import paymentRoutes from "./routes/payments";
+import adminRoutes from "./routes/admin";
+import blogRoutes from "./routes/blog";
+import { chatRouter } from "./routes/chat";
+import { crmRouter } from "./routes/crm";
+import { reportsRouter } from "./routes/reports";
+import { pdfReportsRouter } from "./routes/reports-pdf";
+import { systemRouter } from "./routes/system";
+import { pseoRouter } from "./routes/pseo";
+import { sitemapRouter } from "./routes/sitemap";
+import { webhookRouter } from "./routes/webhooks";
+import { contentRouter } from "./routes/content";
+import { clayRouter } from "./routes/clay";
+import { auditEngineRouter } from "./routes/audit-engine";
+import { emailHandlerRouter } from "./routes/email-handler";
+import { adminPanelRouter } from "./routes/admin-panel";
+import { developerRouter } from "./routes/developer";
+import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
+import bcrypt from 'bcryptjs';
+import { db } from "./db";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // ...
+
+  app.get("/api/crm/stats", (req, res) => {
+    const stats = await storage.getCrmStats();
+    res.json(stats);
+  });
+
+  app.get("/api/crm/leads", (req, res) => {
+    const leads = await storage.getLeads();
+    res.json(leads);
+  });
+}
+
+// client/src/pages/AdminDashboard.tsx
+import { useState, useEffect } from "react";
+import { 
+    Users, Shield, Download, MessageSquare, Flame, 
+    Snowflake, Target, AlertCircle, TrendingUp, 
+    Bot, FileText, BarChart3, Settings
+} from "lucide-react";
+
+// ...
+
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+
+useEffect(() => {
+  fetchDashboardData();
+}, []);
+
+const fetchDashboardData = async () => {
+  try {
+    setIsLoading(true);
+    
+    // Fetch CRM stats
+    const statsRes = await fetch("/api/crm/stats", {
+      headers: { "x-admin-token": ADMIN_TOKEN }
+    });
+    
+    if (statsRes.ok) {
+      const stats = await statsRes.json();
+      setCrmStats(stats);
+    }
+
+    // Fetch leads
+    const leadsRes = await fetch("/api/crm/leads", {
+      headers: { "x-admin-token": ADMIN_TOKEN }
+    });
+    
+    if (leadsRes.ok) {
+      const leadsData = await leadsRes.json();
+      setLeads(leadsData);
+    }
+  } catch (err) {
+    setError("Failed to load dashboard data");
+    console.error(err);
+  } finally {
+    setIsLoading(false);
+  }
+};

@@ -63,11 +63,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile('robots.txt', { root: publicPath });
   });
 
-  app.get('/robots.txt', (req, res) => {
-    res.setHeader('Content-Type', 'text/plain');
-    res.sendFile('robots.txt', { root: 'public' });
-  });
-
   // Authentication routes
   app.post('/api/auth/register', async (req, res) => {
     try {
@@ -333,8 +328,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          message: "Validation error", 
-          errors: error.errors 
+          error: "Invalid request data", 
+          details: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create project brief" });
@@ -350,8 +345,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          message: "Validation error", 
-          errors: error.errors 
+          error: "Invalid request data", 
+          details: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create quiz response" });
