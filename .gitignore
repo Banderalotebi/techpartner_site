@@ -6,3 +6,4 @@ google-credentials.json
 seo-prospects.db
 *.pem
 *.key
+.aider*

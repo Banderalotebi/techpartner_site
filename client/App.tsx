@@ -17,6 +17,7 @@ import AboutPage from "@/pages/about";
 import ContactPage from "@/pages/contact";
 import PortfolioPage from "@/pages/portfolio";
 import BlogPage from "@/pages/blog";
+import CoderPage from "@/pages/CoderPage";
 import AdminPage from "@/pages/admin";
 import PaymentSuccess from "@/pages/payment-success";
 import NotFound from "@/pages/not-found";
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/ar/contact" component={ContactPage} />
       <Route path="/ar/portfolio" component={PortfolioPage} />
       <Route path="/ar/blog" component={BlogPage} />
+      <Route path="/ar/coder" component={CoderPage} />
       <Route path="/ar/admin">
         <AdminRoute>
           <AdminPage />
@@ -90,6 +92,7 @@ function Router() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/portfolio" component={PortfolioPage} />
       <Route path="/blog" component={BlogPage} />
+      <Route path="/coder" component={CoderPage} />
       <Route path="/admin">
         <AdminRoute>
           <AdminPage />

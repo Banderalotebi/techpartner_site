@@ -27,6 +27,7 @@ import { clayRouter } from "./routes/clay";
 import { auditEngineRouter } from "./routes/audit-engine";
 import { emailHandlerRouter } from "./routes/email-handler";
 import { adminPanelRouter } from "./routes/admin-panel";
+import { developerRouter } from "./routes/developer";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { db } from "./db";
@@ -667,6 +668,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register Admin Panel routes (Phase 4 - Administrative Tools)
   app.use("/api/admin-panel", adminPanelRouter);
+
+  // Register Developer/Auto-Dev routes (Aider Integration)
+  app.use("/api/developer", developerRouter);
 
   // SEO Analysis endpoint using Drizzle ORM
   app.post("/api/seo/analyze", async (req, res) => {

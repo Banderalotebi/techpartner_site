@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Search, Mail, User, ChevronDown, Menu, X, Phone, Heart, Star, LogOut, Settings, ShoppingBag } from "lucide-react";
+import { Search, Mail, User, ChevronDown, Menu, X, Phone, Heart, Star, LogOut, Settings, ShoppingBag, Code } from "lucide-react";
 import { AuthModal } from "./AuthModal";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -99,6 +99,13 @@ export default function Header() {
           <Link to="/blog">
             <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group">
               Blog
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
+            </div>
+          </Link>
+          <Link to="/coder">
+            <div className="text-gray-700 font-medium hover:text-[#01A1C1] cursor-pointer transition-colors relative group flex items-center gap-1">
+              <Code className="w-4 h-4" />
+              Coder
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#01A1C1] group-hover:w-full transition-all duration-300"></div>
             </div>
           </Link>
@@ -206,6 +213,12 @@ export default function Header() {
             <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
               About
             </div>
+            <Link to="/coder">
+              <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer flex items-center gap-2">
+                <Code className="w-4 h-4" />
+                Coder
+              </div>
+            </Link>
             <div className="text-gray-700 font-medium py-2 hover:text-[#01A1C1] cursor-pointer">
               Contact
             </div>
@@ -254,4 +267,3 @@ export default function Header() {
     </div>
   );
 }
-
