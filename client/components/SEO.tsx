@@ -11,7 +11,16 @@ interface SEOProps {
   noindex?: boolean;
   structuredData?: Record<string, any>;
   breadcrumbs?: Array<{ name: string; url: string }>;
-  alternateLangs?: Array<{ lang: string; url: string }>;
+  audio?: string;
+  audioTitle?: string;
+  audioDescription?: string;
+  audioKeywords?: string[];
+  audioOgImage?: string;
+  audioOgType?: string;
+  audioCanonical?: string;
+  audioNoindex?: boolean;
+  audioStructuredData?: Record<string, any>;
+  audioBreadcrumbs?: Array<{ name: string; url: string }>;
 }
 
 export default function SEO({
@@ -24,7 +33,16 @@ export default function SEO({
   noindex = false,
   structuredData,
   breadcrumbs,
-  alternateLangs
+  audio,
+  audioTitle,
+  audioDescription,
+  audioKeywords,
+  audioOgImage,
+  audioOgType,
+  audioCanonical,
+  audioNoindex,
+  audioStructuredData,
+  audioBreadcrumbs
 }: SEOProps) {
   const { language } = useLanguage();
   const siteUrl = 'https://techpartner.sa';
@@ -122,11 +140,29 @@ export default function SEO({
       script.textContent = JSON.stringify(structuredData);
     }
 
+    // Add audio SEO
+    if (audio) {
+      const audioScript = document.createElement('script');
+      audioScript.type = 'application/ld+json';
+      audioScript.innerHTML = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'AudioObject',
+        name: audioTitle,
+        description: audioDescription,
+        keywords: audioKeywords,
+        image: audioOgImage,
+        type: audioOgType,
+        canonicalUrl: audioCanonical,
+        noindex: audioNoindex,
+      });
+      document.head.appendChild(audioScript);
+    }
+
     // Cleanup function
     return () => {
       // Optional: cleanup meta tags if needed
     };
-  }, [title, description, keywords, ogImage, ogType, canonical, noindex, structuredData, language, fullTitle]);
+  }, [title, description, keywords, ogImage, ogType, canonical, noindex, structuredData, language, fullTitle, audio, audioTitle, audioDescription, audioKeywords, audioOgImage, audioOgType, audioCanonical, audioNoindex, audioStructuredData]);
 
   return null;
 }

@@ -7,6 +7,16 @@ import { CheckCircle, Home, Receipt } from 'lucide-react';
 interface OrderDetails {
   orderId: string | null;
   chargeId: string | null;
+  audio?: string;
+  audioTitle?: string;
+  audioDescription?: string;
+  audioKeywords?: string[];
+  audioOgImage?: string;
+  audioOgType?: string;
+  audioCanonical?: string;
+  audioNoindex?: boolean;
+  audioStructuredData?: Record<string, any>;
+  audioBreadcrumbs?: Array<{ name: string; url: string }>;
 }
 
 export default function PaymentSuccess() {
