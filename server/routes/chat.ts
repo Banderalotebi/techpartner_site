@@ -65,9 +65,10 @@ chatRouter.post("/", async (req, res) => {
 
     // Get the latest user message for memory search
     const latestUserMessage = messages.filter(m => m.role === "user").pop()?.content || "";
+    const userId = (userEmail as string | undefined) || "anonymous";
     
-    // 1. Search memory for relevant past conversations
-    const relevantMemories = await memoryStore.search(latestUserMessage, 3);
+    // 1. Search memory for relevant past conversations for this user
+    const relevantMemories = await memoryStore.search(latestUserMessage, 3, userId);
     let memoryContext = "";
     if (relevantMemories.length > 0) {
       memoryContext = "\n\nRELEVANT PAST CONVERSATIONS:\n" + 
@@ -124,11 +125,15 @@ User: ${latestUserMessage}
 AI: ${aiResponse.substring(0, 200)}
     `.trim();
     
-    await memoryStore.add(conversationSummary, {
-      type: "chat_exchange",
-      userEmail: userEmail || "anonymous",
-      timestamp: new Date().toISOString(),
-    });
+    await memoryStore.add(
+      conversationSummary,
+      {
+        type: "chat_exchange",
+        userEmail: userId,
+        timestamp: new Date().toISOString(),
+      },
+      userId
+    );
 
     // Send the AI's reply back to the React frontend
     res.json({ reply: data.message });
@@ -159,6 +164,31 @@ chatRouter.get("/memory", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve memory stats" });
+  }
+});
+
+// Inspect memories for a specific user (by email) using Mem0
+chatRouter.get("/memory/user", async (req, res) => {
+  try {
+    const userEmail = (req.query.userEmail as string | undefined) || "";
+    if (!userEmail) {
+      return res.status(400).json({ error: "userEmail query param is required" });
+    }
+
+    const recent = await memoryStore.getRecent(30, userEmail);
+    const stats = await memoryStore.getStats(userEmail);
+
+    res.json({
+      userEmail,
+      stats,
+      recentMemories: recent.map(m => ({
+        content: m.content,
+        timestamp: m.timestamp,
+        metadata: m.metadata,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve user memories" });
   }
 });
 

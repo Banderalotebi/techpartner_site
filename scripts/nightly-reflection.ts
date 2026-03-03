@@ -56,13 +56,19 @@ async function runNightlyReflection() {
     const insights: string[] = [];
     
     for (const interaction of typedInteractions) {
-      // Store the raw conversation as a memory
-      await memoryStore.add(interaction.content, {
-        type: "chat_transcript",
-        lead: interaction.leadEmail,
-        leadScore: interaction.leadScore,
-        date: interaction.createdAt.toISOString(),
-      });
+      const userId = interaction.leadEmail || "unknown_lead";
+
+      // Store the raw conversation as a per-lead memory
+      await memoryStore.add(
+        interaction.content,
+        {
+          type: "chat_transcript",
+          lead: interaction.leadEmail,
+          leadScore: interaction.leadScore,
+          date: interaction.createdAt.toISOString(),
+        },
+        userId
+      );
 
       // If there's an AI summary, store it as a market insight
       if (interaction.aiSummary) {
@@ -82,11 +88,15 @@ Key Patterns:
 - Most common requests: ${extractCommonRequests(typedInteractions)}
       `.trim();
 
-      await memoryStore.add(consolidatedInsight, {
-        type: "daily_market_insight",
-        date: yesterdayStr,
-        totalInteractions: typedInteractions.length,
-      });
+      await memoryStore.add(
+        consolidatedInsight,
+        {
+          type: "daily_market_insight",
+          date: yesterdayStr,
+          totalInteractions: typedInteractions.length,
+        },
+        "market_insights"
+      );
 
       console.log(`💡 Stored market insight: ${consolidatedInsight.substring(0, 100)}...`);
     }
@@ -108,11 +118,15 @@ ${pricingMentions.map(p => `- ${p.leadEmail}: ${extractPricingContext(p.content)
 Note: These are client-mentioned figures, not final quotes.
       `.trim();
 
-      await memoryStore.add(pricingInsight, {
-        type: "pricing_intelligence",
-        date: yesterdayStr,
-        mentions: pricingMentions.length,
-      });
+      await memoryStore.add(
+        pricingInsight,
+        {
+          type: "pricing_intelligence",
+          date: yesterdayStr,
+          mentions: pricingMentions.length,
+        },
+        "pricing_intelligence"
+      );
 
       console.log(`💰 Stored pricing intelligence (${pricingMentions.length} mentions)`);
     }

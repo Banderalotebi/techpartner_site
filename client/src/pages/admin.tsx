@@ -44,8 +44,10 @@ import {
   Globe,
   Mail,
   MessageSquare,
-  Target
+  Target,
+  Brain
 } from "lucide-react";
+import { MemoryInspector } from "@/components/admin/MemoryInspector";
 import type { Order, Payment, ProjectBrief, User, Inquiry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -527,7 +529,7 @@ The article should be informative, authoritative, and provide real value to read
 
         {/* Main Content */}
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-9">
+          <TabsList className="grid w-full grid-cols-10">
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="payments">Payments ({payments.length})</TabsTrigger>
@@ -537,6 +539,7 @@ The article should be informative, authoritative, and provide real value to read
             <TabsTrigger value="crm">CRM</TabsTrigger>
             <TabsTrigger value="domains">Domains</TabsTrigger>
             <TabsTrigger value="outbound">Outbound</TabsTrigger>
+            <TabsTrigger value="memory">AI Memory</TabsTrigger>
           </TabsList>
 
           {/* Analytics Tab */}
@@ -1401,6 +1404,24 @@ The article should be informative, authoritative, and provide real value to read
                     </TableBody>
                   </Table>
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* AI Memory Tab */}
+          <TabsContent value="memory" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Brain className="mr-2" size={20} />
+                  AI Memory Inspector (Mem0)
+                </CardTitle>
+                <CardDescription>
+                  Search and inspect Aiden&apos;s long-term memories for a specific user email.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <MemoryInspector />
               </CardContent>
             </Card>
           </TabsContent>
