@@ -1,10 +1,13 @@
 // Reset admin user - PostgreSQL/Neon version for production server
+import { loadSecrets } from '../server/aws-secrets';
 import { db } from '../server/db';
 import { users } from '../shared/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
 async function resetAdminPG() {
+  // Load environment variables from AWS Secrets Manager or .env
+  await loadSecrets();
   try {
     // New admin credentials
     const newAdminEmail = 'admin@techpartner.sa';
