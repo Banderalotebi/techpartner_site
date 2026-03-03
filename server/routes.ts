@@ -31,6 +31,8 @@ import { developerRouter } from "./routes/developer";
 import { generateToken, verifyToken, requireAuth, requireAdmin, type AuthRequest } from "./middleware/auth";
 import bcrypt from 'bcryptjs';
 import { db } from "./db";
+import { prospects } from "../shared/schema";
+import { desc } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for Google Cloud App Engine
@@ -59,6 +61,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const publicPath = process.env.NODE_ENV === 'production' ? 'dist/public' : 'public';
     res.setHeader('Content-Type', 'text/plain');
     res.sendFile('robots.txt', { root: publicPath });
+  });
+
+  app.get('/robots.txt', (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.sendFile('robots.txt', { root: 'public' });
   });
 
   // Authentication routes
@@ -326,8 +333,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          error: "Invalid request data", 
-          details: error.errors 
+          message: "Validation error", 
+          errors: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create project brief" });
@@ -343,8 +350,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          error: "Invalid request data", 
-          details: error.errors 
+          message: "Validation error", 
+          errors: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create quiz response" });
@@ -706,4 +713,3 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   return httpServer;
-}
