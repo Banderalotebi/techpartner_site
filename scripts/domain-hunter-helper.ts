@@ -17,3 +17,14 @@ function saveToDatabase(data: ExtractedData) {
 function handleExtractedData(data: ExtractedData) {
   console.log("Extracted data:", data);
 }
+
+// Added new function to extract data
+function extractData(): ExtractedData {
+  const data = {
+    domain: "example.com",
+    email: "example@example.com",
+    phone: "123-456-7890",
+    address: "123 Main St, Anytown, USA"
+  };
+  return data;
+}

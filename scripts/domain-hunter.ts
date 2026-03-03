@@ -28,7 +28,7 @@ interface ExtractedData {
 //   console.log(`🔧 Services: ${SERVICES.join(", ")}`);
 //   ...
 // Added new function to extract data
-function extractData() {
+function extractData(): ExtractedData {
   const data = {
     domain: "example.com",
     email: "example@example.com",
