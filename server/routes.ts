@@ -328,8 +328,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          error: "Invalid request data", 
-          details: error.errors 
+          message: "Validation error", 
+          errors: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create project brief" });
@@ -345,8 +345,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ 
-          error: "Invalid request data", 
-          details: error.errors 
+          message: "Validation error", 
+          errors: error.errors 
         });
       }
       res.status(500).json({ message: "Failed to create quiz response" });
