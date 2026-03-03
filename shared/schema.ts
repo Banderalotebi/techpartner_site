@@ -162,8 +162,14 @@ export const domainLeads = pgTable("domain_leads", {
   id: serial("id").primaryKey(),
   domainName: text("domain_name").notNull().unique(),
   keywordsMatched: text("keywords_matched").notNull(),
-  status: text("status").default("NEW"), // NEW, ENRICHED, CONTACTED
+  status: text("status").default("NEW"), // NEW, ENRICHED, CONTACTED, EXTRACTED, FAILED, PENDING
   discoveredAt: timestamp("discovered_at").defaultNow(),
+  // Extracted company data
+  companyName: text("company_name"),
+  email: text("email"),
+  phone: text("phone"),
+  location: text("location"),
+  extractedAt: timestamp("extracted_at"),
 });
 
 export const clientAudits = pgTable("client_audits", {
