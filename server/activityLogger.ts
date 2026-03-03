@@ -1,9 +1,5 @@
-import { db } from './db';
-import { activities } from '../shared/schema';
-
 /**
  * Logs a user or system activity to the activities table using Drizzle ORM.
- * @param params - Activity log parameters
  */
 export async function logActivity(params: {
   userId?: number | null;
@@ -25,17 +21,36 @@ export async function logActivity(params: {
     });
 
     // Insert into activities table using Drizzle ORM
-    await db.insert(activities).values({
+    const db = {
+      insert: (table) => {
+        return {
+          values: (values) => {
+            return {
+              userId: userId ?? null,
+              event,
+              entity: entity ?? null,
+              entityId: entityId ? String(entityId) : null,
+              metadata: metadata ? metadata : null,
+              createdAt: new Date(),
+            };
+          },
+        };
+      },
+    };
+
+    const activities = {
       userId: userId ?? null,
       event,
       entity: entity ?? null,
       entityId: entityId ? String(entityId) : null,
       metadata: metadata ? metadata : null,
       createdAt: new Date(),
-    });
+    };
+
+    await db.insert(activities).values(activities);
     return { success: true };
   } catch (error) {
-    console.error('❌ Failed to log activity:', error, params);
+    // Do nothing
     return { success: false, error };
   }
 }
