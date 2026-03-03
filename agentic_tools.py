@@ -1,5 +1,9 @@
 import re
 from typing import List, Dict, Any
+import logging
+
+# Create a logger
+logger = logging.getLogger(__name__)
 
 class AgenticTool:
     def __init__(self):
@@ -64,9 +68,12 @@ class AgenticTools:
 
     def _query_llm(self, prompt: str) -> str:
         # This is a placeholder for your LLM query function
+        import json
         pass
 
 # Example usage
+import logging
+logging.basicConfig(level=logging.INFO)
 agentic_tools = AgenticTools()
 result = agentic_tools.process_task("Fix the bug in server/routes.ts")
 print(result)
