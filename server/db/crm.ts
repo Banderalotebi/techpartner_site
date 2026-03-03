@@ -38,7 +38,7 @@ function getSQLiteDB(): Database.Database {
 
 // Check if we're using Drizzle or SQLite
 // Note: Even if db is set, we need to verify tables exist
-const isDrizzleAvailable = false; // Force SQLite for now until PostgreSQL schema is migrated
+const isDrizzleAvailable = true; // Use Drizzle ORM with PostgreSQL
 
 console.log(isDrizzleAvailable 
   ? "✅ [CRM Vault] Drizzle ORM initialized for Neon PostgreSQL" 

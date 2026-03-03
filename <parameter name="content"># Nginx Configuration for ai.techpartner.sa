@@ -1,0 +1,74 @@
+# This serves the S3-deployed frontend and proxies API to Python FastAPI
+
+server {
+    listen 80;
+    server_name ai.techpartner.sa;
+
+    # Redirect HTTP to HTTPS via CloudFront
+    return 301 https://ai.techpartner.sa$request_uri;
+}
+
+# HTTPS server - CloudFront handles SSL, EC2 receives HTTP
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ai.techpartner.sa;
+
+    # Trust CloudFront IP ranges
+    set_real_ip_from 13.113.196.0/22;
+    set_real_ip_from 13.113.203.0/22;
+    set_real_ip_from 52.124.128.0/21;
+    set_real_ip_from 52.222.128.0/21;
+    set_real_ip_from 54.182.0.0/16;
+    set_real_ip_from 54.192.0.0/16;
+    set_real_ip_from 64.252.128.0/18;
+    set_real_ip_from 70.132.0.0/18;
+    set_real_ip_from 99.86.0.0/16;
+    set_real_ip_from 130.176.0.0/16;
+    set_real_ip_from 143.204.0.0/16;
+    set_real_ip_from 144.217.64.0/18;
+    set_real_ip_from 157.240.0.0/16;
+    set_real_ip_from 158.227.0.0/16;
+    set_real_ip_from 204.246.0.0/18;
+    real_ip_header X-Forwarded-For;
+
+    root /var/www/techpartner/ai-frontend;
+    index index.html;
+
+    # Serve static frontend files
+    location / {
+        try_files $uri $uri/ /index.html;
+        
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+
+    # Proxy API requests to Python FastAPI server
+    location /api/ {
+        proxy_pass http://localhost:8000/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Timeouts
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # Health check
+    location /health {
+        proxy_pass http://localhost:8000/health;
+        access_log off;
+    }
+}
+</parameter>
+<parameter name="path">/Users/bander/techpartnersite/nginx-ai-subdomain.conf</parameter>
