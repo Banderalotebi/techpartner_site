@@ -27,3 +27,13 @@ interface ExtractedData {
 //   console.log(`🏢 Industries: ${INDUSTRIES.join(", ")}`);
 //   console.log(`🔧 Services: ${SERVICES.join(", ")}`);
 //   ...
+// Added new function to extract data
+function extractData() {
+  const data = {
+    domain: "example.com",
+    email: "example@example.com",
+    phone: "123-456-7890",
+    address: "123 Main St, Anytown, USA"
+  };
+  return data;
+}

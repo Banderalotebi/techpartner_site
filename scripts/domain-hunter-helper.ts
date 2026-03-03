@@ -12,3 +12,8 @@ function saveToDatabase(data: ExtractedData) {
   // Your database saving code here
   console.log("Data saved to database");
 }
+
+// Added new function to handle extracted data
+function handleExtractedData(data: ExtractedData) {
+  console.log("Extracted data:", data);
+}
