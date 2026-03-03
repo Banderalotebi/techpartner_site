@@ -60,4 +60,22 @@ api.post('/domains', async (req: Request, res: Response, next: NextFunction) => 
   }
 });
 
+api.get('/blog', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const blogPosts = await BlogPost.findAll();
+    res.json(blogPosts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+api.post('/blog', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const blogPost = await BlogPost.create(req.body);
+    res.json(blogPost);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default api;
