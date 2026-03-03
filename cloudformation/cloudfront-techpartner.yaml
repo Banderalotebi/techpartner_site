@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFront Distribution for TechPartner.sa with ACM SSL Certificate
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: techpartner.sa
+    Description: Primary domain name
+  
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:597284493757:certificate/535f75d7-d8f9-48af-81de-c737f5df74b2
+    Description: ACM Certificate ARN
+  
+  OriginDomain:
+    Type: String
+    Default: ec2-54-227-243-191.compute-1.amazonaws.com
+    Description: EC2 origin domain
+
+Resources:
+  TechPartnerCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: TechPartner - SSL for all subdomains
+        Enabled: true
+        DefaultRootObject: index.html
+        Aliases:
+          - !Ref DomainName
+          - !Sub '*.${DomainName}'
+        Origins:
+          - Id: techpartner-ec2-origin
+            DomainName: !Ref OriginDomain
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+              OriginSSLProtocols:
+                - TLSv1.2
+                - TLSv1.1
+        DefaultCacheBehavior:
+          TargetOriginId: techpartner-ec2-origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - PATCH
+            - POST
+            - DELETE
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: all
+            Headers:
+              - Origin
+              - Access-Control-Request-Headers
+              - Access-Control-Request-Method
+              - Authorization
+              - Content-Type
+          MinTTL: 0
+          DefaultTTL: 0
+          MaxTTL: 31536000
+          Compress: true
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: techpartner-ec2-origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - PATCH
+              - POST
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: all
+              Headers:
+                - Origin
+                - Access-Control-Request-Headers
+                - Access-Control-Request-Method
+                - Authorization
+                - Content-Type
+            MinTTL: 0
+            DefaultTTL: 0
+            MaxTTL: 0
+            Compress: true
+          - PathPattern: /web-design/*
+            TargetOriginId: techpartner-ec2-origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+            CachedMethods:
+              - GET
+              - HEAD
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+            MinTTL: 86400
+            DefaultTTL: 2592000
+            MaxTTL: 31536000
+            Compress: true
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: none
+
+Outputs:
+  CloudFrontDomainName:
+    Description: CloudFront Distribution Domain Name
+    Value: !GetAtt TechPartnerCloudFrontDistribution.DomainName
+  
+  DistributionId:
+    Description: CloudFront Distribution ID
+    Value: !Ref TechPartnerCloudFrontDistribution
+  
+  WebsiteURL:
+    Description: Website URL
+    Value: !Sub 'https://${DomainName}'
