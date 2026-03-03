@@ -64,5 +64,9 @@ export function AdminPortal() {
     return <AdminLogin onLogin={handleLogin} />;
   }
 
-  return <AdminDashboard onLogout={handleLogout} />;
+  return (
+    <div>
+      <AdminDashboard onLogout={handleLogout} />
+    </div>
+  );
 }
