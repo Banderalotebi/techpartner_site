@@ -1,35 +1,17 @@
-import React from 'react';
-import { SEO } from '../components/admin/SEO';
+import Head from 'next/head';
 
-interface Props {
-  title: string;
-  description: string;
-  keywords?: string[];
-  ogImage?: string;
-  ogType?: string;
-  canonical?: string;
-  noindex?: boolean;
-  structuredData?: Record<string, any>;
-  breadcrumbs?: Array<{ name: string; url: string }>;
-}
-
-const ContactPage: React.FC<Props> = ({ title, description, keywords, ogImage, ogType, canonical, noindex, structuredData, breadcrumbs }) => {
+export default function Contact() {
   return (
-    <>
-      <SEO
-        title={title}
-        description={description}
-        keywords={keywords}
-        ogImage={ogImage}
-        ogType={ogType}
-        canonical={canonical}
-        noindex={noindex}
-        structuredData={structuredData}
-        breadcrumbs={breadcrumbs}
-      />
-      {/* rest of the page content */}
-    </>
-  );
-};
+    <div>
+      <Head>
+        <title>صفحة الاتصال بنا</title>
+      </Head>
 
-export default ContactPage;
+      <h1>صفحة الاتصال بنا</h1>
+
+      <p>إذا كنت ترغب في الاتصال بنا، يمكنك استخدام هذا الرابط</p>
+
+      <a href="#">اتصل بنا</a>
+    </div>
+  );
+}

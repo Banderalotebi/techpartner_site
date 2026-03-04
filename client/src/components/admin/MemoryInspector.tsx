@@ -27,7 +27,8 @@ export function MemoryInspector() {
     queryKey: ["memories", submittedEmail],
     enabled: !!submittedEmail,
     queryFn: async () => {
-      const params = new URLSearchParams({ userEmail: submittedEmail || "" });
+      if (!submittedEmail) return null;
+      const params = new URLSearchParams({ userEmail: submittedEmail });
       const res = await fetch(`/api/chat/memory/user?${params.toString()}`);
       if (!res.ok) {
         throw new Error("Failed to fetch user memories");
@@ -38,9 +39,17 @@ export function MemoryInspector() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setSubmittedEmail(email.trim());
-    refetch();
+    const next = email.trim();
+    if (!next) return;
+
+    // Avoid a race where refetch uses the previous submittedEmail.
+    // If the email didn't change, refetch; otherwise update key and let query run.
+    if (next === submittedEmail) {
+      refetch();
+      return;
+    }
+
+    setSubmittedEmail(next);
   };
 
   return (
