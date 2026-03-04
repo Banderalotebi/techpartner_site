@@ -105,7 +105,7 @@ export class MemoryStore {
     const resolvedUserId = userId || this.userId;
     const all: any = await this.client.getAll({ userId: resolvedUserId });
     const items: any[] = all?.results ?? all ?? [];
-    const recent = await this.getRecent(7);
+    const recent = await this.getRecent(7, resolvedUserId);
 
     return {
       total: items.length,
